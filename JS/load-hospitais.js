@@ -64,39 +64,9 @@ function inicializarDados() {
     }
 }
 
-// Carregar hospitais do localStorage
 function carregarHospitais() {
-    inicializarDados();
+    inicializarDados(); // garante que os dados de exemplo sejam carregados
 
-    let dados = localStorage.getItem('hospitais');
-    let hospitais = dados ? JSON.parse(dados) : [];
-
-    let hospitaisGrid = document.querySelector('.hospitais-grid');
-
-    if (!hospitaisGrid) {
-        console.error("Elemento .hospitais-grid não encontrado!");
-        return;
-    }
-
-    hospitaisGrid.innerHTML = '';
-
-    let msgVazia = document.querySelector('.empty-message');
-    if (msgVazia) msgVazia.remove();
-
-    if (hospitais.length === 0) {
-        mostrarMensagemVazia(hospitaisGrid);
-        return;
-    }
-
-    for (let i = 0; i < hospitais.length; i++) {
-        let card = criarCardHospital(hospitais[i]);
-        hospitaisGrid.appendChild(card);
-    }
-}
-
-
-// carregar hospitais do localStorage
-function carregarHospitais() {
     let dados = localStorage.getItem('hospitais');
     let hospitais = dados ? JSON.parse(dados) : [];
 
@@ -104,13 +74,9 @@ function carregarHospitais() {
     let header = main.querySelector('.page-header');
 
     // limpar cards antigos
-    let cardsAntigos = document.querySelectorAll('.hospital-card');
-    for (let i = 0; i < cardsAntigos.length; i++) {
-        cardsAntigos[i].remove();
-    }
+    document.querySelectorAll('.hospital-card').forEach(card => card.remove());
 
-    // se nao tiver nada, mostra mensagem
-    if (hospitais.length == 0) {
+    if (hospitais.length === 0) {
         let msg = document.createElement('div');
         msg.className = 'empty-message';
         msg.innerHTML = `
@@ -123,42 +89,27 @@ function carregarHospitais() {
         return;
     }
 
-    // criar card pra cada hospital
-    for (let i = 0; i < hospitais.length; i++) {
-        let card = criarCard(hospitais[i]);
+    hospitais.forEach(hospital => {
+        let card = criarCard(hospital);
         main.appendChild(card);
-    }
+    });
 }
 
 function criarCard(hospital) {
     let card = document.createElement('div');
     card.className = 'hospital-card';
 
-    // pegar servicos
-    let servicos = [];
-    if (hospital.servicos) {
-        servicos = hospital.servicos.split(',');
-    }
+    let servicos = hospital.especialidades || [];
+    let tagsServicos = servicos.map(s => `<span class="service-tag">${s}</span>`).join('');
 
-    let tagsServicos = '';
-    for (let i = 0; i < servicos.length; i++) {
-        let s = servicos[i].trim();
-        if (s) {
-            tagsServicos += `<span class="service-tag">${s}</span>`;
-        }
-    }
-
-    let htmlServicos = '';
-    if (servicos.length > 0) {
-        htmlServicos = `
+    let htmlServicos = servicos.length > 0 ? `
         <div class="services">
-            <p class="services-label">Serviços:</p>
+            <p class="services-label">Especialidades:</p>
             <div class="services-tags">
                 ${tagsServicos}
             </div>
         </div>
-        `;
-    }
+    ` : '';
 
     card.innerHTML = `
         <div class="hospital-header">
@@ -191,7 +142,6 @@ function criarCard(hospital) {
 
     return card;
 }
-
 // funcao para ir para pagina de detalhes
 function verDetalhes(id) {
     window.location.href = 'hospital-detalhes.html?id=' + id;
