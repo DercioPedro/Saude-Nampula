@@ -55,13 +55,10 @@ const centrosExemplo = [
     }
 ];
 
-// Inicializar localStorage com dados de exemplo se estiver vazio
+// Inicializar ou atualizar localStorage com dados de exemplo
 function inicializarDados() {
-    let dados = localStorage.getItem('centros');
-    if (!dados || JSON.parse(dados).length === 0) {
-        localStorage.setItem('centros', JSON.stringify(centrosExemplo));
-        console.log("Dados de exemplo carregados no localStorage");
-    }
+    localStorage.setItem('centros', JSON.stringify(centrosExemplo));
+    console.log("Dados atualizados no localStorage");
 }
 
 // carregar centros
