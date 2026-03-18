@@ -46,7 +46,7 @@ function criarCardCentro(centro) {
 
     card.innerHTML = `
         <div class="centro-header">
-            <span class="centro-icon"><img src="/img/centros.png" alt=""></span>
+            <span class="centro-icon"><img src="img/centros.png" alt=""></span>
             <div class="centro-title">
                 <h3>${centro.nome}</h3>
                 <span class="centro-bairro">${nomeBairro}</span>
@@ -55,15 +55,15 @@ function criarCardCentro(centro) {
 
         <div class="centro-details">
             <div class="detail-item">
-                <span class="detail-icon"><img src="/img/ponto.png" alt=""></span>
+                <span class="detail-icon"><img src="img/ponto.png" alt=""></span>
                 <span>${centro.endereco}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-icon"><img src="/img/call.png" alt=""></span>
+                <span class="detail-icon"><img src="img/call.png" alt=""></span>
                 <span>${centro.telefone}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-icon"><img src="/img/clock.png" alt=""></span>
+                <span class="detail-icon"><img src="img/clock.png" alt=""></span>
                 <span>${centro.horario}</span>
             </div>
         </div>
