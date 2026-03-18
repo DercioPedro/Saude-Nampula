@@ -183,10 +183,10 @@ function filtrarCentros(bairro) {
     }
 }
 
-// Carregar farmácias de exemplo
-function carregarcentrossExemplo() {
-    localStorage.setItem('centros', JSON.stringify(centrossExemplo));
-    carregarcentros();
+// Carregar farmácias de exemplo (corrigido)
+function carregarCentrosExemplo() {
+    localStorage.setItem('centros', JSON.stringify(centrosExemplo));
+    carregarCentros();
 }
 
 // ir para detalhes
