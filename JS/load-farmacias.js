@@ -487,9 +487,9 @@ function carregarDetalhesDaFarmacia() {
             <!-- Cabeçalho -->
             <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
                 <a href="farm.html" style="text-decoration: none; color: #7c3aed; font-size: 18px;">← Voltar</a>
-                <h1 style="color: #1f2937; margin: 0; flex: 1;">📋 ${nomeDecodificado}</h1>
+                <h1 style="color: #1f2937; margin: 0; flex: 1;"> ${nomeDecodificado}</h1>
                 <span style="background: ${farmacia && farmacia.plantao ? '#dbeafe' : '#d1fae5'}; color: ${farmacia && farmacia.plantao ? '#1e40af' : '#047857'}; padding: 8px 16px; border-radius: 20px; font-weight: 600;">
-                    ${farmacia && farmacia.plantao ? '🕒 24 Horas' : '🕒 Horário Comercial'}
+                    ${farmacia && farmacia.plantao ? ' 24 Horas' : ' Horário Comercial'}
                 </span>
             </div>
 
@@ -563,7 +563,7 @@ function carregarDetalhesDaFarmacia() {
 
                     <!-- Estatísticas -->
                     <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                        <h3 style="color: #374151; margin-bottom: 15px;">📊 Estatísticas</h3>
+                        <h3 style="color: #374151; margin-bottom: 15px;"> Estatísticas</h3>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                             <div style="text-align: center; background: white; padding: 15px; border-radius: 8px;">
                                 <div style="font-size: 24px; color: #7c3aed;">${produtos.length}</div>
@@ -620,7 +620,7 @@ function carregarDetalhesDaFarmacia() {
             <!-- Botões de Ação -->
             <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
                 <button onclick="window.location.href='medicamentos.html?farmacia=${nomeFarmacia}&id=${id}'" style="background: #059669; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 16px;">
-                    💊 Ver Medicamentos (${produtos.length})
+                     Ver Medicamentos (${produtos.length})
                 </button>
                 <button onclick="window.location.href='farm.html'" style="background: white; color: #7c3aed; border: 2px solid #7c3aed; padding: 15px 30px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 16px;">
                     ← Voltar para Lista
@@ -629,7 +629,7 @@ function carregarDetalhesDaFarmacia() {
 
             <!-- Informações Adicionais -->
             <div style="margin-top: 30px; padding: 15px; background: #faf5ff; border-radius: 8px; font-size: 14px; color: #5b21b6; text-align: center;">
-                <p>🚗 Estacionamento disponível • Acessibilidade •  Farmacêutico de plantão</p>
+                <p> Estacionamento disponível • Acessibilidade •  Farmacêutico de plantão</p>
                 <p style="margin-top: 5px; color: #6b7280;">Última atualização: ${new Date().toLocaleDateString('pt-PT')}</p>
             </div>
         </div>
