@@ -69,20 +69,20 @@ function criarCard(hospital) {
                 <h3>${hospital.nome}</h3>
                 <span class="hospital-type">Hospital</span>
             </div>
-            <span class="hospital-icon"><img src="/img/hospital.png" alt=""></span>
+            <span class="hospital-icon"><img src="img/hospital.png" alt=""></span>
         </div>
 
         <div class="hospital-details">
             <div class="detail-item">
-                <span class="detail-icon"><img src="/img/ponto.png" alt=""></span>
+                <span class="detail-icon"><img src="img/ponto.png" alt=""></span>
                 <span>${hospital.endereco}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-icon"><img src="/img/call.png" alt=""></span>
+                <span class="detail-icon"><img src="img/call.png" alt=""></span>
                 <span>${hospital.telefone}</span>
             </div>
             <div class="detail-item">
-                <span class="detail-icon"><img src="/img/clock.png" alt=""></span>
+                <span class="detail-icon"><img src="img/clock.png" alt=""></span>
                 <span>${hospital.horario}</span>
             </div>
         </div>
