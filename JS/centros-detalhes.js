@@ -49,10 +49,10 @@ function carregarDetalhes() {
 
         // icones para cada servico
         let iconesServicos = {
-            'consultas gerais': '<img src="/img/stete.png" alt="">',
-            'vacinação': '<img src="/img/vacina.png" alt="">',
-            'pré-natal': '<img src="/img/gravida.png" alt="">',
-            'planeamento familiar': '<img src="/img/family.png" alt="">',
+            'consultas gerais': '<img src="img/stete.png" alt="">',
+            'vacinação': '<img src="img/vacina.png" alt="">',
+            'pré-natal': '<img src="img/gravida.png" alt="">',
+            'planeamento familiar': '<img src="img/family.png" alt="">',
             'pediatria': '👶',
             'maternidade': '🤱',
             'teste de hiv': '🧪',
@@ -61,7 +61,7 @@ function carregarDetalhes() {
             'primeiros socorros': '🚑',
             'consultas especializadas': '👨‍⚕️',
             'laboratório': '🔬',
-            'farmácia': '<img src="/img/comprimidos.png" alt="">',
+            'farmácia': '<img src="img/comprimidos.png" alt="">',
             'saúde reprodutiva': '❤️',
             'nutrição infantil': '🍎',
             'testes rápidos': '⚡'
