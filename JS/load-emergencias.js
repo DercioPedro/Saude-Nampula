@@ -36,15 +36,15 @@ function criarCardEmergencia(emergencia, index) {
 
     // Mapeamento de ícones (emoji ou imagem)
     const icones = {
-        'Ambulância': { emoji: '🚑', img: '/img/hospital.png' },
-        'Bombeiros': { emoji: '🚒', img: '/img/bomber.png' },
-        'Polícia': { emoji: '🚓', img: '/img/Police.png' },
-        'Resgate': { emoji: '🆘', img: '/img/resgate.png' },
-        'Hospital': { emoji: '🏥', img: '/img/hospital.png' }
+        'Ambulância': { emoji: '🚑', img: 'img/hospital.png' },
+        'Bombeiros': { emoji: '🚒', img: 'img/bomber.png' },
+        'Polícia': { emoji: '🚓', img: 'img/Police.png' },
+        'Resgate': { emoji: '🆘', img: 'img/resgate.png' },
+        'Hospital': { emoji: '🏥', img: 'img/hospital.png' }
     };
 
     // Pega o ícone correspondente ou usa padrão
-    let iconeData = icones[emergencia.tipo] || { emoji: '📞', img: '/img/call.png' };
+    let iconeData = icones[emergencia.tipo] || { emoji: '📞', img: 'img/call.png' };
 
     // Se tiver imagem, usa <img>, senão usa emoji
     let iconeHTML = iconeData.img
