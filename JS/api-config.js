@@ -30,7 +30,7 @@ async function apiRequest(endpoint, method = 'GET', data = null, token = null) {
         config.body = JSON.stringify(data);
     }
     
-    console.log(`📡 ${method} ${API_BASE_URL}${endpoint}`);
+    // console.log(`📡 ${method} ${API_BASE_URL}${endpoint}`);
     
     try {
         const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
