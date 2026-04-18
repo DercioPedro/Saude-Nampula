@@ -8,8 +8,8 @@ const API_BASE_URL = isProduction
     ? 'https://saude-nampula-api.onrender.com/api'  // 👈 SUBSTITUA PELA URL DO RENDER
     : 'http://localhost:5000/api';
 
-console.log(`🌐 Ambiente: ${isProduction ? 'PRODUÇÃO' : 'DESENVOLVIMENTO'}`);
-console.log(`📡 API URL: ${API_BASE_URL}`);
+// console.log(`🌐 Ambiente: ${isProduction ? 'PRODUÇÃO' : 'DESENVOLVIMENTO'}`);
+// console.log(`📡 API URL: ${API_BASE_URL}`);
 
 // Função para fazer requisições à API
 async function apiRequest(endpoint, method = 'GET', data = null, token = null) {
@@ -40,7 +40,7 @@ async function apiRequest(endpoint, method = 'GET', data = null, token = null) {
             throw new Error(result.error || `Erro ${response.status}: ${response.statusText}`);
         }
         
-        console.log(`✅ Resposta recebida:`, result);
+        // console.log(`✅ Resposta recebida:`, result);
         return result;
     } catch (error) {
         console.error('❌ API Error:', error);
