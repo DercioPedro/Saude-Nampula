@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saúde Nampula - Farmácias</title>
+    <link rel="stylesheet" href="styles/farm.css">
+    <link rel="icon" type="image/png" href="/img/monitor.png">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="/img/monitor.png" alt="Saúde Nampula">
+                </div>
+                <h1>Saúde Nampula</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Início</a></li>
+                <li><a href="hospital.html">Hospitais</a></li>
+                <li><a href="centros.html">Centros de Saúde</a></li>
+                <li><a href="farm.html" class="active">Farmácias</a></li>
+                <li><a href="emer.html">Emergências</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+                <!-- <li><a href="admin-login.html" class="admin-link"
+                        style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600;">🔐
+                        Admin</a></li> -->
+            </ul>
+        </div>
+    </nav>
+
+
+
+    <!-- Main Content -->
+    <main>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2>Farmácias em Nampula</h2>
+            <p class="page-subtitle">Encontre farmácias próximas com horários de funcionamento</p>
+        </div>
+
+        <!-- Info Banner -->
+        <div class="info-banner">
+            <span class="info-banner-icon"><img src="/img/comprimidos.png" alt=""></span>
+            <div class="info-banner-text">
+                <h3>Dica de Saúde</h3>
+                <p>Sempre leve a prescrição médica ao comprar medicamentos controlados</p>
+            </div>
+        </div>
+
+        <!--Seccao de filtragem -->
+        <div class="filter-section">
+            <span class="filter-icon">🔍</span>
+            <label for="filter-select" class="filter-label">Filtrar:</label>
+            <select id="filter-select" class="filter-select" onchange="filtrarFarmacias(this.value)">
+                <option value="todas">Todas as Farmácias</option>
+                <option value="plantao">Plantão 24h</option>
+            </select>
+        </div>
+
+        <!-- Farmácias Grid -->
+        <div class="farmacias-grid">
+            <!-- As farmácias serão carregadas dinamicamente aqui pelo JavaScript -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Saúde Nampula - Plataforma de Saúde Comunitária</p>
+        <p class="footer-subtitle">Melhorando o acesso à saúde em Nampula</p>
+    </footer>
+
+    <!-- Script para carregar farmácias dinamicamente -->
+    <!-- Adicionar antes dos outros scripts -->
+    <script src="JS/api-config.js"></script>
+    <script src="JS/load-farmacias.js"></script>
+</body>
+
+</html>

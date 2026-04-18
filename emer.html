@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saúde Nampula - Emergências</title>
+    <link rel="stylesheet" href="styles/emer.css">
+    <link rel="icon" type="image/png" href="/img/monitor.png">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="/img/monitor.png" alt="Saúde Nampula">
+                </div>
+                <h1>Saúde Nampula</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Início</a></li>
+                <li><a href="hospital.html">Hospitais</a></li>
+                <li><a href="centros.html">Centros de Saúde</a></li>
+                <li><a href="farm.html">Farmácias</a></li>
+                <li><a href="emer.html" class="active">Emergências</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+                <!-- <li><a href="admin-login.html" class="admin-link"
+                        style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600;">🔐
+                        Admin</a></li> -->
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Alert Banner -->
+        <div class="alert-banner">
+            <h2>
+                <span class="alert-icon"><img src="/img/alert.png" alt=""></span>
+                Contactos de Emergência
+            </h2>
+            <p>Utilize estes números apenas em situações de emergência real</p>
+        </div>
+
+        <!-- Emergency Grid -->
+        <div class="emergency-grid">
+            <!-- Os contatos de emergência serão carregados dinamicamente aqui -->
+        </div>
+
+        <!-- Tips Section -->
+        <div class="tips-section">
+            <h3> O Que Fazer em Caso de Emergência</h3>
+            <div class="tips-list">
+                <div class="tip-item">
+                    <h4>1. Mantenha a Calma</h4>
+                    <p>Respire fundo e avalie a situação com clareza. O pânico pode dificultar a ajuda adequada.</p>
+                </div>
+                <div class="tip-item">
+                    <h4>2. Ligue para os Serviços de Emergência</h4>
+                    <p>Contacte imediatamente o número apropriado (119 para ambulância, 198 para bombeiros, 112 para
+                        polícia).</p>
+                </div>
+                <div class="tip-item">
+                    <h4>3. Forneça Informação Clara</h4>
+                    <p>Informe a sua localização exacta, a natureza da emergência e o número de pessoas envolvidas.</p>
+                </div>
+                <div class="tip-item">
+                    <h4>4. Não Mova a Vítima</h4>
+                    <p>A menos que seja absolutamente necessário (perigo imediato), não mova a pessoa ferida.</p>
+                </div>
+                <div class="tip-item">
+                    <h4>5. Verifique Sinais Vitais</h4>
+                    <p>Se souber, verifique a respiração e pulsação da vítima enquanto aguarda ajuda profissional.</p>
+                </div>
+                <div class="tip-item">
+                    <h4>6. Siga as Instruções</h4>
+                    <p>O operador de emergência pode dar-lhe instruções por telefone. Siga-as com atenção.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hospital Contacts -->
+        <div class="hospital-contacts">
+            <h3> Contactos de Hospitais e Farmácias 24 Horas</h3>
+            <div class="hospital-list">
+                <!-- Os contatos 24h serão carregados dinamicamente aqui -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Saúde Nampula - Plataforma de Saúde Comunitária</p>
+        <p class="footer-subtitle">Melhorando o acesso à saúde em Nampula</p>
+    </footer>
+
+    <!-- Script para carregar emergências dinamicamente -->
+     <!-- Adicionar antes dos outros scripts -->
+<script src="JS/api-config.js"></script>
+    <script src="JS/load-emergencias.js"></script>
+</body>
+
+</html>

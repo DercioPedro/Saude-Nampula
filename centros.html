@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saúde Nampula - Centros de Saúde</title>
+    <link rel="stylesheet" href="styles/centros.css">
+    <link rel="icon" type="image/png" href="/img/monitor.png">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                <img src="/img/monitor.png" alt="Saúde Nampula">
+                </div>
+                <h1>Saúde Nampula</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Início</a></li>
+                <li><a href="hospital.html">Hospitais</a></li>
+                <li><a href="centros.html" class="active">Centros de Saúde</a></li>
+                <li><a href="farm.html">Farmácias</a></li>
+                <li><a href="emer.html">Emergências</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+                <!-- <li><a href="admin-login.html" class="admin-link"
+                        style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600;">🔐
+                        Admin</a></li> -->
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Conteudo -->
+    <main>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2>Centros de Saúde</h2>
+            <p class="page-subtitle">Unidades de saúde primária por bairro em Nampula</p>
+        </div>
+
+        <!-- Seccao de filtragem -->
+        <div class="filter-section">
+            <span class="filter-icon">🔍</span>
+            <label for="bairro-filter" class="filter-label">Filtrar por Bairro:</label>
+            <select id="bairro-filter" class="filter-select" onchange="filtrarCentros(this.value)">
+                <option value="todos">Todos os Bairros</option>
+                <option value="mucatine">Mucatine</option>
+                <option value="muhala">Muhala</option>
+                <option value="namicopo">Namicopo</option>
+                <option value="centro">Centro</option>
+                <option value="marrere">Marrere</option>
+                <option value="napipine">Napipine</option>
+                <option value="muatala">Muatala</option>
+                <option value="moma">Moma</option>
+                <option value="natikiri">Natikiri</option>
+                <option value="nacala-a-velha">Nacala-a-Velha</option>
+            </select>
+        </div>
+
+        <!-- Centros Grid -->
+        <div class="centros-grid">
+            <!-- Os centros serão carregados dinamicamente aqui -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Saúde Nampula - Plataforma de Saúde Comunitária</p>
+        <p class="footer-subtitle">Melhorando o acesso à saúde em Nampula</p>
+    </footer>
+
+    <!-- Script para carregar centros dinamicamente -->
+     <!-- Adicionar antes dos outros scripts -->
+<script src="JS/api-config.js"></script>
+    <script src="JS/load-centros.js"></script>
+</body>
+
+</html>

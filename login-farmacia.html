@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saúde Nampula - Login Farmácia</title>
+    <link rel="stylesheet" href="styles/farm.css">
+    <link rel="stylesheet" href="styles/login-farmacia.css">
+    <link rel="icon" type="image/png" href="/img/monitor.png">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="/img/monitor.png" alt="Saúde Nampula">
+                </div>
+                <h1>Saúde Nampula</h1>
+            </div>
+            <!-- <ul class="nav-links">
+                <li><a href="home.html">Início</a></li>
+                <li><a href="hospital.html">Hospitais</a></li>
+                <li><a href="centros.html">Centros de Saúde</a></li>
+                <li><a href="farm.html">Farmácias</a></li>
+                <li><a href="emer.html">Emergências</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+            </ul> -->
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Área da Farmácia</h2>
+                <p>Acesse o painel de gestão da sua farmácia</p>
+            </div>
+
+            <div id="erroMensagem" class="erro-mensagem"></div>
+            <div id="sucessoMensagem" class="sucesso-mensagem"></div>
+
+            <!-- Abas -->
+            <div class="tabs">
+                <div class="tab ativo" onclick="mudarAba('login')">Entrar</div>
+                <div class="tab" onclick="mudarAba('primeiroAcesso')">Primeiro Acesso</div>
+            </div>
+
+            <!-- Aba de Login -->
+            <div id="abaLogin" class="tab-content ativo">
+                <form onsubmit="event.preventDefault(); fazerLogin();">
+                    <div class="form-group">
+                        <label for="farmaciaSelect">Selecione sua Farmácia</label>
+                        <select id="farmaciaSelect" required>
+                            <option value="">Carregando farmácias...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="senha">Sua Senha</label>
+                        <input type="password" id="senha" placeholder="Digite sua senha" required>
+                    </div>
+
+                    <button type="submit" class="btn-login">Entrar no Painel</button>
+                </form>
+            </div>
+
+            <!-- Aba de Primeiro Acesso -->
+            <div id="abaPrimeiroAcesso" class="tab-content">
+                <div class="info-box">
+                    <strong>Primeiro acesso?</strong>
+                    <p>Se é a primeira vez que acessa, selecione sua farmácia e crie uma senha de acesso.</p>
+                    <p style="margin-top: 10px; font-size: 0.85rem;">Guarde bem sua senha, pois será necessária para
+                        acessos futuros.</p>
+                </div>
+
+                <form onsubmit="event.preventDefault(); mostrarModalPrimeiroAcesso();">
+                    <div class="form-group">
+                        <label for="novaFarmaciaSelect">Selecione sua Farmácia</label>
+                        <select id="novaFarmaciaSelect" required>
+                            <option value="">Carregando farmácias...</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-cadastrar">
+                         Criar minha senha de acesso
+                    </button>
+                </form>
+            </div>
+
+            <!-- <a href="farm.html" class="link-voltar">← Voltar para Farmácias</a> -->
+        </div>
+
+        <!-- Modal de Criação de Senha (Primeiro Acesso) -->
+        <div id="modalPrimeiroAcesso" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3> Criar Senha de Acesso</h3>
+                    <button class="close-modal" onclick="fecharModalPrimeiroAcesso()">&times;</button>
+                </div>
+
+                <div id="infoFarmaciaEscolhida" class="info-farmacia">
+                    Carregando...
+                </div>
+
+                <div id="modalErro" class="erro-mensagem"></div>
+
+                <form onsubmit="event.preventDefault(); criarSenhaPrimeiroAcesso();">
+                    <div class="form-group">
+                        <label for="novaSenha">Crie sua senha</label>
+                        <input type="password" id="novaSenha" placeholder="Digite uma senha segura"
+                            onkeyup="verificarForcaSenha()" required minlength="4">
+                        <div class="senha-requisitos">Mínimo 4 caracteres</div>
+                        <div id="forcaSenha" class="senha-forte" style="margin-top: 10px;">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmarSenha">Confirmar senha</label>
+                        <input type="password" id="confirmarSenha" placeholder="Digite a senha novamente" required>
+                    </div>
+
+                    <button type="submit" class="btn-cadastrar">
+                        Salvar e Acessar Painel
+                    </button>
+                </form>
+
+                <p style="text-align: center; margin-top: 20px; font-size: 0.85rem; color: #6b7280;">
+                    Esta senha será usada para todos os acessos futuros da sua farmácia.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Saúde Nampula - Plataforma de Saúde Comunitária</p>
+        <p class="footer-subtitle">Melhorando o acesso à saúde em Nampula</p>
+    </footer>
+
+    <!-- Adicionar antes dos outros scripts -->
+<script src="JS/api-config.js"></script>
+
+    <script src="JS/login-farmacia.js"></script>
+</body>
+
+</html>

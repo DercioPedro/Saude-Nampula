@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Saúde Nampula</title>
+    <link rel="stylesheet" href="/styles/admin-panel.css">
+    <link rel="icon" type="image/png" href="/img/monitor.png">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="header-left">
+            <div class="logo-small">
+                <img src="/img/monitor.png" alt="Saúde Nampula">
+            </div>
+            <div class="header-title">
+                <h1>Painel Administrativo</h1>
+                <p>Saúde Nampula</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-name" id="nomeUsuario">Administrador</div>
+                <div class="user-role">Gestor do Sistema</div>
+            </div>
+            <button class="btn-logout" onclick="sair()">Sair</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Hospitais</div>
+                    <div class="stat-icon" style="background: #dbeafe; color: #1e40af;"><img src="/img/hospital.png"
+                            alt=""></div>
+                </div>
+                <div class="stat-value" id="contadorHospitais">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Centros de Saúde</div>
+                    <div class="stat-icon" style="background: #d1fae5; color: #047857;"><img src="/img/centros.png"
+                            alt=""></div>
+                </div>
+                <div class="stat-value" id="contadorCentros">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Farmácias</div>
+                    <div class="stat-icon" style="background: #e9d5ff; color: #7c3aed;"><img src="/img/comprimidos.png"
+                            alt=""></div>
+                </div>
+                <div class="stat-value" id="contadorFarmacias">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Emergências</div>
+                    <div class="stat-icon" style="background: #fee2e2; color: #dc2626;"><img src="/img/call.png" alt="">
+                    </div>
+                </div>
+                <div class="stat-value" id="contadorEmergencias">0</div>
+            </div>
+        </div>
+
+        <!-- Management Section -->
+        <div class="management-section">
+            <div class="section-header">
+                <h2 class="section-title">Gerenciar Recursos</h2>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" onclick="mudarAba('hospitais')">Hospitais</button>
+                <button class="tab" onclick="mudarAba('centros')">Centros de Saúde</button>
+                <button class="tab" onclick="mudarAba('farmacias')">Farmácias</button>
+                <button class="tab" onclick="mudarAba('emergencias')">Emergências</button>
+                <button class="tab" onclick="mudarAba('avaliacoes')">⭐ Avaliações</button>
+            </div>
+
+            <!-- Tab Content: Hospitais -->
+            <div id="aba-hospitais" class="tab-content active">
+                <button class="btn-add" onclick="abrirModalAdicionar('hospital')">
+                    <span>+</span> Adicionar Hospital
+                </button>
+                <div class="table-container" style="margin-top: 20px;">
+                    <table id="tabelaHospitais">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Endereço</th>
+                                <th>Telefone</th>
+                                <th>Horário</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpoHospitais">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Content: Centros -->
+            <div id="aba-centros" class="tab-content">
+                <button class="btn-add" onclick="abrirModalAdicionar('centro')">
+                    <span>+</span> Adicionar Centro de Saúde
+                </button>
+                <div class="table-container" style="margin-top: 20px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Endereço</th>
+                                <th>Telefone</th>
+                                <th>Horário</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpoCentros">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Content: Farmácias -->
+            <div id="aba-farmacias" class="tab-content">
+                <button class="btn-add" onclick="abrirModalAdicionar('farmacia')">
+                    <span>+</span> Adicionar Farmácia
+                </button>
+                <div class="table-container" style="margin-top: 20px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Endereço</th>
+                                <th>Telefone</th>
+                                <th>Horário</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpoFarmacias">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Content: Emergências -->
+            <div id="aba-emergencias" class="tab-content">
+                <button class="btn-add" onclick="abrirModalAdicionar('emergencia')">
+                    <span>+</span> Adicionar Contato de Emergência
+                </button>
+                <div class="table-container" style="margin-top: 20px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Tipo</th>
+                                <th>Telefone</th>
+                                <th>Disponibilidade</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpoEmergencias">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Conteúdo da aba -->
+<div id="aba-avaliacoes" class="tab-content">
+    <h3>⭐ Gerenciar Avaliações</h3>
+    
+    <div class="filtros-avaliacoes" style="margin-bottom: 20px;">
+        <select id="filtroTipoAvaliacao" onchange="carregarAvaliacoesAdmin()">
+            <option value="">Todos os tipos</option>
+            <option value="site">Site</option>
+            <option value="farmacia">Farmácias</option>
+            <option value="hospital">Hospitais</option>
+            <option value="centro">Centros de Saúde</option>
+        </select>
+    </div>
+    
+    <div class="table-container">
+        <table id="tabelaAvaliacoes">
+            <thead>
+                <tr><th>Data</th><th>Nome</th><th>Nota</th><th>Comentário</th><th>Resposta</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="corpoAvaliacoes"></tbody>
+        </table>
+    </div>
+    
+    <!-- Modal de resposta -->
+    <div id="modalResposta" class="modal" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💬 Responder Avaliação</h3>
+                <button class="btn-close" onclick="fecharModalResposta()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Comentário do usuário:</label>
+                <p id="comentarioOriginal" style="background:#f3f4f6; padding:10px; border-radius:8px;"></p>
+            </div>
+            <div class="form-group">
+                <label>Sua resposta:</label>
+                <textarea id="respostaTexto" rows="4" style="width:100%; padding:10px; border-radius:8px;"></textarea>
+            </div>
+            <div class="form-actions">
+                <button class="btn-cancel" onclick="fecharModalResposta()">Cancelar</button>
+                <button class="btn-submit" onclick="enviarResposta()">Enviar Resposta</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="tituloModal">Adicionar Item</h3>
+                <button class="btn-close" onclick="fecharModal()">&times;</button>
+            </div>
+            <form id="formularioItem">
+                <div id="camposFormulario"></div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+                    <button type="submit" class="btn-submit">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Adicionar antes dos outros scripts -->
+    <script src="JS/api-config.js"></script>
+
+    <script src="JS/admin-panel.js"></script>
+    <script src="JS/avaliacoes.js"></script>
+</body>
+
+</html>

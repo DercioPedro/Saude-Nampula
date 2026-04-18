@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saúde Nampula - Informações de Saúde</title>
+    <link rel="stylesheet" href="styles/info.css">
+    <link rel="icon" type="image/png" href="/img/monitor.png">
+
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="/img/monitor.png" alt="Saúde Nampula">
+                </div>
+                <h1>Saúde Nampula</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Início</a></li>
+                <li><a href="hospital.html">Hospitais</a></li>
+                <li><a href="centros.html">Centros de Saúde</a></li>
+                <li><a href="farm.html">Farmácias</a></li>
+                <li><a href="emer.html">Emergências</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Conteudo -->
+    <main>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2>Informações de Saúde</h2>
+            <p>Aprenda sobre prevenção, cuidados e bem-estar</p>
+        </div>
+
+        <!-- Topics Grid -->
+        <div class="topics-grid">
+            <!-- Malária -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <div class="topic-icon"><img src="/img/mosquito.png" alt=""></div>
+                    <h3>Prevenção de Malária</h3>
+                    <p>Proteja-se contra a malária com medidas simples e eficazes</p>
+                </div>
+                <div class="topic-content">
+                    <ul class="topic-list">
+                        <li>Use redes mosquiteiras tratadas</li>
+                        <li>Elimine água parada</li>
+                        <li>Use repelente de insectos</li>
+                        <li>Mantenha portas e janelas fechadas ao anoitecer</li>
+                    </ul>
+                    <button class="read-more" onclick="document.getElementById('malaria-section').scrollIntoView({behavior: 'smooth'})">
+                        Ler Mais
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vacinação -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <div class="topic-icon"><img src="/img/vacina.png" alt="Vacinação"></div>
+                    <h3>Calendário de Vacinação</h3>
+                    <p>Mantenha as vacinas em dia para proteger sua saúde</p>
+                </div>
+                <div class="topic-content">
+                    <ul class="topic-list">
+                        <li>Recém-nascidos: BCG e Pólio</li>
+                        <li>2 meses: Pentavalente e Rotavírus</li> 
+                        <li>9 meses: Sarampo</li>
+                        <li>Adultos: Tétano e COVID-19</li>
+                    </ul>
+                    <button class="read-more" onclick="document.getElementById('vacinacao-section').scrollIntoView({behavior: 'smooth'})">
+                        Ler Mais
+                    </button>
+                </div>
+            </div>
+
+            <!-- Primeiros Socorros -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <div class="topic-icon"><img src="/img/" alt=""></div>
+                    <h3>Primeiros Socorros</h3>
+                    <p>Saiba como agir em situações de emergência</p>
+                </div>
+                <div class="topic-content">
+                    <ul class="topic-list">
+                        <li>Avalie a situação com calma</li>
+                        <li>Ligue para emergência (119)</li>
+                        <li>Não mova vítimas de acidentes</li>
+                        <li>Controle sangramentos com pressão</li>
+                    </ul>
+                    <button class="read-more" onclick="document.getElementById('primeiros-socorros-section').scrollIntoView({behavior: 'smooth'})">
+                        Ler Mais
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seccao de Malária -->
+        <div class="detailed-section" id="malaria-section">
+            <h3><img src="/img/mosquito.png" alt=""> Prevenção e Tratamento da Malária</h3>
+            
+            <p>A malária é uma doença grave transmitida pela picada do mosquito Anopheles infectado. Em Moçambique, especialmente em Nampula, a malária é endémica e requer atenção constante.</p>
+
+            <h4>Como Prevenir:</h4>
+            <ul>
+                <li>Durma sob uma rede mosquiteira tratada com insecticida todas as noites</li>
+                <li>Use repelente de insectos, especialmente ao anoitecer e à noite</li>
+                <li>Vista roupas de manga comprida e calças ao anoitecer</li>
+                <li>Elimine água parada ao redor de casa (pneus, latas, vasos)</li>
+                <li>Mantenha portas e janelas com redes de protecção</li>
+                <li>Pulverize interiores com insecticida conforme recomendação</li>
+            </ul>
+
+            <h4>Sintomas da Malária:</h4>
+            <ul>
+                <li>Febre alta (acima de 38°C)</li>
+                <li>Calafrios e tremores</li>
+                <li>Dores de cabeça intensas</li>
+                <li>Dores musculares e nas articulações</li>
+                <li>Náuseas e vómitos</li>
+                <li>Fadiga extrema</li>
+            </ul>
+
+            <div class="alert-box">
+                <h5>⚠️ Atenção!</h5>
+                <p>Se apresentar febre e outros sintomas, procure imediatamente um centro de saúde. A malária pode ser fatal se não tratada rapidamente, especialmente em crianças e grávidas.</p>
+            </div>
+
+            <h4>Tratamento:</h4>
+            <p>O tratamento da malária deve ser feito com medicamentos antimaláricos prescritos por profissionais de saúde. Nunca se automedique. O tratamento precoce é essencial para evitar complicações graves.</p>
+
+            <div class="success-box">
+                <h5>✓ Importante Saber</h5>
+                <p>O teste de malária e tratamento são pagos em todos os centros de saúde públicos de Nampula. Procure atendimento ao primeiro sinal de sintomas.</p>
+            </div>
+        </div>
+
+        <!-- Seccao de Vacinação -->
+        <div class="detailed-section" id="vacinacao-section">
+            <h3> <img src="/img/vacina.png" alt="">Calendário Nacional de Vacinação</h3>
+            
+            <p>A vacinação é uma das formas mais eficazes de prevenir doenças graves. Manter o calendário de vacinação em dia protege não apenas você, mas toda a comunidade.</p>
+
+            <h4>Vacinas para Crianças:</h4>
+            
+            <p><strong>Ao Nascer:</strong></p>
+            <ul>
+                <li>BCG (Tuberculose) - dose única</li>
+                <li>Pólio oral (VOP) - dose zero</li>
+            </ul>
+
+            <p><strong>2 Meses:</strong></p>
+            <ul>
+                <li>Pentavalente (Difteria, Tétano, Tosse Convulsa, Hepatite B, Haemophilus) - 1ª dose</li>
+                <li>VIP (Pólio inactivada) - 1ª dose</li>
+                <li>Rotavírus - 1ª dose</li>
+                <li>Pneumocócica 13 - 1ª dose</li>
+            </ul>
+
+            <p><strong>3 Meses:</strong></p>
+            <ul>
+                <li>Pentavalente - 2ª dose</li>
+                <li>VOP (Pólio oral) - 2ª dose</li>
+            </ul>
+
+            <p><strong>4 Meses:</strong></p>
+            <ul>
+                <li>Pentavalente - 3ª dose</li>
+                <li>VIP - 2ª dose</li>
+                <li>Rotavírus - 2ª dose</li>
+                <li>Pneumocócica 13 - 2ª dose</li>
+            </ul>
+
+            <p><strong>9 Meses:</strong></p>
+            <ul>
+                <li>Sarampo - 1ª dose</li>
+                <li>Febre Amarela - dose única</li>
+            </ul>
+
+            <p><strong>18 Meses:</strong></p>
+            <ul>
+                <li>Sarampo - 2ª dose (reforço)</li>
+                <li>DTP (Difteria, Tétano, Tosse Convulsa) - 1º reforço</li>
+                <li>VOP - 1º reforço</li>
+            </ul>
+
+            <h4>Vacinas para Adultos:</h4>
+            <ul>
+                <li>Tétano - reforço a cada 10 anos</li>
+                <li>COVID-19 - conforme campanhas nacionais</li>
+                <li>Grávidas: Tétano (2 doses durante a gravidez)</li>
+            </ul>
+
+            <div class="success-box">
+                <h5>✓ Onde Vacinar</h5>
+                <p>Todas as vacinas do Programa Nacional de Vacinação são gratuitas e estão disponíveis nos centros de saúde e postos de vacinação de Nampula. Leve sempre o cartão de vacinação.</p>
+            </div>
+        </div>
+
+        <!-- Detailed Section: Primeiros Socorros -->
+        <div class="detailed-section" id="primeiros-socorros-section">
+            <h3>🩹 Guia Básico de Primeiros Socorros</h3>
+            
+            <p>Saber prestar primeiros socorros pode salvar vidas. Estas orientações básicas ajudam em situações de emergência enquanto aguarda ajuda profissional.</p>
+
+            <h4>1. Avaliação Inicial:</h4>
+            <ul>
+                <li>Mantenha a calma e avalie a situação</li>
+                <li>Verifique se há perigos no local</li>
+                <li>Ligue imediatamente para 119 (Ambulância)</li>
+                <li>Não coloque sua vida em risco</li>
+            </ul>
+
+            <h4>2. Verificação de Sinais Vitais:</h4>
+            <ul>
+                <li>Verifique se a pessoa está consciente (fale com ela)</li>
+                <li>Observe se está respirando (veja o peito subir e descer)</li>
+                <li>Sinta o pulso no pescoço ou punho</li>
+            </ul>
+
+            <h4>3. Hemorragias (Sangramentos):</h4>
+            <ul>
+                <li>Pressione firmemente o local com pano limpo</li>
+                <li>Mantenha a pressão por pelo menos 10 minutos</li>
+                <li>Não remova o pano se encharcar, adicione mais por cima</li>
+                <li>Eleve o membro ferido acima do coração (se possível)</li>
+            </ul>
+
+            <div class="alert-box">
+                <h5>⚠️ Nunca Faça</h5>
+                <p>Não aplique torniquete (amarrar) a menos que seja absolutamente necessário e você saiba como fazer. Não tente remover objectos cravados. Não mova vítimas de acidentes graves.</p>
+            </div>
+
+            <h4>4. Queimaduras:</h4>
+            <ul>
+                <li>Resfrie imediatamente com água corrente (10-15 minutos)</li>
+                <li>Não aplique gelo, pasta de dente ou outros produtos</li>
+                <li>Cubra com pano limpo e húmido</li>
+                <li>Procure atendimento médico para queimaduras graves</li>
+            </ul>
+
+            <h4>5. Desmaios:</h4>
+            <ul>
+                <li>Deite a pessoa de costas</li>
+                <li>Eleve as pernas (cerca de 30cm)</li>
+                <li>Afrouxe roupas apertadas</li>
+                <li>Mantenha as vias aéreas desobstruídas</li>
+                <li>Vire a cabeça de lado se houver vómito</li>
+            </ul>
+
+            <h4>6. Engasgamento:</h4>
+            <ul>
+                <li>Incentive a pessoa a tossir forte</li>
+                <li>Se não conseguir tossir: aplique 5 pancadas nas costas</li>
+                <li>Depois faça compressões abdominais (Manobra de Heimlich)</li>
+                <li>Alterne até desobstruir ou chegar ajuda médica</li>
+            </ul>
+
+            <h4>7. Fraturas (Ossos Partidos):</h4>
+            <ul>
+                <li>NÃO tente colocar o osso no lugar</li>
+                <li>Imobilize o membro com tala improvisada</li>
+                <li>Aplique gelo (envolvido em pano) para reduzir inchaço</li>
+                <li>Não movimente a vítima desnecessariamente</li>
+            </ul>
+
+            <div class="success-box">
+                <h5>✓ Lembre-se Sempre</h5>
+                <p>Em caso de dúvida, ligue para 119 e siga as orientações do operador. Primeiros socorros são temporários - a vítima sempre precisa de avaliação médica profissional.</p>
+            </div>
+
+            <h4>Kit Básico de Primeiros Socorros:</h4>
+            <p>Tenha em casa:</p>
+            <ul>
+                <li>Gaze esterilizada e ataduras</li>
+                <li>Esparadrapo e pensos rápidos</li>
+                <li>Tesoura e pinça</li>
+                <li>Luvas descartáveis</li>
+                <li>Antisséptico (álcool 70% ou iodo)</li>
+                <li>Termómetro</li>
+                <li>Soro fisiológico</li>
+                <li>Números de emergência anotados</li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Saúde Nampula - Plataforma de Saúde Comunitária</p>
+        <p class="footer-subtitle">Melhorando o acesso à saúde em Nampula</p>
+    </footer>
+
+    <!-- Adicionar antes dos outros scripts -->
+<script src="JS/api-config.js"></script>
+</body>
+</html>

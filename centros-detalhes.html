@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Centro - Saúde Nampula</title>
+    <link rel="stylesheet" href="styles/centros-detalhes.css">
+    <link rel="icon" type="image/png" href="/img/monitor.png">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="/img/monitor.png" alt="Saúde Nampula">
+                </div>
+                <h1>Saúde Nampula</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Início</a></li>
+                <li><a href="hospital.html">Hospitais</a></li>
+                <li><a href="centros.html" class="active">Centros de Saúde</a></li>
+                <li><a href="farm.html">Farmácias</a></li>
+                <li><a href="emer.html">Emergências</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+                <li><a href="admin-login.html" class="admin-link"
+                        style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600;">🔐
+                        Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="home.html">Início</a>
+            <span>›</span>
+            <a href="centros.html">Centros de Saúde</a>
+            <span>›</span>
+            <span id="breadcrumb-nome">Carregando...</span>
+        </div>
+
+        <!-- Centro Header -->
+        <div class="centro-header-section">
+            <div class="centro-info">
+                <div class="centro-icon-large"><img src="/img/centros.png" alt=""></div>
+                <div>
+                    <h1 id="centro-nome">Carregando...</h1>
+                    <p class="centro-bairro-tag" id="centro-bairro">Bairro</p>
+                </div>
+            </div>
+            <div class="centro-actions">
+                <button class="btn-ligar" onclick="ligar()">
+                    <span><img src="/img/call.png" alt=""></span> Ligar Agora
+                </button>
+                <button class="btn-mapa" onclick="verNoMapa()">
+                    <span><img src="/img/ponto.png" alt=""></span> Como Chegar
+                </button>
+            </div>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="info-cards-grid">
+            <div class="info-card info-card-green">
+                <div class="info-card-icon"><img src="/img/clock.png" alt=""></div>
+                <div>
+                    <p class="info-label">Horário de Atendimento</p>
+                    <p class="info-value" id="centro-horario">-</p>
+                </div>
+            </div>
+
+            <div class="info-card info-card-blue">
+                <div class="info-card-icon"><img src="/img/ponto.png" alt=""></div>
+                <div>
+                    <p class="info-label">Localização</p>
+                    <p class="info-value" id="centro-endereco">-</p>
+                </div>
+            </div>
+
+            <div class="info-card info-card-purple">
+                <div class="info-card-icon"><img src="/img/call.png" alt=""></div>
+                <div>
+                    <p class="info-label">Contacto</p>
+                    <p class="info-value" id="centro-telefone">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="content-grid">
+            <!-- Serviços Disponíveis -->
+            <div class="section-card servicos-card">
+                <h2>
+                    <span class="section-icon"><img src="/img/centros.png" alt=""></span>
+                    Serviços de Saúde
+                </h2>
+                <div class="servicos-grid" id="servicos-grid">
+                    <p class="loading-text">Carregando serviços...</p>
+                </div>
+            </div>
+
+            <!-- Horários e Marcações -->
+            <div class="section-card">
+                <h2>
+                    <span class="section-icon"><img src="/img/details.png" alt=""></span>
+                    Horários e Marcações
+                </h2>
+                <div class="horarios-info">
+                    <div class="horario-item">
+                        <span class="horario-icon"><img src="/img/clock.png" alt=""></span>
+                        <div>
+                            <strong>Consultas Gerais</strong>
+                            <p>Segunda a Sexta: 07:00 - 15:30</p>
+                        </div>
+                    </div>
+                    <div class="horario-item">
+                        <span class="horario-icon"><img src="/img/vacina.png" alt=""></span>
+                        <div>
+                            <strong>Vacinação</strong>
+                            <p>Segunda a Sexta: 07:00 - 12:00</p>
+                        </div>
+                    </div>
+                    <div class="horario-item">
+                        <span class="horario-icon"><img src="/img/gravida.png" alt=""></span>
+                        <div>
+                            <strong>Pré-natal</strong>
+                            <p>Terça e Quinta: 07:00 - 15:30</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="marcacao-box">
+                    <p>📌 <strong>Importante:</strong> Para marcar consultas, contacte o centro durante o horário de
+                        funcionamento.</p>
+                </div>
+            </div>
+
+            <!-- O que Trazer -->
+            <div class="section-card trazer-card">
+                <h2>
+                    <span class="section-icon"><img src="/img/details.png" alt=""></span>
+                    O que Trazer
+                </h2>
+                <ul class="checklist">
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <div>
+                            <strong>Bilhete de Identidade</strong>
+                            <p>Documento de identificação válido</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <div>
+                            <strong>Cartão de Saúde</strong>
+                            <p>Se já tiver sido atendido antes</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <div>
+                            <strong>Histórico Médico</strong>
+                            <p>Receitas e exames anteriores</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <div>
+                            <strong>Caderneta de Vacinação</strong>
+                            <p>Para crianças e vacinação</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Dicas Importantes -->
+            <div class="section-card dicas-card">
+                <h2>
+                    <span class="section-icon">💡</span>
+                    Dicas para sua Visita
+                </h2>
+                <div class="dicas-list">
+                    <div class="dica-item">
+                        <span class="dica-numero">1</span>
+                        <div>
+                            <strong>Chegue Cedo</strong>
+                            <p>O atendimento começa às 07:00. Chegue cedo para evitar filas.</p>
+                        </div>
+                    </div>
+                    <div class="dica-item">
+                        <span class="dica-numero">2</span>
+                        <div>
+                            <strong>Traga Água</strong>
+                            <p>Mantenha-se hidratado enquanto aguarda atendimento.</p>
+                        </div>
+                    </div>
+                    <div class="dica-item">
+                        <span class="dica-numero">3</span>
+                        <div>
+                            <strong>Pergunte</strong>
+                            <p>Não hesite em tirar dúvidas com os profissionais de saúde.</p>
+                        </div>
+                    </div>
+                    <div class="dica-item">
+                        <span class="dica-numero">4</span>
+                        <div>
+                            <strong>Guarde as Receitas</strong>
+                            <p>Mantenha todas as receitas e documentos médicos organizados.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mapa -->
+            <div class="section-card map-card">
+                <h2>
+                    <span class="section-icon"><img src="/img/map.png" alt=""></span>
+                    Como Chegar
+                </h2>
+                <div class="map-placeholder">
+                    <div class="map-icon"><img src="/img/ponto.png" alt=""></div>
+                    <p id="endereco-completo">Endereço do centro</p>
+                    <div class="map-actions">
+                        <button class="btn-directions" onclick="obterDirecoes()">
+                            <img src="/img/ponto.png" alt=""> Obter Direções GPS
+                        </button>
+                        <button class="btn-share-location" onclick="compartilharLocalizacao()">
+                            📤 Compartilhar Localização
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="bottom-actions">
+            <button class="btn-back" onclick="window.location.href='centros.html'">
+                ← Voltar para Centros de Saúde
+            </button>
+            <button class="btn-emergency" onclick="window.location.href='emer.html'">
+                🚨 Contactos de Emergência
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Saúde Nampula - Plataforma de Saúde Comunitária</p>
+        <p class="footer-subtitle">Melhorando o acesso à saúde em Nampula</p>
+    </footer>
+
+    <!-- Adicionar antes dos outros scripts -->
+<script src="JS/api-config.js"></script>
+    <script src="JS/centros-detalhes.js"></script>
+</body>
+
+</html>

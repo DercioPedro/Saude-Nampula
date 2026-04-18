@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Hospital - Saúde Nampula</title>
+    <link rel="stylesheet" href="styles/hospital-detalhes.css">
+    <link rel="icon" type="image/png" href="/img/monitor.png">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="/img/monitor.png" alt="Saúde Nampula">
+                </div>
+                <h1>Saúde Nampula</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Início</a></li>
+                <li><a href="hospital.html" class="active">Hospitais</a></li>
+                <li><a href="centros.html">Centros de Saúde</a></li>
+                <li><a href="farm.html">Farmácias</a></li>
+                <li><a href="emer.html">Emergências</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+                <!-- <li><a href="admin-login.html" class="admin-link"
+                        style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600;">🔐
+                        Admin</a></li> -->
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="home.html">Início</a>
+            <span>›</span>
+            <a href="hospital.html">Hospitais</a>
+            <span>›</span>
+            <span id="breadcrumb-nome">Carregando...</span>
+        </div>
+
+        <!-- Hospital Header -->
+        <div class="hospital-header-section">
+            <div class="hospital-info">
+                <div class="hospital-icon-large"><img src="img/hospital.png" alt=""></div>
+                <div>
+                    <h1 id="hospital-nome">Carregando...</h1>
+                    <p class="hospital-tipo">Hospital</p>
+                </div>
+            </div>
+            <div class="hospital-actions">
+                <button class="btn-ligar" onclick="ligar()">
+                    <span><img src="/img/call.png" alt=""></span> Ligar Agora
+                </button>
+                <button class="btn-mapa" onclick="verNoMapa()">
+                    <span><img src="/img/ponto.png" alt=""></span> Ver no Mapa
+                </button>
+            </div>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="info-cards-grid">
+            <div class="info-card">
+                <div class="info-card-icon"><img src="/img/clock.png" alt=""></div>
+                <div>
+                    <p class="info-label">Horário</p>
+                    <p class="info-value" id="hospital-horario">-</p>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-icon"><img src="/img/ponto.png" alt=""></div>
+                <div>
+                    <p class="info-label">Endereço</p>
+                    <p class="info-value" id="hospital-endereco">-</p>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-icon"><img src="/img/call.png" alt=""></div>
+                <div>
+                    <p class="info-label">Telefone</p>
+                    <p class="info-value" id="hospital-telefone">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="content-grid">
+            <!-- Serviços -->
+            <div class="section-card">
+                <h2>
+                    <span class="section-icon"><img src="/img/service.png" alt=""></span>
+                    Serviços Disponíveis
+                </h2>
+                <div class="servicos-list" id="servicos-list">
+                    <p class="loading-text">Carregando serviços...</p>
+                </div>
+            </div>
+
+            <!-- Informações Adicionais -->
+            <div class="section-card">
+                <h2>
+                    <span class="section-icon"><img src="/img/info.png" alt=""></span>
+                    Informações Importantes
+                </h2>
+                <div class="info-list">
+                    <div class="info-item">
+                        <span class="info-item-icon">✓</span>
+                        <div>
+                            <strong>Atendimento de Emergência</strong>
+                            <p>Disponível 24 horas para casos urgentes</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-item-icon">✓</span>
+                        <div>
+                            <strong>Documentos Necessários</strong>
+                            <p>Bilhete de identidade e cartão do seguro (se aplicável)</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-item-icon">✓</span>
+                        <div>
+                            <strong>Marcação de Consultas</strong>
+                            <p>Contacte a recepção para agendar consultas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dicas -->
+            <div class="section-card tips-card">
+                <h2>
+                    <span class="section-icon"></span>
+                    Dicas para sua Visita
+                </h2>
+                <ul class="tips-list">
+                    <li>Chegue com antecedência para consultas marcadas</li>
+                    <li>Leve todos os exames e receitas anteriores</li>
+                    <li>Em caso de emergência, dirija-se diretamente às urgências</li>
+                    <li>Mantenha seus documentos atualizados</li>
+                </ul>
+            </div>
+
+            <!-- Mapa Placeholder -->
+            <div class="section-card map-card">
+                <h2>
+                    <span class="section-icon"><img src="/img/ponto.png" alt=""></span>
+                    Localização
+                </h2>
+                <div class="map-placeholder">
+                    <div class="map-icon"><img src="/img/map.png" alt=""></div>
+                    <p>Mapa da localização</p>
+                    <button class="btn-directions" onclick="obterDirecoes()">
+                        <img src="/img/ponto.png" alt=""> Obter Direções
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="bottom-actions">
+            <button class="btn-back" onclick="window.location.href='hospital.html'">
+                ← Voltar para Lista de Hospitais
+            </button>
+            <button class="btn-compartilhar" onclick="compartilhar()">
+                <img src="/img/share.png" alt=""> Compartilhar
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Saúde Nampula - Plataforma de Saúde Comunitária</p>
+        <p class="footer-subtitle">Melhorando o acesso à saúde em Nampula</p>
+    </footer>
+
+    <!-- Adicionar antes dos outros scripts -->
+<script src="JS/api-config.js"></script>
+
+    <script src="JS/hospital-detalhes.js"></script>
+</body>
+
+</html>

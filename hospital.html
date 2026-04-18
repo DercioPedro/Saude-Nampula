@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saúde Nampula - Hospitais</title>
+    <link rel="stylesheet" href="styles/hospital.css">
+    <link rel="icon" type="image/png" href="/img/monitor.png">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="/img/monitor.png" alt="Saúde Nampula">
+                </div>
+                <h1>Saúde Nampula</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Início</a></li>
+                <li><a href="hospital.html" class="active">Hospitais</a></li>
+                <li><a href="centros.html">Centros de Saúde</a></li>
+                <li><a href="farm.html">Farmácias</a></li>
+                <li><a href="emer.html">Emergências</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+                <!-- <li><a href="admin-login.html" class="admin-link"
+                        style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600;">🔐
+                        Admin</a></li> -->
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Conteudo -->
+    <main>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2>Hospitais em Nampula</h2>
+            <button class="map-btn">
+                <span><img src="/img/ponto.png" alt=""></span>
+                Ver no Mapa
+            </button>
+        </div>
+
+        <!-- Os hospitais serão carregados dinamicamente aqui -->
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Saúde Nampula - Plataforma de Saúde Comunitária</p>
+        <p class="footer-subtitle">Melhorando o acesso à saúde em Nampula</p>
+    </footer>
+
+    <!-- Script para carregar hospitais dinamicamente -->
+     <!-- Adicionar antes dos outros scripts -->
+<script src="JS/api-config.js"></script>
+    <script src="JS/load-hospitais.js"></script>
+</body>
+
+</html>

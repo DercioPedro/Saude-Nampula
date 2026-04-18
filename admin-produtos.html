@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saúde Nampula - Gestão de Produtos</title>
+    <link rel="stylesheet" href="styles/farm.css">
+    <link rel="icon" type="image/png" href="/img/monitor.png">
+    <link rel="stylesheet" href="/styles/admin-produtos.css">
+    
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="/img/monitor.png" alt="Saúde Nampula">
+                </div>
+                <h1>Saúde Nampula</h1>
+            </div>
+            <!-- <ul class="nav-links">
+                <li><a href="home.html">Início</a></li>
+                <li><a href="hospital.html">Hospitais</a></li>
+                <li><a href="centros.html">Centros de Saúde</a></li>
+                <li><a href="farm.html">Farmácias</a></li>
+                <li><a href="emer.html">Emergências</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+            </ul> -->
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="admin-container">
+        <!-- Cabeçalho com informações da farmácia logada -->
+        <div id="farmaciaInfoHeader" class="farmacia-info-header">
+            <!-- Será preenchido dinamicamente -->
+        </div>
+
+        <!-- Botão Adicionar Produto -->
+        <button class="btn-adicionar" onclick="mostrarFormularioProduto()">
+            <i class="fa-solid fa-plus"></i> Adicionar Novo Produto
+        </button>
+
+        <!-- Formulário de Produto -->
+        <div id="formProduto" class="form-produto">
+            <h3 id="formTitulo">➕ Adicionar Novo Produto</h3>
+            <input type="hidden" id="produtoId" value="">
+            <input type="hidden" id="farmaciaId" value="">
+
+            <div class="form-grid">
+                <div class="campo-form">
+                    <label for="produtoNome">Nome do Produto *</label>
+                    <input type="text" id="produtoNome" placeholder="Ex: Paracetamol 500mg" required>
+                </div>
+
+                <div class="campo-form">
+                    <label for="produtoCategoria">Categoria *</label>
+                    <select id="produtoCategoria" required>
+                        <option value="">Selecione...</option>
+                        <option value="Medicamento">Medicamento</option>
+                        <option value="Genérico">Medicamento Genérico</option>
+                        <option value="Cosmético">Cosmético</option>
+                        <option value="Higiene">Higiene</option>
+                        <option value="Suplemento">Suplemento</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+
+                <div class="campo-form">
+                    <label for="produtoPreco">Preço (MZN) *</label>
+                    <input type="number" id="produtoPreco" placeholder="Ex: 150" min="0" step="0.01" required>
+                </div>
+
+                <div class="campo-form">
+                    <label for="produtoQuantidade">Quantidade em Stock *</label>
+                    <input type="number" id="produtoQuantidade" placeholder="Ex: 100" min="0" required>
+                </div>
+
+                <div class="campo-form">
+                    <label for="produtoFabricante">Fabricante</label>
+                    <input type="text" id="produtoFabricante" placeholder="Ex: Laboratório X">
+                </div>
+
+                <div class="campo-form">
+                    <label for="produtoValidade">Data de Validade</label>
+                    <input type="date" id="produtoValidade">
+                </div>
+            </div>
+
+            <div class="campo-form">
+                <label for="produtoDescricao">Descrição</label>
+                <textarea id="produtoDescricao" placeholder="Descrição do produto..."></textarea>
+            </div>
+
+            <div class="acoes-form">
+                <button class="btn-cancelar" onclick="fecharFormularioProduto()">Cancelar</button>
+                <button class="btn-salvar" onclick="salvarProduto()">Salvar Produto</button>
+            </div>
+        </div>
+
+        <!-- Lista de Produtos -->
+        <div class="produtos-lista">
+            <div class="produtos-header">
+                <h3> Meus Produtos</h3>
+                <div class="filtros-produtos">
+                    <select id="filtroCategoria" onchange="filtrarProdutos()">
+                        <option value="">Todas as categorias</option>
+                        <option value="Medicamento"> Medicamentos</option>
+                        <option value="Genérico">Genéricos</option>
+                        <option value="Cosmético"> Cosméticos</option>
+                        <option value="Higiene">Higiene</option>
+                        <option value="Suplemento">Suplementos</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="produtosContainer">
+                <div class="loading">Carregando produtos...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Saúde Nampula - Plataforma de Saúde Comunitária</p>
+        <p class="footer-subtitle">Melhorando o acesso à saúde em Nampula</p>
+    </footer>
+
+    <!-- Toast de notificação -->
+    <div id="toast" class="toast"></div>
+    
+    <!-- Adicionar antes dos outros scripts -->
+<script src="JS/api-config.js"></script>
+    <script src="/JS/admin-produtos.js"></script>
+</body>
+
+</html>

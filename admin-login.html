@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Administrador - Saúde Nampula</title>
+    <link rel="stylesheet" href="/styles/admin-login.css">
+    <link rel="icon" type="image/png" href="/img/monitor.png">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    <path d="M2 17l10 5 10-5" />
+                    <path d="M2 12l10 5 10-5" />
+                </svg>
+            </div>
+            <h1>Painel Administrativo</h1>
+            <p class="subtitle">Faça login para gerenciar o sistema</p>
+        </div>
+
+        <div id="alert" class="alert"></div>
+
+        <form id="loginForm">
+            <div class="form-grupo">
+                <label for="username">Nome de Usuário</label>
+                <input type="text" id="username" name="username" placeholder="Digite seu nome de usuário" required>
+            </div>
+
+            <div class="form-grupo">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            </div>
+
+            <button type="submit" class="btn-login">Entrar no Painel</button>
+        </form>
+
+        <div class="back-link">
+            <a href="home.html">← Voltar para página inicial</a>
+        </div>
+
+    </div>
+
+
+    <!-- Adicionar antes dos outros scripts -->
+    <script src="JS/api-config.js"></script>
+    <script src="/JS/admin-login.js"></script>
+</body>
+
+</html>
