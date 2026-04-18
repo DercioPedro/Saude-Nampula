@@ -1,13 +1,23 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/$1" }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" }
-      ]
-    }
+    { "source": "/", "destination": "/home.html" },
+    { "source": "/home", "destination": "/home.html" },
+    { "source": "/farm", "destination": "/farm.html" },
+    { "source": "/hospital", "destination": "/hospital.html" },
+    { "source": "/centros", "destination": "/centros.html" },
+    { "source": "/emer", "destination": "/emer.html" },
+    { "source": "/sobre", "destination": "/sobre.html" },
+    { "source": "/info", "destination": "/info.html" },
+    { "source": "/admin-login", "destination": "/admin-login.html" },
+    { "source": "/admin-panel", "destination": "/admin-panel.html" },
+    { "source": "/admin-produtos", "destination": "/admin-produtos.html" },
+    { "source": "/login-farmacia", "destination": "/login-farmacia.html" },
+    { "source": "/medicamentos", "destination": "/medicamentos.html" },
+    { "source": "/detalhes-farmacia", "destination": "/detalhes-farmacia.html" },
+    { "source": "/centros-detalhes", "destination": "/centros-detalhes.html" },
+    { "source": "/hospital-detalhes", "destination": "/hospital-detalhes.html" },
+    { "source": "/JS/(.*)", "destination": "/JS/$1" },
+    { "source": "/styles/(.*)", "destination": "/styles/$1" },
+    { "source": "/img/(.*)", "destination": "/img/$1" }
   ]
 }
