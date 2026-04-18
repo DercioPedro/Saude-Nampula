@@ -1,0 +1,10 @@
+        body {
+            background: #f3f4f6;
+            min-height: 100vh;
+        }
+
+        .medicamentos-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }

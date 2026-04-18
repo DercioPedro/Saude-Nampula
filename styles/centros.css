@@ -1,0 +1,307 @@
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f9fafb;
+        color: #1f2937;
+    }
+
+
+
+    /* Navigation */
+    nav {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        color: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .logo-icon {
+        /* background: white; */
+        padding: 0.5rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo-icon img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .logo h1 {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        list-style: none;
+    }
+
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: background 0.3s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Main Content */
+    main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    /* Page Header */
+    .page-header {
+        margin-bottom: 2rem;
+    }
+
+    .page-header h2 {
+        font-size: 2.5rem;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+        color: #6b7280;
+        font-size: 1.1rem;
+    }
+
+    /* Filter Section */
+    .filter-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        border: 2px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-label {
+        font-weight: 600;
+        color: #374151;
+        font-size: 1rem;
+    }
+
+    .filter-select {
+        flex: 1;
+        min-width: 250px;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: #374151;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .filter-select:hover {
+        border-color: #059669;
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: #059669;
+        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+    }
+
+    .filter-icon {
+        font-size: 1.5rem;
+    }
+
+    /* Centros Grid */
+    .centros-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* Centro Card */
+    .centro-card {
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 1.75rem;
+        transition: all 0.3s;
+    }
+
+    .centro-card:hover {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+        border-color: #059669;
+    }
+
+    .centro-header {
+        display: flex;
+        align-items: start;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .centro-icon {
+        color: #059669;
+        font-size: 2.5rem;
+        flex-shrink: 0;
+    }
+
+    .centro-icon img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .centro-title h3 {
+        font-size: 1.2rem;
+        color: #1f2937;
+        margin-bottom: 0.25rem;
+    }
+
+    .centro-bairro {
+        display: inline-block;
+        background: #d1fae5;
+        color: #047857;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    /* Centro Details */
+    .centro-details {
+        display: grid;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #4b5563;
+        font-size: 0.95rem;
+    }
+
+    .detail-icon {
+        color: #059669;
+    }
+
+
+    .detail-icon img {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Services List */
+    .services-list {
+        background: #f9fafb;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .services-list p {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+
+    .services-list ul {
+        list-style: none;
+        display: grid;
+        gap: 0.25rem;
+    }
+
+    .services-list li {
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    .services-list li::before {
+        content: "✓ ";
+        color: #059669;
+        font-weight: bold;
+        margin-right: 0.25rem;
+    }
+
+    /* Action Button */
+    .info-btn {
+        width: 100%;
+        background: #059669;
+        color: white;
+        border: none;
+        padding: 0.875rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .info-btn:hover {
+        background: #047857;
+    }
+
+    /* Footer */
+    footer {
+        background: #1f2937;
+        color: white;
+        padding: 2rem;
+        text-align: center;
+        margin-top: 3rem;
+    }
+
+    footer p {
+        margin-bottom: 0.5rem;
+    }
+
+    .footer-subtitle {
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .nav-links {
+            display: none;
+        }
+
+        .page-header h2 {
+            font-size: 2rem;
+        }
+
+        .centros-grid {
+            grid-template-columns: 1fr;
+        }
+    }
