@@ -1,4 +1,4 @@
-// avaliacoes.js - Versão atualizada com respostas
+// avaliacoes.js - Versão corrigida (usa API_BASE_URL)
 
 class SistemaAvaliacoes {
     constructor() {
@@ -6,7 +6,8 @@ class SistemaAvaliacoes {
         this.notaSelecionada = 0;
         this.tipo = 'site';
         this.tipoId = null;
-        this.apiUrl = 'http://localhost:5000/api';
+        // 👇 CORRIGIDO: usa a URL do api-config.js
+        this.apiUrl = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : 'http://localhost:5000/api';
     }
     
     async init(containerId, tipo = 'site', tipoId = null) {
@@ -18,6 +19,8 @@ class SistemaAvaliacoes {
             console.error('Container não encontrado:', containerId);
             return;
         }
+        
+        console.log('🌐 API URL:', this.apiUrl);
         
         await this.renderizar();
         await this.carregarAvaliacoes();
@@ -112,6 +115,7 @@ class SistemaAvaliacoes {
                 url += `&tipo_id=${this.tipoId}`;
             }
             
+            console.log('📡 Buscando avaliações:', url);
             const response = await fetch(url);
             const avaliacoes = await response.json();
             
@@ -257,6 +261,7 @@ class SistemaAvaliacoes {
 let sistemaAvaliacoes = null;
 
 function inicializarAvaliacoes(containerId, tipo = 'site', tipoId = null) {
+    if (sistemaAvaliacoes) return;
     sistemaAvaliacoes = new SistemaAvaliacoes();
     sistemaAvaliacoes.init(containerId, tipo, tipoId);
 }
