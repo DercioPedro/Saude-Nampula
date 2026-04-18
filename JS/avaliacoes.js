@@ -20,7 +20,7 @@ class SistemaAvaliacoes {
             return;
         }
         
-        console.log('🌐 API URL:', this.apiUrl);
+        // console.log('🌐 API URL:', this.apiUrl);
         
         await this.renderizar();
         await this.carregarAvaliacoes();
@@ -115,7 +115,7 @@ class SistemaAvaliacoes {
                 url += `&tipo_id=${this.tipoId}`;
             }
             
-            console.log('📡 Buscando avaliações:', url);
+            // console.log('📡 Buscando avaliações:', url);
             const response = await fetch(url);
             const avaliacoes = await response.json();
             
