@@ -5,7 +5,7 @@ const isProduction = window.location.hostname !== 'localhost' && window.location
 
 // URL da API - muda automaticamente conforme o ambiente
 const API_BASE_URL = isProduction 
-    ? 'https://seu-backend.onrender.com/api'  // 👈 SUBSTITUA PELA URL DO RENDER
+    ? 'https://saude-nampula-api.onrender.com/api'  // 👈 SUBSTITUA PELA URL DO RENDER
     : 'http://localhost:5000/api';
 
 console.log(`🌐 Ambiente: ${isProduction ? 'PRODUÇÃO' : 'DESENVOLVIMENTO'}`);
