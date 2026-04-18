@@ -64,9 +64,7 @@ function mostrarMensagemVazia(gridElement) {
             <span style="font-size: 48px; display: block; margin-bottom: 16px;">💊</span>
             <h3 style="font-size: 24px; color: #1f2937; margin-bottom: 16px;">Nenhuma farmácia cadastrada</h3>
             <p style="color: #6b7280; margin-bottom: 20px;">As farmácias cadastradas aparecerão aqui.</p>
-            <button onclick="window.location.href='admin-login.html'" style="background: #7c3aed; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">
-                🔐 Acessar Painel Admin
-            </button>
+         
         </div>
     `;
     gridElement.parentNode.insertBefore(msg, gridElement.nextSibling);
