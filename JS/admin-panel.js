@@ -1,4 +1,4 @@
-// admin-panel.js - Versão corrigida
+// admin-panel.js - Versão completa com coordenadas e telefone opcional
 
 let token = null;
 
@@ -52,7 +52,6 @@ function mudarAba(abaNome) {
     event.target.classList.add('active');
     document.getElementById('aba-' + abaNome).classList.add('active');
     
-    // Carregar dados específicos da aba
     if (abaNome === 'avaliacoes') {
         carregarAvaliacoesAdmin();
     }
@@ -73,19 +72,20 @@ async function carregarHospitais() {
         let corpo = document.getElementById('corpoHospitais');
 
         if (hospitais.length === 0) {
-            corpo.innerHTML = '<tr><td colspan="7" style="text-align: center;">Nenhum hospital cadastrado</td></tr>';
+            corpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum hospital cadastrado</td></tr>';
             return;
         }
 
         let html = '';
         for (let h of hospitais) {
+            const localizacao = h.latitude && h.longitude ? `${h.latitude}, ${h.longitude}` : (h.endereco || '-');
             html += `
                 <tr>
                     <td><strong>${h.nome}</strong></td>
-                    <td>${h.endereco}</td>
-                    <td>${h.telefone}</td>
-                    <td>${h.horario}</td>
-                    <td>${h.latitude ? h.latitude + ', ' + h.longitude : '-'}</td>
+                    <td>${h.endereco || '-'}</td>
+                    <td>${h.telefone || '-'}</td>
+                    <td>${h.horario || '-'}</td>
+                    <td>${localizacao}</td>
                     <td>
                         <div class="action-buttons">
                             <button class="btn-edit" onclick="editarItem('hospital', ${h.id})">Editar</button>
@@ -107,19 +107,20 @@ async function carregarCentros() {
         let corpo = document.getElementById('corpoCentros');
 
         if (centros.length === 0) {
-            corpo.innerHTML = '<td><td colspan="7" style="text-align: center;">Nenhum centro cadastrado</td></tr>';
+            corpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum centro cadastrado</td></tr>';
             return;
         }
 
         let html = '';
         for (let c of centros) {
+            const localizacao = c.latitude && c.longitude ? `${c.latitude}, ${c.longitude}` : (c.endereco || '-');
             html += `
                 <tr>
                     <td><strong>${c.nome}</strong></td>
-                    <td>${c.endereco}</td>
-                    <td>${c.telefone}</td>
-                    <td>${c.horario}</td>
-                    <td>${c.latitude ? c.latitude + ', ' + c.longitude : '-'}</td>
+                    <td>${c.endereco || '-'}</td>
+                    <td>${c.telefone || '-'}</td>
+                    <td>${c.horario || '-'}</td>
+                    <td>${localizacao}</td>
                     <td>
                         <div class="action-buttons">
                             <button class="btn-edit" onclick="editarItem('centro', ${c.id})">Editar</button>
@@ -141,19 +142,20 @@ async function carregarFarmacias() {
         let corpo = document.getElementById('corpoFarmacias');
 
         if (farmacias.length === 0) {
-            corpo.innerHTML = '<tr><td colspan="7" style="text-align: center;">Nenhuma farmácia cadastrada</td></tr>';
+            corpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhuma farmácia cadastrada</td></tr>';
             return;
         }
 
         let html = '';
         for (let f of farmacias) {
+            const localizacao = f.latitude && f.longitude ? `${f.latitude}, ${f.longitude}` : (f.endereco || '-');
             html += `
                 <tr>
                     <td><strong>${f.nome}</strong></td>
-                    <td>${f.endereco}</td>
-                    <td>${f.telefone}</td>
-                    <td>${f.horario}</td>
-                    <td>${f.latitude ? f.latitude + ', ' + f.longitude : '-'}</td>
+                    <td>${f.endereco || '-'}</td>
+                    <td>${f.telefone || '-'}</td>
+                    <td>${f.horario || '-'}</td>
+                    <td>${localizacao}</td>
                     <td>
                         <div class="action-buttons">
                             <button class="btn-edit" onclick="editarItem('farmacia', ${f.id})">Editar</button>
@@ -185,8 +187,8 @@ async function carregarEmergencias() {
                 <tr>
                     <td><strong>${e.nome}</strong></td>
                     <td>${e.tipo}</td>
-                    <td>${e.telefone}</td>
-                    <td>${e.disponibilidade}</td>
+                    <td>${e.telefone || '-'}</td>
+                    <td>${e.disponibilidade || '-'}</td>
                     <td>
                         <div class="action-buttons">
                             <button class="btn-edit" onclick="editarItem('emergencia', ${e.id})">Editar</button>
@@ -205,6 +207,7 @@ async function carregarEmergencias() {
 // ==================== AVALIAÇÕES ====================
 
 let avaliacaoAtualId = null;
+
 async function carregarAvaliacoesAdmin() {
     try {
         const tipo = document.getElementById('filtroTipoAvaliacao')?.value || '';
@@ -213,8 +216,6 @@ async function carregarAvaliacoesAdmin() {
             url += `?tipo=${tipo}`;
         }
 
-        console.log('Carregando avaliações...');
-        
         const result = await apiRequest(url, 'GET', null, token);
         const corpo = document.getElementById('corpoAvaliacoes');
 
@@ -249,7 +250,7 @@ async function carregarAvaliacoesAdmin() {
                             <button class="btn-delete" onclick="deletarAvaliacao(${av.id})">🗑️ Excluir</button>
                         </div>
                      </td>
-                 </tr>
+                </tr>
             `;
         }
         corpo.innerHTML = html;
@@ -257,9 +258,9 @@ async function carregarAvaliacoesAdmin() {
         console.error('Erro ao carregar avaliações:', error);
         const corpo = document.getElementById('corpoAvaliacoes');
         if (corpo) {
-            corpo.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">
+            corpo.innerHTML = `<td><td colspan="6" style="text-align:center; color:red;">
                 ❌ Erro ao carregar: ${error.message}
-              </td></tr>`;
+             </td></tr>`;
         }
     }
 }
@@ -277,12 +278,8 @@ function escapeHtml(texto) {
 
 function abrirModalResposta(id) {
     avaliacaoAtualId = id;
-    
-    // Encontrar a linha clicada
     const button = event.target;
     const row = button.closest('tr');
-    
-    // O comentário está na 4ª coluna (índice 3)
     const comentarioCell = row.cells[3];
     const comentario = comentarioCell.textContent;
     
@@ -400,51 +397,51 @@ function mostrarCamposFormulario(tipo) {
     if (tipo === 'hospital' || tipo === 'centro') {
         campos.innerHTML = `
             <div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div>
-            <div class="form-group"><label>Endereço *</label><input type="text" id="endereco" required></div>
-            <div class="form-group"><label>Telefone *</label><input type="tel" id="telefone" required></div>
-            <div class="form-group"><label>Horário *</label><input type="text" id="horario" required></div>
+            <div class="form-group"><label>Endereço</label><input type="text" id="endereco" placeholder="Opcional (usado se não houver coordenadas)"></div>
+            <div class="form-group"><label>Telefone</label><input type="tel" id="telefone" placeholder="Opcional"></div>
+            <div class="form-group"><label>Horário</label><input type="text" id="horario" placeholder="Ex: 24h ou 08:00-18:00"></div>
             <div class="form-group"><label>Serviços</label><textarea id="servicos" placeholder="Separados por vírgula"></textarea></div>
             
             <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
-                <h4>📍 Localização Exata (Opcional)</h4>
+                <h4>📍 Localização Exata (Recomendado)</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <div class="form-group"><label>Latitude</label><input type="text" id="latitude" placeholder="Ex: -15.1165"></div>
                     <div class="form-group"><label>Longitude</label><input type="text" id="longitude" placeholder="Ex: 39.2667"></div>
                 </div>
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <button type="button" class="btn-coordenadas" onclick="buscarCoordenadasPorEndereco()" style="background: #7c3aed; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
-                        🔍 Buscar Coordenadas
+                        🔍 Buscar Coordenadas pelo Endereço
                     </button>
                     <button type="button" class="btn-mapa" onclick="abrirMapaParaSelecionar()" style="background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
                         🗺️ Selecionar no Mapa
                     </button>
                 </div>
-                <small style="color: #6b7280;">Se não informar coordenadas, usaremos o endereço para localização.</small>
+                <small style="color: #6b7280;">⚠️ Se informar coordenadas, serão usadas para localização exata no mapa. O endereço será usado apenas como referência textual.</small>
             </div>
         `;
     } else if (tipo === 'farmacia') {
         campos.innerHTML = `
             <div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div>
-            <div class="form-group"><label>Endereço *</label><input type="text" id="endereco" required></div>
-            <div class="form-group"><label>Telefone *</label><input type="tel" id="telefone" required></div>
-            <div class="form-group"><label>Horário *</label><input type="text" id="horario" required></div>
+            <div class="form-group"><label>Endereço</label><input type="text" id="endereco" placeholder="Opcional (usado se não houver coordenadas)"></div>
+            <div class="form-group"><label>Telefone</label><input type="tel" id="telefone" placeholder="Opcional"></div>
+            <div class="form-group"><label>Horário</label><input type="text" id="horario" placeholder="Ex: 24h ou 08:00-18:00"></div>
             <div class="form-group"><label>Plantão</label><select id="plantao"><option value="false">Não</option><option value="true">Sim</option></select></div>
             
             <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
-                <h4>📍 Localização Exata (Opcional)</h4>
+                <h4>📍 Localização Exata (Recomendado)</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <div class="form-group"><label>Latitude</label><input type="text" id="latitude" placeholder="Ex: -15.1165"></div>
                     <div class="form-group"><label>Longitude</label><input type="text" id="longitude" placeholder="Ex: 39.2667"></div>
                 </div>
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <button type="button" class="btn-coordenadas" onclick="buscarCoordenadasPorEndereco()" style="background: #7c3aed; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
-                        🔍 Buscar Coordenadas
+                        🔍 Buscar Coordenadas pelo Endereço
                     </button>
                     <button type="button" class="btn-mapa" onclick="abrirMapaParaSelecionar()" style="background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
                         🗺️ Selecionar no Mapa
                     </button>
                 </div>
-                <small style="color: #6b7280;">Se não informar coordenadas, usaremos o endereço para localização.</small>
+                <small style="color: #6b7280;">⚠️ Se informar coordenadas, serão usadas para localização exata no mapa. O endereço será usado apenas como referência textual.</small>
             </div>
         `;
     } else if (tipo === 'emergencia') {
@@ -452,7 +449,7 @@ function mostrarCamposFormulario(tipo) {
             <div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div>
             <div class="form-group"><label>Tipo *</label><select id="tipo" required><option value="">Selecione...</option><option value="Ambulância">Ambulância</option><option value="Bombeiros">Bombeiros</option><option value="Polícia">Polícia</option><option value="Resgate">Resgate</option></select></div>
             <div class="form-group"><label>Telefone *</label><input type="tel" id="telefone" required></div>
-            <div class="form-group"><label>Disponibilidade *</label><input type="text" id="disponibilidade" value="24/7" required></div>
+            <div class="form-group"><label>Disponibilidade</label><input type="text" id="disponibilidade" value="24/7"></div>
         `;
     }
 }
@@ -477,24 +474,25 @@ async function editarItem(tipo, id) {
         mostrarCamposFormulario(tipo);
 
         document.getElementById('nome').value = item.nome;
+        
         if (tipo !== 'emergencia') {
-            document.getElementById('endereco').value = item.endereco || '';
+            if (document.getElementById('endereco')) document.getElementById('endereco').value = item.endereco || '';
+            if (document.getElementById('telefone')) document.getElementById('telefone').value = item.telefone || '';
+            if (document.getElementById('horario')) document.getElementById('horario').value = item.horario || '';
             if (document.getElementById('latitude')) {
                 document.getElementById('latitude').value = item.latitude || '';
                 document.getElementById('longitude').value = item.longitude || '';
             }
-        }
-        document.getElementById('telefone').value = item.telefone;
-
-        if (tipo === 'hospital' || tipo === 'centro') {
-            document.getElementById('horario').value = item.horario;
-            if (item.servicos) document.getElementById('servicos').value = item.servicos;
-        } else if (tipo === 'farmacia') {
-            document.getElementById('horario').value = item.horario;
-            document.getElementById('plantao').value = item.plantao ? 'true' : 'false';
-        } else if (tipo === 'emergencia') {
-            document.getElementById('tipo').value = item.tipo;
-            document.getElementById('disponibilidade').value = item.disponibilidade;
+            if (tipo === 'hospital' || tipo === 'centro') {
+                if (document.getElementById('servicos')) document.getElementById('servicos').value = item.servicos || '';
+            }
+            if (tipo === 'farmacia' && document.getElementById('plantao')) {
+                document.getElementById('plantao').value = item.plantao ? 'true' : 'false';
+            }
+        } else {
+            document.getElementById('telefone').value = item.telefone;
+            if (document.getElementById('tipo')) document.getElementById('tipo').value = item.tipo;
+            if (document.getElementById('disponibilidade')) document.getElementById('disponibilidade').value = item.disponibilidade;
         }
 
         document.getElementById('modal').classList.add('active');
@@ -517,13 +515,13 @@ document.getElementById('formularioItem').addEventListener('submit', async funct
     let endpoint = tipoAtual === 'hospital' ? '/hospitais' : tipoAtual === 'centro' ? '/centros' : tipoAtual === 'farmacia' ? '/farmacias' : '/emergencias';
 
     let dadosFormulario = {
-        nome: document.getElementById('nome').value,
-        telefone: document.getElementById('telefone').value
+        nome: document.getElementById('nome').value
     };
 
     if (tipoAtual === 'hospital' || tipoAtual === 'centro') {
-        dadosFormulario.endereco = document.getElementById('endereco').value;
-        dadosFormulario.horario = document.getElementById('horario').value;
+        dadosFormulario.endereco = document.getElementById('endereco').value || '';
+        dadosFormulario.telefone = document.getElementById('telefone').value || '';
+        dadosFormulario.horario = document.getElementById('horario').value || '';
         dadosFormulario.servicos = document.getElementById('servicos') ? document.getElementById('servicos').value : '';
         const latInput = document.getElementById('latitude');
         const lngInput = document.getElementById('longitude');
@@ -532,8 +530,9 @@ document.getElementById('formularioItem').addEventListener('submit', async funct
             dadosFormulario.longitude = parseFloat(lngInput.value);
         }
     } else if (tipoAtual === 'farmacia') {
-        dadosFormulario.endereco = document.getElementById('endereco').value;
-        dadosFormulario.horario = document.getElementById('horario').value;
+        dadosFormulario.endereco = document.getElementById('endereco').value || '';
+        dadosFormulario.telefone = document.getElementById('telefone').value || '';
+        dadosFormulario.horario = document.getElementById('horario').value || '';
         dadosFormulario.plantao = document.getElementById('plantao').value === 'true';
         const latInput = document.getElementById('latitude');
         const lngInput = document.getElementById('longitude');
@@ -543,6 +542,7 @@ document.getElementById('formularioItem').addEventListener('submit', async funct
         }
     } else if (tipoAtual === 'emergencia') {
         dadosFormulario.tipo = document.getElementById('tipo').value;
+        dadosFormulario.telefone = document.getElementById('telefone').value;
         dadosFormulario.disponibilidade = document.getElementById('disponibilidade').value;
     }
 
@@ -597,7 +597,6 @@ if (checkAuth()) {
     carregarInfoUsuario();
     atualizarContadores();
     carregarTabelas();
-    // Pequeno delay para garantir que o token está pronto
     setTimeout(() => {
         carregarAvaliacoesAdmin();
     }, 500);
