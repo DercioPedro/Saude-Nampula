@@ -1,50 +1,8 @@
-// centros-detalhes.js - Versão com priorização correta de coordenadas
+// centros-detalhes.js - Versão corrigida (funciona apenas com coordenadas)
 
 function getCentroId() {
     let params = new URLSearchParams(window.location.search);
     return params.get('id');
-}
-
-// Função para obter URL do Google Maps (prioriza coordenadas)
-function obterUrlGoogleMaps(centro) {
-    // PRIORIDADE: Se tem coordenadas, usa apenas elas
-    if (centro.latitude && centro.longitude) {
-        return `https://www.google.com/maps/search/?api=1&query=${centro.latitude},${centro.longitude}`;
-    }
-    // SÓ USA ENDEREÇO SE NÃO TIVER COORDENADAS
-    if (centro.endereco) {
-        const enderecoCompleto = encodeURIComponent(centro.endereco + ', Nampula, Moçambique');
-        return `https://www.google.com/maps/search/?api=1&query=${enderecoCompleto}`;
-    }
-    return '#';
-}
-
-// Função para obter URL do Waze (prioriza coordenadas)
-function obterUrlWaze(centro) {
-    // PRIORIDADE: Se tem coordenadas, usa apenas elas
-    if (centro.latitude && centro.longitude) {
-        return `https://www.waze.com/ul?ll=${centro.latitude},${centro.longitude}&navigate=yes`;
-    }
-    // SÓ USA ENDEREÇO SE NÃO TIVER COORDENADAS
-    if (centro.endereco) {
-        const enderecoCompleto = encodeURIComponent(centro.endereco + ', Nampula, Moçambique');
-        return `https://www.waze.com/ul?q=${enderecoCompleto}&navigate=yes`;
-    }
-    return '#';
-}
-
-// Função para obter URL de direções (prioriza coordenadas)
-function obterUrlDirecoes(centro) {
-    // PRIORIDADE: Se tem coordenadas, usa apenas elas
-    if (centro.latitude && centro.longitude) {
-        return `https://www.google.com/maps/dir/?api=1&destination=${centro.latitude},${centro.longitude}`;
-    }
-    // SÓ USA ENDEREÇO SE NÃO TIVER COORDENADAS
-    if (centro.endereco) {
-        const enderecoCompleto = encodeURIComponent(centro.endereco + ', Nampula, Moçambique');
-        return `https://www.google.com/maps/dir/?api=1&destination=${enderecoCompleto}`;
-    }
-    return '#';
 }
 
 // Função para verificar se tem coordenadas válidas
@@ -52,6 +10,53 @@ function temCoordenadas(centro) {
     return centro.latitude && centro.longitude && 
            !isNaN(centro.latitude) && !isNaN(centro.longitude) &&
            centro.latitude !== 0 && centro.longitude !== 0;
+}
+
+// Função para obter URL do Google Maps (usa coordenadas ou endereço)
+function obterUrlGoogleMaps(centro) {
+    if (temCoordenadas(centro)) {
+        return `https://www.google.com/maps/search/?api=1&query=${centro.latitude},${centro.longitude}`;
+    }
+    if (centro.endereco && centro.endereco !== 'Endereço não informado') {
+        const enderecoCompleto = encodeURIComponent(centro.endereco + ', Nampula, Moçambique');
+        return `https://www.google.com/maps/search/?api=1&query=${enderecoCompleto}`;
+    }
+    return null;
+}
+
+// Função para obter URL do Waze
+function obterUrlWaze(centro) {
+    if (temCoordenadas(centro)) {
+        return `https://www.waze.com/ul?ll=${centro.latitude},${centro.longitude}&navigate=yes`;
+    }
+    if (centro.endereco && centro.endereco !== 'Endereço não informado') {
+        const enderecoCompleto = encodeURIComponent(centro.endereco + ', Nampula, Moçambique');
+        return `https://www.waze.com/ul?q=${enderecoCompleto}&navigate=yes`;
+    }
+    return null;
+}
+
+// Função para obter URL de direções
+function obterUrlDirecoes(centro) {
+    if (temCoordenadas(centro)) {
+        return `https://www.google.com/maps/dir/?api=1&destination=${centro.latitude},${centro.longitude}`;
+    }
+    if (centro.endereco && centro.endereco !== 'Endereço não informado') {
+        const enderecoCompleto = encodeURIComponent(centro.endereco + ', Nampula, Moçambique');
+        return `https://www.google.com/maps/dir/?api=1&destination=${enderecoCompleto}`;
+    }
+    return null;
+}
+
+// Obter texto de localização para exibição
+function obterTextoLocalizacao(centro) {
+    if (temCoordenadas(centro)) {
+        return `📍 Coordenadas: ${centro.latitude}, ${centro.longitude}`;
+    }
+    if (centro.endereco && centro.endereco !== 'Endereço não informado') {
+        return `📍 ${centro.endereco}, Nampula`;
+    }
+    return '📍 Localização não informada';
 }
 
 async function carregarDetalhes() {
@@ -68,29 +73,34 @@ async function carregarDetalhes() {
         
         console.log('Centro carregado:', centro);
         console.log('Tem coordenadas?', temCoordenadas(centro));
-        if (temCoordenadas(centro)) {
-            console.log('Coordenadas:', centro.latitude, centro.longitude);
-        }
         
+        // Preencher informações básicas
         document.getElementById('breadcrumb-nome').textContent = centro.nome;
         document.getElementById('centro-nome').textContent = centro.nome;
         document.getElementById('centro-bairro').textContent = pegarNomeBairro(centro.endereco);
         document.getElementById('centro-horario').textContent = centro.horario || 'Horário não informado';
-        document.getElementById('centro-endereco').textContent = centro.endereco || 'Endereço não informado';
         document.getElementById('centro-telefone').textContent = centro.telefone || 'Telefone não informado';
-        document.getElementById('endereco-completo').textContent = (centro.endereco || 'Endereço não informado') + ', Nampula';
         
-        // Atualizar botões de mapa com coordenadas priorizadas
-        const urlGoogleMaps = obterUrlGoogleMaps(centro);
-        const urlWaze = obterUrlWaze(centro);
-        const urlDirecoes = obterUrlDirecoes(centro);
+        // Endereço (pode estar vazio se tiver coordenadas)
+        const enderecoElement = document.getElementById('centro-endereco');
+        if (enderecoElement) {
+            if (temCoordenadas(centro)) {
+                enderecoElement.textContent = `Coordenadas: ${centro.latitude}, ${centro.longitude}`;
+            } else {
+                enderecoElement.textContent = centro.endereco || 'Endereço não informado';
+            }
+        }
         
-        // Atualizar ou criar botões de navegação
-        atualizarBotoesNavegacao(urlGoogleMaps, urlWaze, urlDirecoes, temCoordenadas(centro));
+        // Texto completo da localização
+        const enderecoCompletoElement = document.getElementById('endereco-completo');
+        if (enderecoCompletoElement) {
+            enderecoCompletoElement.textContent = obterTextoLocalizacao(centro);
+        }
         
-        // Atualizar o placeholder do mapa
-        atualizarMapaPlaceholder(centro);
+        // Atualizar seção de mapa com prioridade para coordenadas
+        atualizarSecaoMapa(centro);
         
+        // Carregar serviços
         let servicosGrid = document.getElementById('servicos-grid');
         servicosGrid.innerHTML = '';
         
@@ -132,11 +142,13 @@ async function carregarDetalhes() {
             servicosGrid.innerHTML = '<p class="loading-text">Nenhum serviço cadastrado</p>';
         }
         
+        // Salvar dados globalmente
         window.centroTelefone = centro.telefone;
         window.centroNome = centro.nome;
         window.centroEndereco = centro.endereco;
         window.centroLatitude = centro.latitude;
         window.centroLongitude = centro.longitude;
+        window.centroTemCoordenadas = temCoordenadas(centro);
         
     } catch (error) {
         console.error('Erro ao carregar detalhes:', error);
@@ -145,105 +157,58 @@ async function carregarDetalhes() {
     }
 }
 
-function atualizarBotoesNavegacao(urlGoogleMaps, urlWaze, urlDirecoes, temCoordenadas) {
-    // Botão "Ver no Mapa"
-    const btnVerMapa = document.querySelector('.btn-mapa');
-    if (btnVerMapa) {
-        btnVerMapa.onclick = () => {
-            if (urlGoogleMaps !== '#') {
-                window.open(urlGoogleMaps, '_blank');
-            } else {
-                alert('Localização não disponível para este centro.');
-            }
-        };
+function atualizarSecaoMapa(centro) {
+    const mapaSection = document.querySelector('.map-card');
+    if (!mapaSection) return;
+    
+    const temCoord = temCoordenadas(centro);
+    const urlMapa = obterUrlGoogleMaps(centro);
+    const urlWaze = obterUrlWaze(centro);
+    const urlDirecoes = obterUrlDirecoes(centro);
+    const textoLocalizacao = obterTextoLocalizacao(centro);
+    
+    let botoesHTML = '';
+    
+    if (urlMapa) {
+        botoesHTML += `<button class="btn-mapa" onclick="window.open('${urlMapa}', '_blank')" style="flex:1; background:#ea4335; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;">🗺️ Ver no Mapa</button>`;
+    }
+    if (urlDirecoes) {
+        botoesHTML += `<button class="btn-directions" onclick="window.open('${urlDirecoes}', '_blank')" style="flex:1; background:#4285F4; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;">🧭 Como Chegar</button>`;
+    }
+    if (urlWaze) {
+        botoesHTML += `<button class="btn-waze" onclick="window.open('${urlWaze}', '_blank')" style="flex:1; background:#33CCFF; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;">🚗 Waze</button>`;
     }
     
-    // Botão "Como Chegar" / "Obter Direções"
-    const btnDirecoes = document.querySelector('.btn-directions');
-    if (btnDirecoes) {
-        btnDirecoes.onclick = () => {
-            if (urlDirecoes !== '#') {
-                window.open(urlDirecoes, '_blank');
-            } else {
-                alert('Localização não disponível para este centro.');
-            }
-        };
+    if (!botoesHTML) {
+        botoesHTML = '<p style="color:#ef4444;">⚠️ Localização não disponível para este centro</p>';
     }
     
-    // Botão Waze
-    const btnWaze = document.querySelector('.btn-waze');
-    if (btnWaze) {
-        btnWaze.onclick = () => {
-            if (urlWaze !== '#') {
-                window.open(urlWaze, '_blank');
-            } else {
-                alert('Localização não disponível para este centro.');
-            }
-        };
-    }
+    // Atualizar o conteúdo da seção de mapa
+    const mapPlaceholder = mapaSection.querySelector('.map-placeholder') || mapaSection;
+    mapPlaceholder.innerHTML = `
+        <div class="map-icon"><img src="/img/ponto.png" alt=""></div>
+        <p><strong>${temCoord ? '📍 Localização exata (GPS)' : '📍 Endereço'}</strong></p>
+        <p>${textoLocalizacao}</p>
+        <div class="map-actions" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+            ${botoesHTML}
+        </div>
+    `;
     
-    // Adicionar indicador visual se está usando coordenadas
-    if (temCoordenadas) {
-        const mapaContainer = document.querySelector('.map-card');
-        if (mapaContainer && !document.querySelector('.coordenadas-badge')) {
-            const badge = document.createElement('div');
+    // Adicionar badge se tiver coordenadas
+    if (temCoord && !document.querySelector('.coordenadas-badge')) {
+        const title = mapaSection.querySelector('h2');
+        if (title) {
+            const badge = document.createElement('span');
             badge.className = 'coordenadas-badge';
-            badge.style.cssText = 'background: #059669; color: white; padding: 4px 8px; border-radius: 20px; font-size: 11px; display: inline-block; margin-left: 10px;';
-            badge.innerHTML = '📍 Localização exata (GPS)';
-            const title = mapaContainer.querySelector('h2');
-            if (title) title.appendChild(badge);
+            badge.style.cssText = 'background: #059669; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-left: 10px;';
+            badge.innerHTML = '📍 GPS';
+            title.appendChild(badge);
         }
     }
 }
 
-function atualizarMapaPlaceholder(centro) {
-    const mapaPlaceholder = document.querySelector('.map-placeholder');
-    if (!mapaPlaceholder) return;
-    
-    const temCoord = temCoordenadas(centro);
-    const urlMapa = obterUrlGoogleMaps(centro);
-    
-    if (temCoord) {
-        // Mostrar mapa estático do Google Maps com as coordenadas
-        const staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centro.latitude},${centro.longitude}&zoom=15&size=400x200&markers=color:red|${centro.latitude},${centro.longitude}&key=AIzaSyDummyKey`; // Nota: Para usar mapa estático precisa de API key
-        // Como fallback, mostra apenas o link
-        mapaPlaceholder.innerHTML = `
-            <div class="map-icon"><img src="/img/ponto.png" alt=""></div>
-            <p><strong>📍 Localização exata (GPS)</strong></p>
-            <p class="coordenadas-text">Latitude: ${centro.latitude}, Longitude: ${centro.longitude}</p>
-            <div class="map-actions" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                <button class="btn-directions" onclick="window.open('${obterUrlDirecoes(centro)}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                    🧭 Obter Direções GPS
-                </button>
-                <button class="btn-waze" onclick="window.open('${obterUrlWaze(centro)}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                    🚗 Abrir no Waze
-                </button>
-                <button class="btn-mapa" onclick="window.open('${urlMapa}', '_blank')" style="flex: 1; background: #ea4335; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                    🗺️ Ver no Google Maps
-                </button>
-            </div>
-        `;
-    } else if (centro.endereco) {
-        mapaPlaceholder.innerHTML = `
-            <div class="map-icon"><img src="/img/ponto.png" alt=""></div>
-            <p>📍 ${centro.endereco}, Nampula</p>
-            <div class="map-actions" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                <button class="btn-directions" onclick="obterDirecoesPorEndereco()" style="flex: 1; background: #4285F4; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                    🧭 Obter Direções
-                </button>
-                <button class="btn-waze" onclick="abrirWazePorEndereco()" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                    🚗 Abrir no Waze
-                </button>
-                <button class="btn-mapa" onclick="verNoMapaPorEndereco()" style="flex: 1; background: #ea4335; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                    🗺️ Ver no Google Maps
-                </button>
-            </div>
-        `;
-    }
-}
-
 function pegarNomeBairro(endereco) {
-    if (!endereco) return 'Nampula';
+    if (!endereco || endereco === 'Endereço não informado') return 'Nampula';
     let bairros = ['mucatine', 'muhala', 'namicopo', 'centro', 'marrere', 'napipine'];
     let enderecoLower = endereco.toLowerCase();
     
@@ -255,35 +220,7 @@ function pegarNomeBairro(endereco) {
     return endereco.split(',')[0] || 'Nampula';
 }
 
-// Funções para quando não tem coordenadas (usa endereço)
-function verNoMapaPorEndereco() {
-    if (window.centroEndereco) {
-        let endereco = encodeURIComponent(window.centroEndereco + ', Nampula, Mozambique');
-        window.open('https://www.google.com/maps/search/?api=1&query=' + endereco, '_blank');
-    } else {
-        alert('Endereço não disponível para este centro.');
-    }
-}
-
-function obterDirecoesPorEndereco() {
-    if (window.centroEndereco) {
-        let endereco = encodeURIComponent(window.centroEndereco + ', Nampula, Mozambique');
-        window.open('https://www.google.com/maps/dir/?api=1&destination=' + endereco, '_blank');
-    } else {
-        alert('Endereço não disponível para este centro.');
-    }
-}
-
-function abrirWazePorEndereco() {
-    if (window.centroEndereco) {
-        let endereco = encodeURIComponent(window.centroEndereco + ', Nampula, Mozambique');
-        window.open('https://www.waze.com/ul?q=' + endereco + '&navigate=yes', '_blank');
-    } else {
-        alert('Endereço não disponível para este centro.');
-    }
-}
-
-// Funções principais usando coordenadas (prioridade)
+// Funções principais
 function ligar() {
     if (window.centroTelefone && window.centroTelefone !== 'Telefone não informado') {
         if (confirm('Deseja ligar para ' + window.centroTelefone + '?')) {
@@ -294,49 +231,26 @@ function ligar() {
     }
 }
 
-function verNoMapa() {
-    if (window.centroLatitude && window.centroLongitude) {
-        window.open(`https://www.google.com/maps/search/?api=1&query=${window.centroLatitude},${window.centroLongitude}`, '_blank');
-    } else if (window.centroEndereco) {
-        verNoMapaPorEndereco();
-    } else {
-        alert('Localização não disponível para este centro.');
-    }
-}
-
-function obterDirecoes() {
-    if (window.centroLatitude && window.centroLongitude) {
-        window.open(`https://www.google.com/maps/dir/?api=1&destination=${window.centroLatitude},${window.centroLongitude}`, '_blank');
-    } else if (window.centroEndereco) {
-        obterDirecoesPorEndereco();
-    } else {
-        alert('Localização não disponível para este centro.');
-    }
-}
-
-function abrirWaze() {
-    if (window.centroLatitude && window.centroLongitude) {
-        window.open(`https://www.waze.com/ul?ll=${window.centroLatitude},${window.centroLongitude}&navigate=yes`, '_blank');
-    } else if (window.centroEndereco) {
-        abrirWazePorEndereco();
-    } else {
-        alert('Localização não disponível para este centro.');
-    }
-}
-
 function compartilharLocalizacao() {
-    let texto = window.centroNome + '\n' + (window.centroEndereco || 'Endereço não informado') + ', Nampula';
-    if (navigator.share) {
-        navigator.share({ title: window.centroNome, text: texto }).catch(() => copiarEndereco());
+    let texto = window.centroNome + '\n';
+    if (window.centroTemCoordenadas) {
+        texto += `Coordenadas: ${window.centroLatitude}, ${window.centroLongitude}`;
+    } else if (window.centroEndereco && window.centroEndereco !== 'Endereço não informado') {
+        texto += window.centroEndereco + ', Nampula';
     } else {
-        copiarEndereco();
+        texto += 'Localização não disponível';
+    }
+    
+    if (navigator.share) {
+        navigator.share({ title: window.centroNome, text: texto }).catch(() => copiarTexto(texto));
+    } else {
+        copiarTexto(texto);
     }
 }
 
-function copiarEndereco() {
-    let texto = window.centroNome + '\n' + (window.centroEndereco || 'Endereço não informado') + ', Nampula';
+function copiarTexto(texto) {
     if (navigator.clipboard) {
-        navigator.clipboard.writeText(texto).then(() => alert('Endereço copiado!'));
+        navigator.clipboard.writeText(texto).then(() => alert('Localização copiada!'));
     } else {
         alert(texto);
     }
