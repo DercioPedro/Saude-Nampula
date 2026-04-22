@@ -1,4 +1,34 @@
-// load-hospitais.js - Versão com API
+// load-hospitais.js - Versão com API e priorização de coordenadas
+
+function obterUrlGoogleMaps(hospital) {
+    if (hospital.latitude && hospital.longitude) {
+        return `https://www.google.com/maps/search/?api=1&query=${hospital.latitude},${hospital.longitude}`;
+    } else if (hospital.endereco) {
+        const enderecoCompleto = encodeURIComponent(hospital.endereco + ', Nampula, Moçambique');
+        return `https://www.google.com/maps/search/?api=1&query=${enderecoCompleto}`;
+    }
+    return '#';
+}
+
+function obterUrlWaze(hospital) {
+    if (hospital.latitude && hospital.longitude) {
+        return `https://www.waze.com/ul?ll=${hospital.latitude},${hospital.longitude}&navigate=yes`;
+    } else if (hospital.endereco) {
+        const enderecoCompleto = encodeURIComponent(hospital.endereco + ', Nampula, Moçambique');
+        return `https://www.waze.com/ul?q=${enderecoCompleto}&navigate=yes`;
+    }
+    return '#';
+}
+
+function obterUrlDirecoes(hospital) {
+    if (hospital.latitude && hospital.longitude) {
+        return `https://www.google.com/maps/dir/?api=1&destination=${hospital.latitude},${hospital.longitude}`;
+    } else if (hospital.endereco) {
+        const enderecoCompleto = encodeURIComponent(hospital.endereco + ', Nampula, Moçambique');
+        return `https://www.google.com/maps/dir/?api=1&destination=${enderecoCompleto}`;
+    }
+    return '#';
+}
 
 async function carregarHospitais() {
     try {
@@ -43,7 +73,7 @@ function mostrarMensagemErroHospitais() {
         msg.innerHTML = `
             <div style="text-align: center; padding: 60px 20px;">
                 <h3 style="color: #b91c1c;">Erro ao carregar hospitais</h3>
-                <p>Verifique se o servidor está rodando em http://localhost:5000</p>
+                <p>Verifique se o servidor está rodando.</p>
             </div>
         `;
         main.appendChild(msg);
@@ -77,6 +107,13 @@ function criarCard(hospital) {
         `;
     }
     
+    const telefone = hospital.telefone || 'Telefone não informado';
+    const endereco = hospital.endereco || 'Endereço não informado';
+    const horario = hospital.horario || 'Horário não informado';
+    
+    const urlDirecoes = obterUrlDirecoes(hospital);
+    const urlWaze = obterUrlWaze(hospital);
+    
     card.innerHTML = `
         <div class="hospital-header">
             <div class="hospital-title">
@@ -88,19 +125,29 @@ function criarCard(hospital) {
         <div class="hospital-details">
             <div class="detail-item">
                 <span class="detail-icon"><img src="/img/ponto.png" alt=""></span>
-                <span>${hospital.endereco}</span>
+                <span>${endereco}</span>
             </div>
             <div class="detail-item">
                 <span class="detail-icon"><img src="/img/call.png" alt=""></span>
-                <span>${hospital.telefone}</span>
+                <span>${telefone}</span>
             </div>
             <div class="detail-item">
                 <span class="detail-icon"><img src="/img/clock.png" alt=""></span>
-                <span>${hospital.horario}</span>
+                <span>${horario}</span>
             </div>
         </div>
         ${htmlServicos}
-        <button class="details-btn" onclick="verDetalhes(${hospital.id})">Ver Detalhes</button>
+        <div class="button-container" style="display: flex; gap: 8px; margin-top: 15px;">
+            <button class="details-btn" onclick="verDetalhes(${hospital.id})" style="flex: 1;">📋 Ver Detalhes</button>
+        </div>
+        <div class="directions-container" style="display: flex; gap: 8px; margin-top: 10px;">
+            <button class="directions-btn" onclick="window.open('${urlDirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                🗺️ Como Chegar
+            </button>
+            <button class="waze-btn" onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                🚗 Waze
+            </button>
+        </div>
     `;
     
     return card;
