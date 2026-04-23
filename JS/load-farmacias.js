@@ -338,7 +338,7 @@ async function carregarMedicamentosDaFarmacia() {
                         <img src="/img/ponto.png" alt="Como Chegar" style="width: 16px; height: 16px; vertical-align: middle;"> Como Chegar (Google Maps)
                     </button>
                     <button onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                        <img src="/img/waze.png" alt="Waze" style="width: 16px; height: 16px; vertical-align: middle;"> Abrir no Waze
+                         Abrir no Waze
                     </button>
                 </div>
                 <div style="margin-top: 20px; text-align: center;">
@@ -412,7 +412,7 @@ async function carregarDetalhesDaFarmacia() {
                                     <img src="/img/call.png" alt="Ligar" style="width: 16px; height: 16px; vertical-align: middle;"> Ligar Agora
                                 </a>
                                 <a href="https://wa.me/258${(farmacia.telefone || '').replace(/[^0-9]/g, '')}" style="flex: 1; background: #25D366; color: white; text-decoration: none; padding: 12px; border-radius: 8px; text-align: center; font-weight: 600;">
-                                    <img src="/img/whatsapp.png" alt="WhatsApp" style="width: 16px; height: 16px; vertical-align: middle;"> WhatsApp
+                                    <img src="/img/call.png" alt="WhatsApp" style="width: 16px; height: 16px; vertical-align: middle;"> WhatsApp
                                 </a>
                             </div>
                             <div style="display: flex; gap: 10px;">
@@ -420,7 +420,7 @@ async function carregarDetalhesDaFarmacia() {
                                     <img src="/img/ponto.png" alt="Como Chegar" style="width: 14px; height: 14px;"> Como Chegar
                                 </button>
                                 <button onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                                    <img src="/img/waze.png" alt="Waze" style="width: 14px; height: 14px;"> Waze
+                                    Waze
                                 </button>
                             </div>
                         </div>
@@ -450,7 +450,7 @@ async function carregarDetalhesDaFarmacia() {
                         </div>
                         
                         <div style="background: #f9fafb; padding: 20px; border-radius: 12px;">
-                            <h3 style="color: #374151; margin-bottom: 15px;"><img src="/img/family.png" alt="Pagamento" style="width: 20px; height: 20px;"> Formas de Pagamento</h3>
+                            <h3 style="color: #374151; margin-bottom: 15px;"> Formas de Pagamento</h3>
                             <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                                 <span style="background: white; padding: 8px 12px; border-radius: 20px; font-size: 14px; border: 1px solid #e5e7eb;">Dinheiro</span>
                                 <span style="background: white; padding: 8px 12px; border-radius: 20px; font-size: 14px; border: 1px solid #e5e7eb;">Cartao</span>
