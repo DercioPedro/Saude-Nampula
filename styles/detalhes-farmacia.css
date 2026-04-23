@@ -1,10 +1,561 @@
-        body {
-            background: #f3f4f6;
-            min-height: 100vh;
-        }
+/* detalhes-farmacia.css - Responsivo para mobile */
 
-        .detalhes-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #f3f4f6;
+    color: #1f2937;
+    line-height: 1.5;
+}
+
+/* Container principal */
+.detalhes-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Card principal */
+.detalhes-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+/* Cabeçalho */
+.detalhes-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+    color: white;
+    flex-wrap: wrap;
+}
+
+.detalhes-header a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 30px;
+    transition: background 0.3s;
+}
+
+.detalhes-header a:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.detalhes-header h1 {
+    font-size: 22px;
+    margin: 0;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.detalhes-header h1 img {
+    width: 28px;
+    height: 28px;
+}
+
+.status-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Grid de informações */
+.info-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Cards de informação */
+.info-card {
+    background: #f9fafb;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.info-card h3 {
+    color: #374151;
+    margin-bottom: 15px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-card h3 img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Endereço */
+.endereco-box {
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 15px;
+}
+
+.endereco-box p {
+    color: #4b5563;
+    margin-bottom: 5px;
+}
+
+.endereco-box small {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* Botões de ação */
+.acoes-grid {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-ligar {
+    flex: 1;
+    background: #7c3aed;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-ligar:hover {
+    background: #6d28d9;
+    transform: translateY(-2px);
+}
+
+.btn-whatsapp {
+    flex: 1;
+    background: #25D366;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.btn-whatsapp:hover {
+    background: #1da851;
+    transform: translateY(-2px);
+}
+
+.btn-mapa {
+    flex: 1;
+    background: #4285F4;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.btn-mapa:hover {
+    background: #3367d6;
+    transform: translateY(-2px);
+}
+
+.btn-waze {
+    flex: 1;
+    background: #33CCFF;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.btn-waze:hover {
+    background: #00b8e6;
+    transform: translateY(-2px);
+}
+
+.btn-ligar img,
+.btn-whatsapp img,
+.btn-mapa img,
+.btn-waze img {
+    width: 18px;
+    height: 18px;
+}
+
+/* Horário */
+.horario-box {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.horario-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.horario-item:last-child {
+    border-bottom: none;
+}
+
+.horario-label {
+    font-weight: normal;
+    color: #6b7280;
+}
+
+.horario-valor {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.horario-24h {
+    color: #059669;
+}
+
+.horario-fechado {
+    color: #ef4444;
+}
+
+/* Estatísticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: bold;
+    color: #7c3aed;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 5px;
+}
+
+/* Formas de pagamento */
+.pagamento-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pagamento-item {
+    background: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    border: 1px solid #e5e7eb;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pagamento-item img {
+    width: 16px;
+    height: 16px;
+}
+
+/* Botões principais */
+.botoes-principais {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding: 0 20px 20px 20px;
+    flex-wrap: wrap;
+}
+
+.btn-medicamentos {
+    background: #059669;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.btn-medicamentos:hover {
+    background: #047857;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.btn-voltar {
+    background: white;
+    color: #7c3aed;
+    border: 2px solid #7c3aed;
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-voltar:hover {
+    background: #7c3aed;
+    color: white;
+}
+
+.btn-medicamentos img,
+.btn-voltar img {
+    width: 18px;
+    height: 18px;
+}
+
+/* Badge de GPS */
+.coordenadas-badge {
+    background: #059669;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+/* Loading */
+.loading {
+    text-align: center;
+    padding: 60px;
+    color: #6b7280;
+}
+
+.loading::after {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #7c3aed;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Erro */
+.error {
+    text-align: center;
+    padding: 60px;
+    color: #ef4444;
+    background: #fef2f2;
+    border-radius: 16px;
+}
+
+/* ==================== RESPONSIVO MOBILE ==================== */
+
+@media (max-width: 768px) {
+    .detalhes-container {
+        padding: 12px;
+    }
+    
+    /* Cabeçalho */
+    .detalhes-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 16px;
+    }
+    
+    .detalhes-header h1 {
+        justify-content: center;
+        font-size: 20px;
+    }
+    
+    .status-badge {
+        font-size: 11px;
+    }
+    
+    /* Grid de informações - uma coluna no mobile */
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .info-card {
+        padding: 15px;
+        margin-bottom: 0;
+    }
+    
+    .info-card h3 {
+        font-size: 16px;
+    }
+    
+    /* Botões de ação - empilhados no mobile */
+    .acoes-grid {
+        flex-direction: column;
+    }
+    
+    .btn-ligar,
+    .btn-whatsapp,
+    .btn-mapa,
+    .btn-waze {
+        width: 100%;
+    }
+    
+    /* Botões de navegação */
+    .botoes-principais {
+        flex-direction: column;
+        gap: 10px;
+        padding: 0 15px 15px 15px;
+    }
+    
+    .btn-medicamentos,
+    .btn-voltar {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Estatísticas */
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    /* Horário */
+    .horario-item {
+        font-size: 14px;
+    }
+    
+    /* Endereço */
+    .endereco-box {
+        font-size: 14px;
+    }
+    
+    /* Pagamento */
+    .pagamento-item {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+}
+
+/* Mobile pequeno (celulares menores) */
+@media (max-width: 480px) {
+    .detalhes-container {
+        padding: 8px;
+    }
+    
+    .detalhes-header h1 {
+        font-size: 18px;
+    }
+    
+    .info-card h3 {
+        font-size: 15px;
+    }
+    
+    .stat-number {
+        font-size: 24px;
+    }
+    
+    .btn-medicamentos,
+    .btn-voltar {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+    
+    .endereco-box p {
+        font-size: 13px;
+    }
+    
+    .btn-ligar,
+    .btn-whatsapp,
+    .btn-mapa,
+    .btn-waze {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+/* Tablet (entre 769px e 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .detalhes-container {
+        max-width: 90%;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Animação de entrada */
+.detalhes-card {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
