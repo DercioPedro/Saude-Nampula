@@ -175,9 +175,9 @@ function atualizarSecaoMapa(centro) {
     if (urlDirecoes) {
         botoesHTML += `<button class="btn-directions" onclick="window.open('${urlDirecoes}', '_blank')" style="flex:1; background:#4285F4; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;"> Como Chegar</button>`;
     }
-    if (urlWaze) {
-        botoesHTML += `<button class="btn-waze" onclick="window.open('${urlWaze}', '_blank')" style="flex:1; background:#33CCFF; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;"> Waze</button>`;
-    }
+    // if (urlWaze) {
+    //     botoesHTML += `<button class="btn-waze" onclick="window.open('${urlWaze}', '_blank')" style="flex:1; background:#33CCFF; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;"> Waze</button>`;
+    // }
     
     if (!botoesHTML) {
         botoesHTML = '<p style="color:#ef4444;">⚠️ Localização não disponível para este centro</p>';
