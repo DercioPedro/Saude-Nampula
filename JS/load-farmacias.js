@@ -34,9 +34,9 @@ function obterUrlDirecoes(item) {
 // Carregar farmácias da API
 async function carregarFarmacias() {
     try {
-        console.log('Carregando farmacias...');
+        // console.log('Carregando farmacias...');
         const farmacias = await apiRequest('/farmacias');
-        console.log('Farmacias recebidas:', farmacias);
+        // console.log('Farmacias recebidas:', farmacias);
         
         let farmaciasGrid = document.querySelector('.farmacias-grid');
         if (!farmaciasGrid) {
@@ -59,10 +59,10 @@ async function carregarFarmacias() {
             farmaciasGrid.appendChild(card);
         }
         
-        console.log("Farmacias carregadas com sucesso!");
+        // console.log("Farmacias carregadas com sucesso!");
         
     } catch (error) {
-        console.error('Erro ao carregar farmacias:', error);
+        // console.error('Erro ao carregar farmacias:', error);
         mostrarMensagemErro('Erro ao carregar farmacias. Tente novamente.');
     }
 }
@@ -167,7 +167,7 @@ function criarCardFarmacia(farmacia) {
                 <img src="/img/ponto.png" alt="Como Chegar" style="width: 14px; height: 14px;"> Como Chegar
             </button>
             <button class="waze-btn" onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                <img src="/img/waze.png" alt="Waze" style="width: 14px; height: 14px;"> Waze
+                 Waze
             </button>
         </div>
     `;
