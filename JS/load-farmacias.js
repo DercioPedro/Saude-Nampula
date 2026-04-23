@@ -418,19 +418,22 @@ async function carregarDetalhesDaFarmacia() {
                             </div>
                         </div>
                         
-                        <div style="background: #f9fafb; padding: 20px; border-radius: 12px;">
-                            <h3 style="color: #374151; margin-bottom: 15px;"> Horário de Funcionamento</h3>
-                            <div style="background: white; padding: 15px; border-radius: 8px;">
-                                ${farmacia.plantao ? 
-                                    '<div>Segunda a Domingo: <strong style="color: #059669;">24 horas</strong></div>' :
-                                    `<div>Segunda a Sexta: <strong>08:00 - 18:00</strong></div>
-                                     <div>Sábado: <strong>08:00 - 12:00</strong></div>
-                                     <div>Domingo: <strong style="color: #ef4444;">Fechado</strong></div>`
-                                }
-                            </div>
-                            ${farmacia.plantao ? '<p style="margin-top: 10px; color: #059669;">✅ Aberto 24 horas, inclusive feriados</p>' : '<p style="margin-top: 10px; color: #6b7280;">⚠️ Horário pode variar em feriados</p>'}
-                        </div>
-                    </div>
+                    // Horário de Funcionamento
+<div style="background: #f9fafb; padding: 20px; border-radius: 12px;">
+    <h3 style="color: #374151; margin-bottom: 15px;">🕒 Horário de Funcionamento</h3>
+    
+    <div style="background: white; padding: 15px; border-radius: 8px;">
+        ${farmacia.plantao ? 
+            '<div>Segunda a Domingo: <strong style="color: #059669;">24 horas</strong></div>' :
+            `<div>Horário: <strong>${farmacia.horario || '08:00 - 18:00'}</strong></div>`
+        }
+    </div>
+    
+    ${farmacia.plantao ? 
+        '<p style="margin-top: 10px; color: #059669;">✅ Aberto 24 horas, inclusive feriados</p>' : 
+        '<p style="margin-top: 10px; color: #6b7280;">⚠️ Horário pode variar em feriados</p>'
+    }
+</div>
                     
                     <div>
                         <div style="background: #f9fafb; padding: 20px; border-radius: 12px;">
