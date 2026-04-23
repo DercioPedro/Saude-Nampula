@@ -170,7 +170,7 @@ function atualizarSecaoMapa(centro) {
     let botoesHTML = '';
     
     if (urlMapa) {
-        botoesHTML += `<button class="btn-mapa" onclick="window.open('${urlMapa}', '_blank')" style="flex:1; background:#ea4335; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;"> Ver no Mapa</button>`;
+        botoesHTML += `<button class="btn-mapa" onclick="window.open('${urlMapa}', '_blank')" style="flex:1; background:#ea4335; text-align:center; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;"> Ver no Mapa</button>`;
     }
     if (urlDirecoes) {
         botoesHTML += `<button class="btn-directions" onclick="window.open('${urlDirecoes}', '_blank')" style="flex:1; background:#4285F4; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;"> Como Chegar</button>`;
