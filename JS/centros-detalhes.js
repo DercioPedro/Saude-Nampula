@@ -51,12 +51,12 @@ function obterUrlDirecoes(centro) {
 // Obter texto de localização para exibição
 function obterTextoLocalizacao(centro) {
     if (temCoordenadas(centro)) {
-        return `📍 Coordenadas: ${centro.latitude}, ${centro.longitude}`;
+        return ` Coordenadas: ${centro.latitude}, ${centro.longitude}`;
     }
     if (centro.endereco && centro.endereco !== 'Endereço não informado') {
-        return `📍 ${centro.endereco}, Nampula`;
+        return ` ${centro.endereco}, Nampula`;
     }
-    return '📍 Localização não informada';
+    return ' Localização não informada';
 }
 
 async function carregarDetalhes() {
@@ -170,13 +170,13 @@ function atualizarSecaoMapa(centro) {
     let botoesHTML = '';
     
     if (urlMapa) {
-        botoesHTML += `<button class="btn-mapa" onclick="window.open('${urlMapa}', '_blank')" style="flex:1; background:#ea4335; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;">🗺️ Ver no Mapa</button>`;
+        botoesHTML += `<button class="btn-mapa" onclick="window.open('${urlMapa}', '_blank')" style="flex:1; background:#ea4335; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;"> Ver no Mapa</button>`;
     }
     if (urlDirecoes) {
-        botoesHTML += `<button class="btn-directions" onclick="window.open('${urlDirecoes}', '_blank')" style="flex:1; background:#4285F4; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;">🧭 Como Chegar</button>`;
+        botoesHTML += `<button class="btn-directions" onclick="window.open('${urlDirecoes}', '_blank')" style="flex:1; background:#4285F4; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;"> Como Chegar</button>`;
     }
     if (urlWaze) {
-        botoesHTML += `<button class="btn-waze" onclick="window.open('${urlWaze}', '_blank')" style="flex:1; background:#33CCFF; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;">🚗 Waze</button>`;
+        botoesHTML += `<button class="btn-waze" onclick="window.open('${urlWaze}', '_blank')" style="flex:1; background:#33CCFF; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;"> Waze</button>`;
     }
     
     if (!botoesHTML) {
@@ -187,7 +187,7 @@ function atualizarSecaoMapa(centro) {
     const mapPlaceholder = mapaSection.querySelector('.map-placeholder') || mapaSection;
     mapPlaceholder.innerHTML = `
         <div class="map-icon"><img src="/img/ponto.png" alt=""></div>
-        <p><strong>${temCoord ? '📍 Localização exata (GPS)' : '📍 Endereço'}</strong></p>
+        <p><strong>${temCoord ? ' Localização exata (GPS)' : ' Endereço'}</strong></p>
         <p>${textoLocalizacao}</p>
         <div class="map-actions" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
             ${botoesHTML}
@@ -201,7 +201,7 @@ function atualizarSecaoMapa(centro) {
             const badge = document.createElement('span');
             badge.className = 'coordenadas-badge';
             badge.style.cssText = 'background: #059669; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-left: 10px;';
-            badge.innerHTML = '📍 GPS';
+            badge.innerHTML = ' GPS';
             title.appendChild(badge);
         }
     }
