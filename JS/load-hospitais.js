@@ -83,6 +83,7 @@ function mostrarMensagemErroHospitais() {
 function criarCard(hospital) {
     let card = document.createElement('div');
     card.className = 'hospital-card';
+    card.setAttribute('data-id', hospital.id);
     
     let servicos = [];
     if (hospital.servicos) {
