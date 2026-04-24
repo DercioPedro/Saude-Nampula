@@ -695,6 +695,113 @@ footer p {
     }
 }
 
+/* ==================== DARK MODE ==================== */
+
+/* Botão Dark Mode */
+.dark-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #7c3aed;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    z-index: 999;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+}
+
+.dark-mode-toggle:hover {
+    transform: scale(1.05);
+    background: #6d28d9;
+}
+
+/* Dark Mode - Corpo */
+.dark-mode {
+    background-color: #1a1a2e !important;
+    color: #e2e8f0 !important;
+}
+
+.dark-mode nav {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+}
+
+.dark-mode .nav-links a {
+    color: #e2e8f0 !important;
+}
+
+.dark-mode .nav-links a:hover,
+.dark-mode .nav-links a.active {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Cards */
+.dark-mode .card,
+.dark-mode .info-card,
+.dark-mode .hero {
+    background: #0d1117 !important;
+    border-color: #30363d !important;
+    color: #e2e8f0 !important;
+}
+
+.dark-mode .card h3,
+.dark-mode .info-card p {
+    color: #e2e8f0 !important;
+}
+
+.dark-mode .card p {
+    color: #9ca3af !important;
+}
+
+/* Barra de busca */
+.dark-mode .barra-busca {
+    background: #0d1117 !important;
+    border-color: #30363d !important;
+}
+
+.dark-mode .barra-busca input {
+    background: #0d1117 !important;
+    color: #e2e8f0 !important;
+}
+
+.dark-mode .barra-busca input::placeholder {
+    color: #6b7280 !important;
+}
+
+.dark-mode .barra-busca button {
+    background: #7c3aed !important;
+}
+
+/* Emergency Alert */
+.dark-mode .emergency-alerta {
+    background: linear-gradient(135deg, #7f1a1a 0%, #991b1b 100%) !important;
+}
+
+/* Info Section */
+.dark-mode .info-section {
+    background: #0d1117 !important;
+}
+
+.dark-mode .info-section h3 {
+    color: #e2e8f0 !important;
+}
+
+/* Footer */
+.dark-mode footer {
+    background: #0a0a0f !important;
+}
+
+.dark-mode footer p {
+    color: #9ca3af !important;
+}
+
+.dark-mode .footer-subtitle {
+    color: #6b7280 !important;
+}
+
 /* Animações */
 .avaliacao-item {
     animation: fadeInUp 0.5s ease;
