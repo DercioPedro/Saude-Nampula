@@ -82,6 +82,7 @@ function mostrarMensagemErroCentros() {
 function criarCardCentro(centro) {
     let card = document.createElement('div');
     card.className = 'centro-card';
+    card.setAttribute('data-id', centro.id);
     
     let bairro = pegarBairro(centro.endereco);
     card.setAttribute('data-bairro', bairro);
