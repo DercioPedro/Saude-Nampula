@@ -1,175 +1,634 @@
-/* darkmode.css - Estilos para modo escuro */
+/* ============================================
+   DARK MODE - SAÚDE NAMPULA
+   CSS unificado para todas as páginas
+   ============================================ */
 
-/* Modo Escuro - Toggle */
+/* Estilos base do Dark Mode */
 .dark-mode {
-    background-color: #1a1a2e !important;
-    color: #e2e8f0 !important;
+    --bg-primary: #0f0f1a;
+    --bg-secondary: #1a1a2e;
+    --bg-card: #16213e;
+    --bg-hover: #1e293b;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #6b7280;
+    --border-color: #2d3748;
+    --border-light: #1e293b;
+    --accent-purple: #a855f7;
+    --accent-purple-dark: #7c3aed;
+    --accent-green: #059669;
+    --accent-green-dark: #047857;
+    --accent-red: #ef4444;
+    --accent-blue: #3b82f6;
+    --accent-yellow: #f59e0b;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+/* Corpo e fundo */
+.dark-mode body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Navigation - Todas as páginas */
 .dark-mode nav {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%) !important;
+    border-bottom: 1px solid var(--border-color);
 }
 
+.dark-mode .nav-links a {
+    color: var(--text-secondary) !important;
+}
+
+.dark-mode .nav-links a:hover,
+.dark-mode .nav-links a.active {
+    background: rgba(168, 85, 247, 0.2) !important;
+    color: var(--accent-purple) !important;
+}
+
+.dark-mode .logo h1 {
+    color: var(--text-primary);
+}
+
+/* Cards - Farmácias, Hospitais, Centros */
 .dark-mode .farmacia-card,
 .dark-mode .hospital-card,
 .dark-mode .centro-card,
 .dark-mode .info-card,
 .dark-mode .section-card,
+.dark-mode .topic-card,
 .dark-mode .avaliacao-item,
 .dark-mode .avaliacoes-form,
-.dark-mode .procedimentos-card {
-    background: #0d1117 !important;
-    border-color: #30363d !important;
-    color: #e2e8f0 !important;
+.dark-mode .procedimentos-card,
+.dark-mode .emergency-card,
+.dark-mode .feature-box,
+.dark-mode .content-card {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow);
 }
 
-.dark-mode .farmacia-card h3,
-.dark-mode .hospital-card h3,
-.dark-mode .centro-card h3,
-.dark-mode .info-card h3,
+.dark-mode .farmacia-card:hover,
+.dark-mode .hospital-card:hover,
+.dark-mode .centro-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    border-color: var(--accent-purple);
+}
+
+/* Títulos */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode .farmacia-title h3,
+.dark-mode .centro-title h3,
+.dark-mode .hospital-title h3,
+.dark-mode .section-card h2,
 .dark-mode .section-card h3 {
-    color: #fff !important;
+    color: var(--text-primary) !important;
 }
 
+.dark-mode .page-header h2 {
+    color: var(--text-primary);
+}
+
+.dark-mode .page-subtitle {
+    color: var(--text-secondary);
+}
+
+/* Detalhes dos cards */
 .dark-mode .farmacia-details,
 .dark-mode .hospital-details,
-.dark-mode .centro-details {
-    color: #9ca3af !important;
+.dark-mode .centro-details,
+.dark-mode .detail-item span,
+.dark-mode .info-value {
+    color: var(--text-secondary) !important;
 }
 
-.dark-mode .features {
-    background: #161b22 !important;
+.dark-mode .detail-icon img {
+    filter: brightness(0) invert(1);
+    opacity: 0.7;
 }
 
-.dark-mode .feature-tag {
-    background: #0d1117 !important;
-    color: #a855f7 !important;
-    border-color: #30363d !important;
+/* Serviços e Features */
+.dark-mode .farmacia-services,
+.dark-mode .services-list {
+    background: var(--bg-secondary) !important;
 }
 
-.dark-mode .contact-info {
-    background: #161b22 !important;
-    border-color: #30363d !important;
+.dark-mode .farmacia-services p,
+.dark-mode .services-list p,
+.dark-mode .features p {
+    color: var(--accent-purple) !important;
+}
+
+.dark-mode .farmacia-services li,
+.dark-mode .services-list li,
+.dark-mode .feature-tag,
+.dark-mode .service-tag {
+    background: var(--bg-card) !important;
+    color: var(--text-secondary) !important;
+    border-color: var(--border-color) !important;
+}
+
+.dark-mode .feature-tag:hover,
+.dark-mode .service-tag:hover {
+    background: var(--accent-purple) !important;
+    color: white !important;
+}
+
+/* Badges e Status */
+.dark-mode .badge-plantao,
+.dark-mode .status-badge {
+    background: var(--bg-secondary) !important;
+    color: var(--accent-green) !important;
+    border: 1px solid var(--accent-green);
+}
+
+.dark-mode .status-badge.fechado {
+    color: var(--accent-red) !important;
+    border-color: var(--accent-red);
+}
+
+/* Botões */
+.dark-mode .medicamentos-btn,
+.dark-mode .btn-medicamentos {
+    background: var(--accent-green) !important;
+}
+
+.dark-mode .medicamentos-btn:hover,
+.dark-mode .btn-medicamentos:hover {
+    background: var(--accent-green-dark) !important;
+}
+
+.dark-mode .details-btn,
+.dark-mode .info-btn,
+.dark-mode .btn-detalhes {
+    background: var(--accent-purple) !important;
+}
+
+.dark-mode .details-btn:hover,
+.dark-mode .info-btn:hover {
+    background: var(--accent-purple-dark) !important;
+}
+
+.dark-mode .directions-btn,
+.dark-mode .btn-mapa,
+.dark-mode .btn-directions {
+    background: var(--bg-secondary) !important;
+    border: 1px solid var(--accent-blue);
+    color: var(--accent-blue) !important;
+}
+
+.dark-mode .waze-btn {
+    background: var(--bg-secondary) !important;
+    border: 1px solid #33CCFF;
+    color: #33CCFF !important;
+}
+
+.dark-mode .directions-btn:hover,
+.dark-mode .btn-mapa:hover {
+    background: var(--accent-blue) !important;
+    color: white !important;
+}
+
+.dark-mode .waze-btn:hover {
+    background: #33CCFF !important;
+    color: white !important;
+}
+
+.dark-mode .btn-ligar,
+.dark-mode .btn-login {
+    background: var(--accent-purple) !important;
 }
 
 .dark-mode .btn-voltar,
-.dark-mode .details-btn {
-    background: #a855f7 !important;
+.dark-mode .btn-back {
+    background: transparent !important;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
 }
 
-.dark-mode .medicamentos-btn {
-    background: #059669 !important;
+.dark-mode .btn-voltar:hover,
+.dark-mode .btn-back:hover {
+    background: var(--bg-secondary) !important;
+    border-color: var(--accent-purple);
+    color: var(--accent-purple);
 }
 
+/* Contact Info */
+.dark-mode .contact-info {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border-color) !important;
+}
+
+.dark-mode .contact-info a {
+    color: var(--accent-purple) !important;
+}
+
+/* Filtros e Busca */
 .dark-mode .filter-section,
+.dark-mode .barra-busca {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color);
+}
+
+.dark-mode .filter-select,
+.dark-mode .barra-busca input {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color);
+}
+
+.dark-mode .filter-select option {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.dark-mode .barra-busca button {
+    background: var(--accent-purple) !important;
+}
+
+/* Info Banner */
 .dark-mode .info-banner {
-    background: #0d1117 !important;
-    border-color: #30363d !important;
+    background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-purple-dark) 100%) !important;
 }
 
-.dark-mode footer {
-    background: #0a0a0f !important;
+.dark-mode .info-banner-text h3,
+.dark-mode .info-banner-text p {
+    color: white !important;
 }
 
-.dark-mode .loading-text,
-.dark-mode .empty-state p {
-    color: #9ca3af !important;
+/* Emergency Alert */
+.dark-mode .emergency-alerta {
+    background: linear-gradient(135deg, #7f1a1a 0%, #991b1b 100%) !important;
 }
 
-.dark-mode .avaliacao-item {
-    background: #0d1117 !important;
-    border-color: #30363d !important;
+.dark-mode .emergency-btn {
+    background: white !important;
+    color: #dc2626 !important;
 }
 
-.dark-mode .avaliacao-comentario {
-    color: #b0b7c4 !important;
+/* Tips Section */
+.dark-mode .tips-section,
+.dark-mode .hospital-contacts {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color);
+}
+
+.dark-mode .tip-item,
+.dark-mode .hospital-item {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border-color);
+}
+
+.dark-mode .tip-item h4,
+.dark-mode .hospital-info h4 {
+    color: var(--text-primary);
+}
+
+.dark-mode .tip-item p,
+.dark-mode .hospital-info p {
+    color: var(--text-secondary);
+}
+
+.dark-mode .hospital-phone {
+    color: var(--accent-purple);
+}
+
+/* Seções de Informação (info.html) */
+.dark-mode .detailed-section,
+.dark-mode .alert-box,
+.dark-mode .success-box {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color);
+}
+
+.dark-mode .detailed-section h3,
+.dark-mode .detailed-section h4 {
+    color: var(--text-primary);
+}
+
+.dark-mode .detailed-section p,
+.dark-mode .detailed-section li {
+    color: var(--text-secondary);
+}
+
+.dark-mode .alert-box {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-left-color: var(--accent-red);
+}
+
+.dark-mode .success-box {
+    background: rgba(5, 150, 105, 0.1) !important;
+    border-left-color: var(--accent-green);
+}
+
+/* Página Sobre */
+.dark-mode .hero-about {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+}
+
+.dark-mode .hero-about h2,
+.dark-mode .hero-about p {
+    color: var(--text-primary);
+}
+
+.dark-mode .vision-section {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+.dark-mode .stat-box {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+.dark-mode .stat-number {
+    color: var(--accent-purple);
+}
+
+.dark-mode .stat-label {
+    color: var(--text-secondary);
+}
+
+.dark-mode .team-section {
+    border-color: var(--border-color);
+}
+
+.dark-mode .contact-section {
+    background: var(--bg-card);
+}
+
+/* Página de Login Admin */
+.dark-mode .login-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+.dark-mode .login-header h1,
+.dark-mode .login-header p {
+    color: var(--text-primary);
+}
+
+.dark-mode .form-grupo label {
+    color: var(--text-secondary);
+}
+
+.dark-mode .form-grupo input {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.dark-mode .form-grupo input:focus {
+    border-color: var(--accent-purple);
+}
+
+/* Painel Admin */
+.dark-mode .admin-header {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%) !important;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dark-mode .stat-card {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+.dark-mode .stat-title {
+    color: var(--text-secondary);
+}
+
+.dark-mode .stat-value {
+    color: var(--accent-purple);
+}
+
+.dark-mode .tabs .tab {
+    color: var(--text-secondary);
+}
+
+.dark-mode .tabs .tab.active {
+    background: var(--accent-purple);
+    color: white;
+}
+
+.dark-mode .table-container table {
+    border-color: var(--border-color);
+}
+
+.dark-mode .table-container th {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.dark-mode .table-container td {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+}
+
+.dark-mode .table-container tr:hover td {
+    background: var(--bg-hover);
+}
+
+.dark-mode .btn-edit,
+.dark-mode .btn-editar {
+    background: var(--accent-blue) !important;
+}
+
+.dark-mode .btn-delete,
+.dark-mode .btn-excluir {
+    background: var(--accent-red) !important;
 }
 
 .dark-mode .modal-content {
-    background: #0d1117 !important;
-    border-color: #30363d !important;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
 }
 
-.dark-mode .modal-header h3,
-.dark-mode .form-group label {
-    color: #fff !important;
+.dark-mode .modal-header {
+    border-bottom-color: var(--border-color);
 }
 
+.dark-mode .modal-header h3 {
+    color: var(--text-primary);
+}
+
+/* Avaliações */
+.dark-mode .avaliacoes-stats {
+    background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-purple-dark) 100%) !important;
+}
+
+.dark-mode .avaliacao-resposta {
+    background: rgba(5, 150, 105, 0.1) !important;
+    border-left-color: var(--accent-green);
+}
+
+.dark-mode .resposta-header {
+    color: var(--accent-green);
+}
+
+/* Formulários */
 .dark-mode input,
 .dark-mode select,
-.dark-mode textarea {
-    background: #161b22 !important;
-    border-color: #30363d !important;
-    color: #e2e8f0 !important;
+.dark-mode textarea,
+.dark-mode .form-group input,
+.dark-mode .form-group select,
+.dark-mode .form-group textarea {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
 }
 
 .dark-mode input:focus,
 .dark-mode select:focus,
 .dark-mode textarea:focus {
-    border-color: #a855f7 !important;
-    outline: none !important;
+    border-color: var(--accent-purple) !important;
+    outline: none;
 }
 
-.dark-mode .stats-card {
-    background: #0d1117 !important;
-    border-color: #30363d !important;
+.dark-mode .form-group label {
+    color: var(--text-secondary) !important;
 }
 
-.dark-mode .section-icon {
-    filter: invert(1) !important;
+/* Footer - Todas as páginas */
+.dark-mode footer {
+    background: #0a0a0f !important;
+    border-top: 1px solid var(--border-color);
 }
 
-.dark-mode .detail-icon img {
-    filter: invert(1) !important;
+.dark-mode footer p {
+    color: var(--text-secondary);
 }
 
-.dark-mode .farmacia-icon img {
-    filter: invert(1) !important;
+.dark-mode .footer-subtitle {
+    color: var(--text-muted);
 }
 
-.dark-mode .directions-btn,
-.dark-mode .waze-btn {
-    background: #1a1a2e !important;
-    border: 1px solid #30363d !important;
+/* Breadcrumb */
+.dark-mode .breadcrumb {
+    color: var(--text-secondary);
 }
 
-.dark-mode .directions-btn:hover,
-.dark-mode .waze-btn:hover {
-    background: #2d3748 !important;
+.dark-mode .breadcrumb a {
+    color: var(--accent-purple);
 }
 
-/* Botão dark mode flutuante */
+.dark-mode .breadcrumb a:hover {
+    color: var(--accent-purple-dark);
+}
+
+/* Horários */
+.dark-mode .horario-item {
+    border-bottom-color: var(--border-color);
+}
+
+.dark-mode .horario-icon img {
+    filter: brightness(0) invert(1);
+    opacity: 0.7;
+}
+
+/* Checklist */
+.dark-mode .checklist li {
+    border-bottom-color: var(--border-color);
+}
+
+.dark-mode .check-icon {
+    background: var(--accent-green);
+}
+
+/* Map placeholder */
+.dark-mode .map-placeholder {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+.dark-mode .map-icon img {
+    filter: brightness(0) invert(1);
+    opacity: 0.5;
+}
+
+/* Loading e Empty State */
+.dark-mode .loading,
+.dark-mode .empty-state,
+.dark-mode .nenhuma-avaliacao {
+    color: var(--text-secondary);
+}
+
+.dark-mode .loading::after {
+    border-color: var(--border-color);
+    border-top-color: var(--accent-purple);
+}
+
+/* Toast notifications */
+.dark-mode .toast {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.dark-mode .toast.mostrar {
+    background: var(--accent-green);
+    color: white;
+}
+
+.dark-mode .toast.erro {
+    background: var(--accent-red);
+}
+
+/* Scrollbar */
+.dark-mode ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+    background: var(--accent-purple);
+    border-radius: 5px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-purple-dark);
+}
+
+/* Botão Dark Mode flutuante */
 .dark-mode-toggle {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    z-index: 999;
-    background: #7c3aed;
+    background: var(--accent-purple);
     color: white;
     border: none;
     padding: 12px 20px;
     border-radius: 30px;
     cursor: pointer;
+    z-index: 999;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     transition: all 0.3s;
 }
 
 .dark-mode-toggle:hover {
     transform: scale(1.05);
-    background: #6d28d9;
+    background: var(--accent-purple-dark);
 }
 
-/* Distância badge */
-.distancia-badge {
-    background: #7c3aed;
+.dark-mode .dark-mode-toggle {
+    background: var(--accent-purple);
     color: white;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-bottom: 8px;
-    width: fit-content;
+}
+
+/* Animações */
+.dark-mode .farmacia-card,
+.dark-mode .hospital-card,
+.dark-mode .centro-card,
+.dark-mode .avaliacao-item {
+    transition: all 0.3s ease;
 }
