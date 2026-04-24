@@ -44,6 +44,15 @@
             </button>
         </div>
 
+        <!-- Seccao de filtragem -->
+<div class="filter-section">
+    <span class="filter-icon">Filtrar:</span>
+    <select id="filter-select" class="filter-select" onchange="filtrarHospitais(this.value)">
+        <option value="todas">Todos os Hospitais</option>
+        <option value="emergencia">Com Emergência 24h</option>
+    </select>
+</div>
+
         <!-- Os hospitais serão carregados dinamicamente aqui -->
 
     </main>
