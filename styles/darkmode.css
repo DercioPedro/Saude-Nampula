@@ -1,0 +1,175 @@
+/* darkmode.css - Estilos para modo escuro */
+
+/* Modo Escuro - Toggle */
+.dark-mode {
+    background-color: #1a1a2e !important;
+    color: #e2e8f0 !important;
+}
+
+.dark-mode nav {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+}
+
+.dark-mode .farmacia-card,
+.dark-mode .hospital-card,
+.dark-mode .centro-card,
+.dark-mode .info-card,
+.dark-mode .section-card,
+.dark-mode .avaliacao-item,
+.dark-mode .avaliacoes-form,
+.dark-mode .procedimentos-card {
+    background: #0d1117 !important;
+    border-color: #30363d !important;
+    color: #e2e8f0 !important;
+}
+
+.dark-mode .farmacia-card h3,
+.dark-mode .hospital-card h3,
+.dark-mode .centro-card h3,
+.dark-mode .info-card h3,
+.dark-mode .section-card h3 {
+    color: #fff !important;
+}
+
+.dark-mode .farmacia-details,
+.dark-mode .hospital-details,
+.dark-mode .centro-details {
+    color: #9ca3af !important;
+}
+
+.dark-mode .features {
+    background: #161b22 !important;
+}
+
+.dark-mode .feature-tag {
+    background: #0d1117 !important;
+    color: #a855f7 !important;
+    border-color: #30363d !important;
+}
+
+.dark-mode .contact-info {
+    background: #161b22 !important;
+    border-color: #30363d !important;
+}
+
+.dark-mode .btn-voltar,
+.dark-mode .details-btn {
+    background: #a855f7 !important;
+}
+
+.dark-mode .medicamentos-btn {
+    background: #059669 !important;
+}
+
+.dark-mode .filter-section,
+.dark-mode .info-banner {
+    background: #0d1117 !important;
+    border-color: #30363d !important;
+}
+
+.dark-mode footer {
+    background: #0a0a0f !important;
+}
+
+.dark-mode .loading-text,
+.dark-mode .empty-state p {
+    color: #9ca3af !important;
+}
+
+.dark-mode .avaliacao-item {
+    background: #0d1117 !important;
+    border-color: #30363d !important;
+}
+
+.dark-mode .avaliacao-comentario {
+    color: #b0b7c4 !important;
+}
+
+.dark-mode .modal-content {
+    background: #0d1117 !important;
+    border-color: #30363d !important;
+}
+
+.dark-mode .modal-header h3,
+.dark-mode .form-group label {
+    color: #fff !important;
+}
+
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea {
+    background: #161b22 !important;
+    border-color: #30363d !important;
+    color: #e2e8f0 !important;
+}
+
+.dark-mode input:focus,
+.dark-mode select:focus,
+.dark-mode textarea:focus {
+    border-color: #a855f7 !important;
+    outline: none !important;
+}
+
+.dark-mode .stats-card {
+    background: #0d1117 !important;
+    border-color: #30363d !important;
+}
+
+.dark-mode .section-icon {
+    filter: invert(1) !important;
+}
+
+.dark-mode .detail-icon img {
+    filter: invert(1) !important;
+}
+
+.dark-mode .farmacia-icon img {
+    filter: invert(1) !important;
+}
+
+.dark-mode .directions-btn,
+.dark-mode .waze-btn {
+    background: #1a1a2e !important;
+    border: 1px solid #30363d !important;
+}
+
+.dark-mode .directions-btn:hover,
+.dark-mode .waze-btn:hover {
+    background: #2d3748 !important;
+}
+
+/* Botão dark mode flutuante */
+.dark-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+    background: #7c3aed;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+}
+
+.dark-mode-toggle:hover {
+    transform: scale(1.05);
+    background: #6d28d9;
+}
+
+/* Distância badge */
+.distancia-badge {
+    background: #7c3aed;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 8px;
+    width: fit-content;
+}
