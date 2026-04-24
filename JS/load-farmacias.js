@@ -1,7 +1,7 @@
-// load-farmacias.js - Versão completa com API e priorização de coordenadas
+// load-farmacias.js - Versão completa com API, coordenadas e status de funcionamento
 
 // Função para verificar se a farmácia está aberta (baseado no horário de Moçambique)
-function verificarStatusFarmarcia(farmacia) {
+function verificarStatusFarmacia(farmacia) {
     // Horário de Moçambique (UTC+2)
     const agora = new Date();
     const horaMoçambique = new Date(agora.toLocaleString("en-US", {timeZone: "Africa/Maputo"}));
@@ -16,7 +16,7 @@ function verificarStatusFarmarcia(farmacia) {
             texto: "Aberto agora",
             cor: "#059669",
             bg: "#d1fae5",
-            icon: '<img src="/img/clock-open.png" alt="Aberto" style="width: 14px; height: 14px;">'
+            icon: '<img src="/img/clock.png" alt="Aberto" style="width: 14px; height: 14px;">'
         };
     }
     
@@ -44,14 +44,9 @@ function verificarStatusFarmarcia(farmacia) {
     
     // Verificar se está dentro do horário
     let aberto = false;
-    let textoStatus = "";
-    let corStatus = "";
-    let bgStatus = "";
-    let iconStatus = "";
     
-    // Domingo (dia 0) - verificar se abre aos domingos
+    // Domingo (dia 0)
     if (diaSemana === 0) {
-        // Verificar se o horário inclui domingo
         const temDomingo = horarioFuncionamento.toLowerCase().includes("domingo") || 
                            horarioFuncionamento.toLowerCase().includes("sunday");
         
@@ -61,9 +56,8 @@ function verificarStatusFarmarcia(farmacia) {
             aberto = false;
         }
     } 
-    // Sábado (dia 6) - verificar se tem horário de sábado
+    // Sábado (dia 6)
     else if (diaSemana === 6) {
-        // Verificar se o horário inclui sábado
         const temSabado = horarioFuncionamento.toLowerCase().includes("sábado") || 
                           horarioFuncionamento.toLowerCase().includes("sabado") ||
                           horarioFuncionamento.toLowerCase().includes("saturday");
@@ -80,24 +74,22 @@ function verificarStatusFarmarcia(farmacia) {
     }
     
     if (aberto) {
-        textoStatus = "Aberto agora";
-        corStatus = "#059669";
-        bgStatus = "#d1fae5";
-        iconStatus = '<img src="/img/clock-open.png" alt="Aberto" style="width: 14px; height: 14px;">';
+        return {
+            aberto: true,
+            texto: "Aberto agora",
+            cor: "#059669",
+            bg: "#d1fae5",
+            icon: '<img src="/img/clock.png" alt="Aberto" style="width: 14px; height: 14px;">'
+        };
     } else {
-        textoStatus = "Fechado";
-        corStatus = "#dc2626";
-        bgStatus = "#fee2e2";
-        iconStatus = '<img src="/img/clock-closed.png" alt="Fechado" style="width: 14px; height: 14px;">';
+        return {
+            aberto: false,
+            texto: "Fechado",
+            cor: "#dc2626",
+            bg: "#fee2e2",
+            icon: '<img src="/img/clock.png" alt="Fechado" style="width: 14px; height: 14px;">'
+        };
     }
-    
-    return {
-        aberto: aberto,
-        texto: textoStatus,
-        cor: corStatus,
-        bg: bgStatus,
-        icon: iconStatus
-    };
 }
 
 // Funções auxiliares para obter URLs com prioridade para coordenadas
@@ -134,9 +126,7 @@ function obterUrlDirecoes(item) {
 // Carregar farmácias da API
 async function carregarFarmacias() {
     try {
-        // console.log('Carregando farmacias...');
         const farmacias = await apiRequest('/farmacias');
-        // console.log('Farmacias recebidas:', farmacias);
         
         let farmaciasGrid = document.querySelector('.farmacias-grid');
         if (!farmaciasGrid) {
@@ -159,10 +149,8 @@ async function carregarFarmacias() {
             farmaciasGrid.appendChild(card);
         }
         
-        // console.log("Farmacias carregadas com sucesso!");
-        
     } catch (error) {
-        // console.error('Erro ao carregar farmacias:', error);
+        console.error('Erro ao carregar farmacias:', error);
         mostrarMensagemErro('Erro ao carregar farmacias. Tente novamente.');
     }
 }
@@ -200,6 +188,7 @@ function mostrarMensagemErro(mensagem) {
     }
 }
 
+// Criar um card de farmacia
 function criarCardFarmacia(farmacia) {
     let card = document.createElement('div');
     card.className = 'farmacia-card';
@@ -210,7 +199,7 @@ function criarCardFarmacia(farmacia) {
     let badgePlantao = plantao ? '<span class="badge-plantao">Plantao 24h</span>' : '';
     
     // Verificar status da farmácia
-    const status = verificarStatusFarmarcia(farmacia);
+    const status = verificarStatusFarmacia(farmacia);
     
     let servicos = gerarServicos(farmacia, plantao);
     let servicosHTML = '';
@@ -274,7 +263,7 @@ function criarCardFarmacia(farmacia) {
                 <img src="/img/ponto.png" alt="Como Chegar" style="width: 14px; height: 14px;"> Como Chegar
             </button>
             <button class="waze-btn" onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                <img src="/img/waze.png" alt="Waze" style="width: 14px; height: 14px;"> Waze
+                 Waze
             </button>
         </div>
     `;
@@ -470,9 +459,6 @@ async function carregarDetalhesDaFarmacia() {
     const urlParams = new URLSearchParams(window.location.search);
     const nomeFarmacia = urlParams.get('farmacia');
     const id = urlParams.get('id');
-    const status = verificarStatusFarmarcia(farmacia);
-
-// Depois, no HTML do detalhes, adicione o status ao lado do nome
     
     if (!nomeFarmacia) {
         document.body.innerHTML = '<div style="text-align: center; padding: 50px;">Farmacia nao encontrada</div>';
@@ -486,10 +472,10 @@ async function carregarDetalhesDaFarmacia() {
         const farmacia = await apiRequest(`/farmacias/${id}`);
         const produtos = await apiRequest(`/produtos?farmaciaId=${id}`);
         
-        let container = document.querySelector('.detalhes-container') || document.body;
+        // Verificar status da farmácia
+        const status = verificarStatusFarmacia(farmacia);
         
-        let plantaoTexto = farmacia.plantao ? 'Sim (24 horas)' : 'Nao';
-        let horario = farmacia.horario || (farmacia.plantao ? '24 horas' : '08:00 - 18:00');
+        let container = document.querySelector('.detalhes-container') || document.body;
         
         let enderecoCompleto = farmacia.endereco || 'Endereco nao informado';
         
@@ -497,15 +483,19 @@ async function carregarDetalhesDaFarmacia() {
         const urlWaze = obterUrlWaze(farmacia);
         
         let detalhesHTML = `
-            // Substitua a linha do status-badge por:
-<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-    <span style="background: ${farmacia.plantao ? '#dbeafe' : '#d1fae5'}; color: ${farmacia.plantao ? '#1e40af' : '#047857'}; padding: 8px 16px; border-radius: 20px; font-weight: 600;">
-        ${farmacia.plantao ? '24 Horas' : 'Horario Comercial'}
-    </span>
-    <span style="background: ${status.bg}; color: ${status.cor}; padding: 8px 16px; border-radius: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-        ${status.icon} ${status.texto}
-    </span>
-</div>
+            <div style="max-width: 900px; margin: 40px auto; padding: 30px; background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <a href="farm.html" style="text-decoration: none; color: #7c3aed; font-size: 18px;">← Voltar</a>
+                    <h1 style="color: #1f2937; margin: 0; flex: 1;"><img src="/img/comprimidos.png" alt="Farmacia" style="width: 28px; height: 28px; vertical-align: middle;"> ${nomeDecodificado}</h1>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <span style="background: ${farmacia.plantao ? '#dbeafe' : '#d1fae5'}; color: ${farmacia.plantao ? '#1e40af' : '#047857'}; padding: 8px 16px; border-radius: 20px; font-weight: 600;">
+                            ${farmacia.plantao ? '24 Horas' : 'Horario Comercial'}
+                        </span>
+                        <span style="background: ${status.bg}; color: ${status.cor}; padding: 8px 16px; border-radius: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                            ${status.icon} ${status.texto}
+                        </span>
+                    </div>
+                </div>
                 
                 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px;">
                     <div>
@@ -531,7 +521,7 @@ async function carregarDetalhesDaFarmacia() {
                                     <img src="/img/ponto.png" alt="Como Chegar" style="width: 14px; height: 14px;"> Como Chegar
                                 </button>
                                 <button onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                                    Waze
+                                    <img src="/img/waze.png" alt="Waze" style="width: 14px; height: 14px;"> Waze
                                 </button>
                             </div>
                         </div>
