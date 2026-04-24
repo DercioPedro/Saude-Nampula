@@ -470,6 +470,9 @@ async function carregarDetalhesDaFarmacia() {
     const urlParams = new URLSearchParams(window.location.search);
     const nomeFarmacia = urlParams.get('farmacia');
     const id = urlParams.get('id');
+    const status = verificarStatusFarmarcia(farmacia);
+
+// Depois, no HTML do detalhes, adicione o status ao lado do nome
     
     if (!nomeFarmacia) {
         document.body.innerHTML = '<div style="text-align: center; padding: 50px;">Farmacia nao encontrada</div>';
@@ -494,14 +497,15 @@ async function carregarDetalhesDaFarmacia() {
         const urlWaze = obterUrlWaze(farmacia);
         
         let detalhesHTML = `
-            <div style="max-width: 900px; margin: 40px auto; padding: 30px; background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-                    <a href="farm.html" style="text-decoration: none; color: #7c3aed; font-size: 18px;">← Voltar</a>
-                    <h1 style="color: #1f2937; margin: 0; flex: 1;"><img src="/img/comprimidos.png" alt="Farmacia" style="width: 28px; height: 28px; vertical-align: middle;"> ${nomeDecodificado}</h1>
-                    <span style="background: ${farmacia.plantao ? '#dbeafe' : '#d1fae5'}; color: ${farmacia.plantao ? '#1e40af' : '#047857'}; padding: 8px 16px; border-radius: 20px; font-weight: 600;">
-                        ${farmacia.plantao ? '24 Horas' : 'Horario Comercial'}
-                    </span>
-                </div>
+            // Substitua a linha do status-badge por:
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+    <span style="background: ${farmacia.plantao ? '#dbeafe' : '#d1fae5'}; color: ${farmacia.plantao ? '#1e40af' : '#047857'}; padding: 8px 16px; border-radius: 20px; font-weight: 600;">
+        ${farmacia.plantao ? '24 Horas' : 'Horario Comercial'}
+    </span>
+    <span style="background: ${status.bg}; color: ${status.cor}; padding: 8px 16px; border-radius: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+        ${status.icon} ${status.texto}
+    </span>
+</div>
                 
                 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px;">
                     <div>
