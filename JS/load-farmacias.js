@@ -192,6 +192,7 @@ function mostrarMensagemErro(mensagem) {
 function criarCardFarmacia(farmacia) {
     let card = document.createElement('div');
     card.className = 'farmacia-card';
+    card.setAttribute('data-id', farmacia.id);
     card.dataset.id = farmacia.id;
     card.dataset.plantao = farmacia.plantao || false;
     
