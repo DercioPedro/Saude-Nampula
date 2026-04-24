@@ -218,8 +218,12 @@ function ordenarCardsPorDistancia() {
 function criarBotaoLocalizacao() {
     if (document.querySelector('.btn-localizacao-container')) return;
     
-    const filterSection = document.querySelector('.filter-section');
-    if (!filterSection) return;
+    // Procurar o page-header ou o main para inserir o botão
+    const pageHeader = document.querySelector('.page-header');
+    const main = document.querySelector('main');
+    const targetElement = pageHeader || main;
+    
+    if (!targetElement) return;
     
     const container = document.createElement('div');
     container.className = 'btn-localizacao-container';
@@ -248,7 +252,9 @@ function criarBotaoLocalizacao() {
     
     container.appendChild(btnLocalizar);
     container.appendChild(btnOrdenar);
-    filterSection.parentNode.insertBefore(container, filterSection.nextSibling);
+    
+    // Inserir após o page-header
+    targetElement.parentNode.insertBefore(container, targetElement.nextSibling);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
