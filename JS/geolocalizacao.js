@@ -1,10 +1,9 @@
-// geolocalizacao.js - Versão corrigida (sem emojis)
+// geolocalizacao.js - Versão corrigida (busca todos os cards)
 
 let localizacaoAtual = null;
 let distanciaAtiva = false;
 let cacheCoordenadas = {};
 
-// URL do backend (Render)
 const API_URL = 'https://saude-nampula-api.onrender.com/api';
 
 function obterLocalizacao() {
@@ -70,6 +69,19 @@ function formatarDistancia(distancia) {
     return distancia.toFixed(1) + ' km';
 }
 
+function adicionarBadgeAoCard(card, texto) {
+    const badgeAntigo = card.querySelector('.distancia-badge');
+    if (badgeAntigo) badgeAntigo.remove();
+    
+    const badge = document.createElement('div');
+    badge.className = 'distancia-badge';
+    badge.textContent = ' a ' + texto;
+    badge.style.cssText = 'background: #7c3aed; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; margin-bottom: 8px; width: fit-content;';
+    
+    const primeiroFilho = card.firstChild;
+    card.insertBefore(badge, primeiroFilho);
+}
+
 async function adicionarDistanciasAosCards() {
     try {
         if (!localizacaoAtual) {
@@ -80,19 +92,19 @@ async function adicionarDistanciasAosCards() {
         let itens = [];
         let tipoCard = '';
         
-        if (path.includes('farm.html')) {
+        if (path.indexOf('farm.html') !== -1) {
             const farmacias = await apiRequest('/farmacias');
-            itens = farmacias.map(f => ({ ...f, tipo: 'farmacia' }));
+            itens = farmacias.map(function(f) { return { ...f, tipo: 'farmacia' }; });
             tipoCard = 'farmacia-card';
             console.log(itens.length + ' farmacias para processar');
-        } else if (path.includes('hospital.html')) {
+        } else if (path.indexOf('hospital.html') !== -1) {
             const hospitais = await apiRequest('/hospitais');
-            itens = hospitais.map(h => ({ ...h, tipo: 'hospital' }));
+            itens = hospitais.map(function(h) { return { ...h, tipo: 'hospital' }; });
             tipoCard = 'hospital-card';
             console.log(itens.length + ' hospitais para processar');
-        } else if (path.includes('centros.html')) {
+        } else if (path.indexOf('centros.html') !== -1) {
             const centros = await apiRequest('/centros');
-            itens = centros.map(c => ({ ...c, tipo: 'centro' }));
+            itens = centros.map(function(c) { return { ...c, tipo: 'centro' }; });
             tipoCard = 'centro-card';
             console.log(itens.length + ' centros para processar');
         } else {
@@ -100,46 +112,48 @@ async function adicionarDistanciasAosCards() {
             return;
         }
         
+        const todosCards = document.querySelectorAll('.' + tipoCard);
+        console.log('Cards encontrados na pagina:', todosCards.length);
+        
         let cardsComDistancia = 0;
         
-        for (const item of itens) {
+        for (let i = 0; i < todosCards.length; i++) {
+            const card = todosCards[i];
+            const cardId = card.getAttribute('data-id');
+            
+            if (!cardId) {
+                console.log('Card sem data-id:', card);
+                continue;
+            }
+            
+            const itemId = parseInt(cardId);
+            const item = itens.find(function(i) { return i.id === itemId; });
+            
+            if (!item) {
+                console.log('Item nao encontrado para ID:', itemId);
+                continue;
+            }
+            
             let coords = null;
             
             if (item.latitude && item.longitude) {
                 coords = { lat: item.latitude, lng: item.longitude };
+                console.log('Usando coordenadas do banco para:', item.nome);
             } else if (item.endereco && item.endereco !== 'Endereco nao informado') {
                 coords = await geocodeEndereco(item.endereco);
+                if (coords) {
+                    console.log('Geocodificado com sucesso:', item.nome);
+                }
             }
             
             if (coords) {
                 const distancia = calcularDistancia(localizacaoAtual.lat, localizacaoAtual.lng, coords.lat, coords.lng);
-                
-                const cards = document.querySelectorAll('.' + tipoCard);
-                let cardEncontrado = null;
-                
-                for (const card of cards) {
-                    const cardId = card.getAttribute('data-id');
-                    if (cardId && parseInt(cardId) === item.id) {
-                        cardEncontrado = card;
-                        break;
-                    }
-                }
-                
-                if (cardEncontrado) {
-                    const badgeAntigo = cardEncontrado.querySelector('.distancia-badge');
-                    if (badgeAntigo) badgeAntigo.remove();
-                    
-                    const badge = document.createElement('div');
-                    badge.className = 'distancia-badge';
-                    badge.textContent = ' a ' + formatarDistancia(distancia);
-                    badge.style.cssText = 'background: #7c3aed; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; margin-bottom: 8px; width: fit-content;';
-                    
-                    const primeiroFilho = cardEncontrado.firstChild;
-                    cardEncontrado.insertBefore(badge, primeiroFilho);
-                    cardsComDistancia++;
-                } else {
-                    console.log('Card nao encontrado para ID:', item.id, item.nome);
-                }
+                const distanciaFormatada = formatarDistancia(distancia);
+                adicionarBadgeAoCard(card, distanciaFormatada);
+                cardsComDistancia++;
+                console.log('Distancia calculada para ' + item.nome + ': ' + distanciaFormatada);
+            } else {
+                console.log('Sem coordenadas para:', item.nome);
             }
         }
         
