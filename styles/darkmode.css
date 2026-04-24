@@ -1,56 +1,60 @@
 /* ============================================
    DARK MODE - SAÚDE NAMPULA
    CSS unificado para todas as páginas
+   Versão otimizada baseada nos seus estilos existentes
    ============================================ */
 
-/* Estilos base do Dark Mode */
+:root {
+    --dm-bg-primary: #0f0f1a;
+    --dm-bg-secondary: #1a1a2e;
+    --dm-bg-card: #16213e;
+    --dm-bg-hover: #1e293b;
+    --dm-text-primary: #e2e8f0;
+    --dm-text-secondary: #94a3b8;
+    --dm-text-muted: #6b7280;
+    --dm-border: #2d3748;
+    --dm-border-light: #1e293b;
+    --dm-purple: #a855f7;
+    --dm-purple-dark: #7c3aed;
+    --dm-green: #059669;
+    --dm-green-dark: #047857;
+    --dm-red: #ef4444;
+    --dm-blue: #3b82f6;
+    --dm-orange: #f59e0b;
+}
+
+/* ESTILOS GERAIS */
 .dark-mode {
-    --bg-primary: #0f0f1a;
-    --bg-secondary: #1a1a2e;
-    --bg-card: #16213e;
-    --bg-hover: #1e293b;
-    --text-primary: #e2e8f0;
-    --text-secondary: #94a3b8;
-    --text-muted: #6b7280;
-    --border-color: #2d3748;
-    --border-light: #1e293b;
-    --accent-purple: #a855f7;
-    --accent-purple-dark: #7c3aed;
-    --accent-green: #059669;
-    --accent-green-dark: #047857;
-    --accent-red: #ef4444;
-    --accent-blue: #3b82f6;
-    --accent-yellow: #f59e0b;
-    --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    background-color: var(--dm-bg-primary) !important;
+    color: var(--dm-text-primary) !important;
 }
 
-/* Corpo e fundo */
 .dark-mode body {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
+    background-color: var(--dm-bg-primary) !important;
+    color: var(--dm-text-primary) !important;
 }
 
-/* Navigation - Todas as páginas */
+/* ==================== NAVEGAÇÃO ==================== */
 .dark-mode nav {
     background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%) !important;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--dm-border);
+}
+
+.dark-mode .logo h1 {
+    color: var(--dm-text-primary) !important;
 }
 
 .dark-mode .nav-links a {
-    color: var(--text-secondary) !important;
+    color: var(--dm-text-secondary) !important;
 }
 
 .dark-mode .nav-links a:hover,
 .dark-mode .nav-links a.active {
     background: rgba(168, 85, 247, 0.2) !important;
-    color: var(--accent-purple) !important;
+    color: var(--dm-purple) !important;
 }
 
-.dark-mode .logo h1 {
-    color: var(--text-primary);
-}
-
-/* Cards - Farmácias, Hospitais, Centros */
+/* ==================== CARDS (Farmácias, Hospitais, Centros) ==================== */
 .dark-mode .farmacia-card,
 .dark-mode .hospital-card,
 .dark-mode .centro-card,
@@ -59,24 +63,31 @@
 .dark-mode .topic-card,
 .dark-mode .avaliacao-item,
 .dark-mode .avaliacoes-form,
-.dark-mode .procedimentos-card,
 .dark-mode .emergency-card,
 .dark-mode .feature-box,
-.dark-mode .content-card {
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border-color) !important;
-    box-shadow: var(--shadow);
+.dark-mode .content-card,
+.dark-mode .detailed-section,
+.dark-mode .map-card,
+.dark-mode .modal-content,
+.dark-mode .login-container,
+.dark-mode .stat-card,
+.dark-mode .management-section,
+.dark-mode .produtos-lista,
+.dark-mode .form-produto {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
 }
 
+/* Hover dos cards */
 .dark-mode .farmacia-card:hover,
 .dark-mode .hospital-card:hover,
 .dark-mode .centro-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    border-color: var(--accent-purple);
+    border-color: var(--dm-purple) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* Títulos */
+/* ==================== TÍTULOS E TEXTOS ==================== */
 .dark-mode h1,
 .dark-mode h2,
 .dark-mode h3,
@@ -84,112 +95,114 @@
 .dark-mode .farmacia-title h3,
 .dark-mode .centro-title h3,
 .dark-mode .hospital-title h3,
+.dark-mode .page-header h2,
 .dark-mode .section-card h2,
-.dark-mode .section-card h3 {
-    color: var(--text-primary) !important;
+.dark-mode .produtos-header h3,
+.dark-mode .modal-title {
+    color: var(--dm-text-primary) !important;
 }
 
-.dark-mode .page-header h2 {
-    color: var(--text-primary);
+.dark-mode .page-subtitle,
+.dark-mode .info-value,
+.dark-mode .centro-bairro,
+.dark-mode .hospital-type {
+    color: var(--dm-text-secondary) !important;
 }
 
-.dark-mode .page-subtitle {
-    color: var(--text-secondary);
+.dark-mode .detail-item,
+.dark-mode .farmacia-details span,
+.dark-mode .centro-details span,
+.dark-mode .hospital-details span {
+    color: var(--dm-text-secondary) !important;
 }
 
-/* Detalhes dos cards */
-.dark-mode .farmacia-details,
-.dark-mode .hospital-details,
-.dark-mode .centro-details,
-.dark-mode .detail-item span,
-.dark-mode .info-value {
-    color: var(--text-secondary) !important;
+/* ==================== BADGES E STATUS ==================== */
+.dark-mode .badge-plantao {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-green) !important;
+    border: 1px solid var(--dm-green);
 }
 
-.dark-mode .detail-icon img {
-    filter: brightness(0) invert(1);
-    opacity: 0.7;
+.dark-mode .centro-bairro {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-green) !important;
 }
 
-/* Serviços e Features */
+.dark-mode .status-badge {
+    background: var(--dm-bg-secondary) !important;
+}
+
+.dark-mode .service-tag,
+.dark-mode .feature-tag {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-secondary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+/* ==================== SERVIÇOS E LISTAS ==================== */
 .dark-mode .farmacia-services,
-.dark-mode .services-list {
-    background: var(--bg-secondary) !important;
+.dark-mode .services-list,
+.dark-mode .features {
+    background: var(--dm-bg-secondary) !important;
 }
 
 .dark-mode .farmacia-services p,
-.dark-mode .services-list p,
-.dark-mode .features p {
-    color: var(--accent-purple) !important;
+.dark-mode .services-list p {
+    color: var(--dm-purple) !important;
 }
 
 .dark-mode .farmacia-services li,
-.dark-mode .services-list li,
-.dark-mode .feature-tag,
-.dark-mode .service-tag {
-    background: var(--bg-card) !important;
-    color: var(--text-secondary) !important;
-    border-color: var(--border-color) !important;
+.dark-mode .services-list li {
+    color: var(--dm-text-secondary) !important;
+    border-bottom-color: var(--dm-border) !important;
 }
 
-.dark-mode .feature-tag:hover,
-.dark-mode .service-tag:hover {
-    background: var(--accent-purple) !important;
-    color: white !important;
-}
-
-/* Badges e Status */
-.dark-mode .badge-plantao,
-.dark-mode .status-badge {
-    background: var(--bg-secondary) !important;
-    color: var(--accent-green) !important;
-    border: 1px solid var(--accent-green);
-}
-
-.dark-mode .status-badge.fechado {
-    color: var(--accent-red) !important;
-    border-color: var(--accent-red);
-}
-
-/* Botões */
+/* ==================== BOTÕES ==================== */
 .dark-mode .medicamentos-btn,
-.dark-mode .btn-medicamentos {
-    background: var(--accent-green) !important;
+.dark-mode .btn-medicamentos,
+.dark-mode .btn-salvar,
+.dark-mode .btn-add {
+    background: var(--dm-green) !important;
 }
 
 .dark-mode .medicamentos-btn:hover,
-.dark-mode .btn-medicamentos:hover {
-    background: var(--accent-green-dark) !important;
+.dark-mode .btn-medicamentos:hover,
+.dark-mode .btn-salvar:hover,
+.dark-mode .btn-add:hover {
+    background: var(--dm-green-dark) !important;
 }
 
 .dark-mode .details-btn,
 .dark-mode .info-btn,
-.dark-mode .btn-detalhes {
-    background: var(--accent-purple) !important;
+.dark-mode .btn-login,
+.dark-mode .btn-cadastrar,
+.dark-mode .btn-submit {
+    background: var(--dm-purple) !important;
 }
 
 .dark-mode .details-btn:hover,
-.dark-mode .info-btn:hover {
-    background: var(--accent-purple-dark) !important;
+.dark-mode .info-btn:hover,
+.dark-mode .btn-login:hover,
+.dark-mode .btn-cadastrar:hover,
+.dark-mode .btn-submit:hover {
+    background: var(--dm-purple-dark) !important;
 }
 
 .dark-mode .directions-btn,
-.dark-mode .btn-mapa,
-.dark-mode .btn-directions {
-    background: var(--bg-secondary) !important;
-    border: 1px solid var(--accent-blue);
-    color: var(--accent-blue) !important;
+.dark-mode .btn-mapa {
+    background: var(--dm-bg-secondary) !important;
+    border: 1px solid var(--dm-blue);
+    color: var(--dm-blue) !important;
 }
 
 .dark-mode .waze-btn {
-    background: var(--bg-secondary) !important;
+    background: var(--dm-bg-secondary) !important;
     border: 1px solid #33CCFF;
     color: #33CCFF !important;
 }
 
-.dark-mode .directions-btn:hover,
-.dark-mode .btn-mapa:hover {
-    background: var(--accent-blue) !important;
+.dark-mode .directions-btn:hover {
+    background: var(--dm-blue) !important;
     color: white !important;
 }
 
@@ -199,411 +212,227 @@
 }
 
 .dark-mode .btn-ligar,
-.dark-mode .btn-login {
-    background: var(--accent-purple) !important;
-}
-
-.dark-mode .btn-voltar,
 .dark-mode .btn-back {
-    background: transparent !important;
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
+    background: var(--dm-bg-secondary) !important;
+    border: 1px solid var(--dm-green);
+    color: var(--dm-green) !important;
 }
 
-.dark-mode .btn-voltar:hover,
+.dark-mode .btn-ligar:hover,
 .dark-mode .btn-back:hover {
-    background: var(--bg-secondary) !important;
-    border-color: var(--accent-purple);
-    color: var(--accent-purple);
-}
-
-/* Contact Info */
-.dark-mode .contact-info {
-    background: var(--bg-secondary) !important;
-    border-color: var(--border-color) !important;
-}
-
-.dark-mode .contact-info a {
-    color: var(--accent-purple) !important;
-}
-
-/* Filtros e Busca */
-.dark-mode .filter-section,
-.dark-mode .barra-busca {
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border-color);
-}
-
-.dark-mode .filter-select,
-.dark-mode .barra-busca input {
-    background: var(--bg-secondary) !important;
-    color: var(--text-primary) !important;
-    border-color: var(--border-color);
-}
-
-.dark-mode .filter-select option {
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-}
-
-.dark-mode .barra-busca button {
-    background: var(--accent-purple) !important;
-}
-
-/* Info Banner */
-.dark-mode .info-banner {
-    background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-purple-dark) 100%) !important;
-}
-
-.dark-mode .info-banner-text h3,
-.dark-mode .info-banner-text p {
+    background: var(--dm-green) !important;
     color: white !important;
 }
 
-/* Emergency Alert */
-.dark-mode .emergency-alerta {
-    background: linear-gradient(135deg, #7f1a1a 0%, #991b1b 100%) !important;
+.dark-mode .btn-cancelar,
+.dark-mode .btn-delete {
+    background: var(--dm-red) !important;
+    color: white !important;
 }
 
-.dark-mode .emergency-btn {
-    background: white !important;
-    color: #dc2626 !important;
+.dark-mode .btn-cancelar:hover,
+.dark-mode .btn-delete:hover {
+    background: #b91c1c !important;
 }
 
-/* Tips Section */
-.dark-mode .tips-section,
-.dark-mode .hospital-contacts {
-    background: var(--bg-card) !important;
-    border-color: var(--border-color);
+.dark-mode .btn-edit {
+    background: var(--dm-blue) !important;
+    color: white !important;
 }
 
-.dark-mode .tip-item,
-.dark-mode .hospital-item {
-    background: var(--bg-secondary) !important;
-    border-color: var(--border-color);
+/* ==================== FILTROS E FORMULÁRIOS ==================== */
+.dark-mode .filter-section,
+.dark-mode .barra-busca {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
 }
 
-.dark-mode .tip-item h4,
-.dark-mode .hospital-info h4 {
-    color: var(--text-primary);
-}
-
-.dark-mode .tip-item p,
-.dark-mode .hospital-info p {
-    color: var(--text-secondary);
-}
-
-.dark-mode .hospital-phone {
-    color: var(--accent-purple);
-}
-
-/* Seções de Informação (info.html) */
-.dark-mode .detailed-section,
-.dark-mode .alert-box,
-.dark-mode .success-box {
-    background: var(--bg-card) !important;
-    border-color: var(--border-color);
-}
-
-.dark-mode .detailed-section h3,
-.dark-mode .detailed-section h4 {
-    color: var(--text-primary);
-}
-
-.dark-mode .detailed-section p,
-.dark-mode .detailed-section li {
-    color: var(--text-secondary);
-}
-
-.dark-mode .alert-box {
-    background: rgba(239, 68, 68, 0.1) !important;
-    border-left-color: var(--accent-red);
-}
-
-.dark-mode .success-box {
-    background: rgba(5, 150, 105, 0.1) !important;
-    border-left-color: var(--accent-green);
-}
-
-/* Página Sobre */
-.dark-mode .hero-about {
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
-}
-
-.dark-mode .hero-about h2,
-.dark-mode .hero-about p {
-    color: var(--text-primary);
-}
-
-.dark-mode .vision-section {
-    background: var(--bg-card);
-    border-color: var(--border-color);
-}
-
-.dark-mode .stat-box {
-    background: var(--bg-secondary);
-    border-color: var(--border-color);
-}
-
-.dark-mode .stat-number {
-    color: var(--accent-purple);
-}
-
-.dark-mode .stat-label {
-    color: var(--text-secondary);
-}
-
-.dark-mode .team-section {
-    border-color: var(--border-color);
-}
-
-.dark-mode .contact-section {
-    background: var(--bg-card);
-}
-
-/* Página de Login Admin */
-.dark-mode .login-container {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-}
-
-.dark-mode .login-header h1,
-.dark-mode .login-header p {
-    color: var(--text-primary);
-}
-
-.dark-mode .form-grupo label {
-    color: var(--text-secondary);
-}
-
-.dark-mode .form-grupo input {
-    background: var(--bg-secondary);
-    border-color: var(--border-color);
-    color: var(--text-primary);
-}
-
-.dark-mode .form-grupo input:focus {
-    border-color: var(--accent-purple);
-}
-
-/* Painel Admin */
-.dark-mode .admin-header {
-    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%) !important;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.dark-mode .stat-card {
-    background: var(--bg-card);
-    border-color: var(--border-color);
-}
-
-.dark-mode .stat-title {
-    color: var(--text-secondary);
-}
-
-.dark-mode .stat-value {
-    color: var(--accent-purple);
-}
-
-.dark-mode .tabs .tab {
-    color: var(--text-secondary);
-}
-
-.dark-mode .tabs .tab.active {
-    background: var(--accent-purple);
-    color: white;
-}
-
-.dark-mode .table-container table {
-    border-color: var(--border-color);
-}
-
-.dark-mode .table-container th {
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    border-color: var(--border-color);
-}
-
-.dark-mode .table-container td {
-    background: var(--bg-card);
-    color: var(--text-secondary);
-    border-color: var(--border-color);
-}
-
-.dark-mode .table-container tr:hover td {
-    background: var(--bg-hover);
-}
-
-.dark-mode .btn-edit,
-.dark-mode .btn-editar {
-    background: var(--accent-blue) !important;
-}
-
-.dark-mode .btn-delete,
-.dark-mode .btn-excluir {
-    background: var(--accent-red) !important;
-}
-
-.dark-mode .modal-content {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-}
-
-.dark-mode .modal-header {
-    border-bottom-color: var(--border-color);
-}
-
-.dark-mode .modal-header h3 {
-    color: var(--text-primary);
-}
-
-/* Avaliações */
-.dark-mode .avaliacoes-stats {
-    background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-purple-dark) 100%) !important;
-}
-
-.dark-mode .avaliacao-resposta {
-    background: rgba(5, 150, 105, 0.1) !important;
-    border-left-color: var(--accent-green);
-}
-
-.dark-mode .resposta-header {
-    color: var(--accent-green);
-}
-
-/* Formulários */
+.dark-mode .filter-select,
+.dark-mode .barra-busca input,
 .dark-mode input,
 .dark-mode select,
 .dark-mode textarea,
 .dark-mode .form-group input,
 .dark-mode .form-group select,
-.dark-mode .form-group textarea {
-    background: var(--bg-secondary) !important;
-    border-color: var(--border-color) !important;
-    color: var(--text-primary) !important;
+.dark-mode .form-group textarea,
+.dark-mode #filtroCategoria {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-primary) !important;
 }
 
+.dark-mode .filter-select:focus,
 .dark-mode input:focus,
-.dark-mode select:focus,
-.dark-mode textarea:focus {
-    border-color: var(--accent-purple) !important;
-    outline: none;
+.dark-mode textarea:focus,
+.dark-mode select:focus {
+    border-color: var(--dm-purple) !important;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2) !important;
 }
 
-.dark-mode .form-group label {
-    color: var(--text-secondary) !important;
+.dark-mode .filter-label,
+.dark-mode .form-group label,
+.dark-mode .campo-form label {
+    color: var(--dm-text-secondary) !important;
 }
 
-/* Footer - Todas as páginas */
+/* ==================== TABELAS ==================== */
+.dark-mode table th {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-primary) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+.dark-mode table td {
+    background: var(--dm-bg-card) !important;
+    color: var(--dm-text-secondary) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+.dark-mode table tr:hover td {
+    background: var(--dm-bg-hover) !important;
+}
+
+/* ==================== AVALIAÇÕES ==================== */
+.dark-mode .avaliacoes-stats {
+    background: linear-gradient(135deg, var(--dm-purple) 0%, var(--dm-purple-dark) 100%) !important;
+}
+
+.dark-mode .avaliacao-resposta {
+    background: rgba(5, 150, 105, 0.1) !important;
+    border-left-color: var(--dm-green) !important;
+}
+
+.dark-mode .resposta-header {
+    color: var(--dm-green) !important;
+}
+
+/* ==================== MODAL ==================== */
+.dark-mode .modal {
+    background: rgba(0, 0, 0, 0.8) !important;
+}
+
+.dark-mode .modal-header {
+    border-bottom-color: var(--dm-border) !important;
+}
+
+/* ==================== INFO BANNER ==================== */
+.dark-mode .info-banner {
+    background: linear-gradient(135deg, var(--dm-purple) 0%, var(--dm-purple-dark) 100%) !important;
+}
+
+.dark-mode .alert-banner {
+    background: linear-gradient(135deg, #7f1a1a 0%, #991b1b 100%) !important;
+}
+
+/* ==================== TIPS E CONTATOS ==================== */
+.dark-mode .tips-section,
+.dark-mode .hospital-contacts {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-orange) !important;
+}
+
+.dark-mode .tip-item,
+.dark-mode .hospital-item {
+    background: var(--dm-bg-secondary) !important;
+    border-left-color: var(--dm-orange) !important;
+}
+
+.dark-mode .tip-item h4,
+.dark-mode .hospital-info h4 {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .tip-item p,
+.dark-mode .hospital-info p {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .hospital-phone {
+    color: var(--dm-purple) !important;
+}
+
+/* ==================== PÁGINA SOBRE ==================== */
+.dark-mode .hero-about {
+    background: linear-gradient(135deg, var(--dm-bg-secondary) 0%, var(--dm-bg-card) 100%) !important;
+}
+
+.dark-mode .vision-section {
+    background: linear-gradient(135deg, #1e3a8a 0%, var(--dm-purple) 100%) !important;
+}
+
+.dark-mode .stat-box {
+    background: linear-gradient(135deg, var(--dm-green) 0%, var(--dm-green-dark) 100%) !important;
+}
+
+.dark-mode .contact-section {
+    background: var(--dm-bg-secondary) !important;
+}
+
+.dark-mode .contact-item {
+    background: var(--dm-bg-card) !important;
+}
+
+.dark-mode .contact-info p {
+    color: var(--dm-purple) !important;
+}
+
+/* ==================== ADMIN PANEL ==================== */
+.dark-mode .admin-header {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+.dark-mode .stat-value {
+    color: var(--dm-purple) !important;
+}
+
+.dark-mode .tab {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .tab.active {
+    color: var(--dm-green) !important;
+    border-bottom-color: var(--dm-green) !important;
+}
+
+.dark-mode .tabs .tab.active {
+    background: var(--dm-purple) !important;
+    color: white !important;
+}
+
+/* ==================== ÍCONES E IMAGENS ==================== */
+.dark-mode .detail-icon img,
+.dark-mode .farmacia-icon img,
+.dark-mode .centro-icon img,
+.dark-mode .hospital-icon img,
+.dark-mode .info-card-icon img,
+.dark-mode .section-icon img,
+.dark-mode .horario-icon img,
+.dark-mode .map-icon img {
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+}
+
+/* ==================== FOOTER ==================== */
 .dark-mode footer {
     background: #0a0a0f !important;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--dm-border);
 }
 
 .dark-mode footer p {
-    color: var(--text-secondary);
+    color: var(--dm-text-secondary) !important;
 }
 
 .dark-mode .footer-subtitle {
-    color: var(--text-muted);
+    color: var(--dm-text-muted) !important;
 }
 
-/* Breadcrumb */
-.dark-mode .breadcrumb {
-    color: var(--text-secondary);
-}
-
-.dark-mode .breadcrumb a {
-    color: var(--accent-purple);
-}
-
-.dark-mode .breadcrumb a:hover {
-    color: var(--accent-purple-dark);
-}
-
-/* Horários */
-.dark-mode .horario-item {
-    border-bottom-color: var(--border-color);
-}
-
-.dark-mode .horario-icon img {
-    filter: brightness(0) invert(1);
-    opacity: 0.7;
-}
-
-/* Checklist */
-.dark-mode .checklist li {
-    border-bottom-color: var(--border-color);
-}
-
-.dark-mode .check-icon {
-    background: var(--accent-green);
-}
-
-/* Map placeholder */
-.dark-mode .map-placeholder {
-    background: var(--bg-secondary);
-    border-color: var(--border-color);
-}
-
-.dark-mode .map-icon img {
-    filter: brightness(0) invert(1);
-    opacity: 0.5;
-}
-
-/* Loading e Empty State */
-.dark-mode .loading,
-.dark-mode .empty-state,
-.dark-mode .nenhuma-avaliacao {
-    color: var(--text-secondary);
-}
-
-.dark-mode .loading::after {
-    border-color: var(--border-color);
-    border-top-color: var(--accent-purple);
-}
-
-/* Toast notifications */
-.dark-mode .toast {
-    background: var(--bg-card);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-}
-
-.dark-mode .toast.mostrar {
-    background: var(--accent-green);
-    color: white;
-}
-
-.dark-mode .toast.erro {
-    background: var(--accent-red);
-}
-
-/* Scrollbar */
-.dark-mode ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-.dark-mode ::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
-}
-
-.dark-mode ::-webkit-scrollbar-thumb {
-    background: var(--accent-purple);
-    border-radius: 5px;
-}
-
-.dark-mode ::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-purple-dark);
-}
-
-/* Botão Dark Mode flutuante */
+/* ==================== BOTÃO FLUTUANTE DARK MODE ==================== */
 .dark-mode-toggle {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background: var(--accent-purple);
+    background: var(--dm-purple);
     color: white;
     border: none;
     padding: 12px 20px;
@@ -617,18 +446,53 @@
 
 .dark-mode-toggle:hover {
     transform: scale(1.05);
-    background: var(--accent-purple-dark);
+    background: var(--dm-purple-dark);
 }
 
 .dark-mode .dark-mode-toggle {
-    background: var(--accent-purple);
+    background: var(--dm-purple);
     color: white;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
 }
 
-/* Animações */
-.dark-mode .farmacia-card,
-.dark-mode .hospital-card,
-.dark-mode .centro-card,
-.dark-mode .avaliacao-item {
-    transition: all 0.3s ease;
+/* ==================== LOADING E EMPTY ==================== */
+.dark-mode .loading,
+.dark-mode .empty-state,
+.dark-mode .nenhuma-avaliacao,
+.dark-mode .empty-message {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .loading::after {
+    border-color: var(--dm-border);
+    border-top-color: var(--dm-purple);
+}
+
+/* ==================== SCROLLBAR ==================== */
+.dark-mode ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+    background: var(--dm-bg-secondary);
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+    background: var(--dm-purple);
+    border-radius: 5px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: var(--dm-purple-dark);
+}
+
+/* ==================== RESPONSIVO ==================== */
+@media (max-width: 768px) {
+    .dark-mode-toggle {
+        padding: 10px 16px;
+        font-size: 12px;
+        bottom: 15px;
+        right: 15px;
+    }
 }
