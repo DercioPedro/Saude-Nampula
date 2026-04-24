@@ -1,5 +1,105 @@
 // load-farmacias.js - Versão completa com API e priorização de coordenadas
 
+// Função para verificar se a farmácia está aberta (baseado no horário de Moçambique)
+function verificarStatusFarmarcia(farmacia) {
+    // Horário de Moçambique (UTC+2)
+    const agora = new Date();
+    const horaMoçambique = new Date(agora.toLocaleString("en-US", {timeZone: "Africa/Maputo"}));
+    const horaAtual = horaMoçambique.getHours();
+    const minutoAtual = horaMoçambique.getMinutes();
+    const diaSemana = horaMoçambique.getDay(); // 0=Domingo, 1=Segunda, ..., 6=Sábado
+    
+    // Se for plantão 24h, sempre aberto
+    if (farmacia.plantao === true) {
+        return {
+            aberto: true,
+            texto: "Aberto agora",
+            cor: "#059669",
+            bg: "#d1fae5",
+            icon: '<img src="/img/clock-open.png" alt="Aberto" style="width: 14px; height: 14px;">'
+        };
+    }
+    
+    // Se não tem horário cadastrado, usar padrão
+    let horarioFuncionamento = farmacia.horario || "08:00 - 18:00";
+    
+    // Extrair horários
+    let horarioAbertura = "08:00";
+    let horarioFechamento = "18:00";
+    
+    // Tentar extrair do formato "08:00 - 18:00" ou "08:00-18:00"
+    const match = horarioFuncionamento.match(/(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/);
+    if (match) {
+        horarioAbertura = match[1];
+        horarioFechamento = match[2];
+    }
+    
+    // Converter para minutos
+    const [aberturaH, aberturaM] = horarioAbertura.split(':').map(Number);
+    const [fechamentoH, fechamentoM] = horarioFechamento.split(':').map(Number);
+    
+    const minutosAbertura = aberturaH * 60 + aberturaM;
+    const minutosFechamento = fechamentoH * 60 + fechamentoM;
+    const minutosAtual = horaAtual * 60 + minutoAtual;
+    
+    // Verificar se está dentro do horário
+    let aberto = false;
+    let textoStatus = "";
+    let corStatus = "";
+    let bgStatus = "";
+    let iconStatus = "";
+    
+    // Domingo (dia 0) - verificar se abre aos domingos
+    if (diaSemana === 0) {
+        // Verificar se o horário inclui domingo
+        const temDomingo = horarioFuncionamento.toLowerCase().includes("domingo") || 
+                           horarioFuncionamento.toLowerCase().includes("sunday");
+        
+        if (temDomingo) {
+            aberto = (minutosAtual >= minutosAbertura && minutosAtual < minutosFechamento);
+        } else {
+            aberto = false;
+        }
+    } 
+    // Sábado (dia 6) - verificar se tem horário de sábado
+    else if (diaSemana === 6) {
+        // Verificar se o horário inclui sábado
+        const temSabado = horarioFuncionamento.toLowerCase().includes("sábado") || 
+                          horarioFuncionamento.toLowerCase().includes("sabado") ||
+                          horarioFuncionamento.toLowerCase().includes("saturday");
+        
+        if (temSabado) {
+            aberto = (minutosAtual >= minutosAbertura && minutosAtual < minutosFechamento);
+        } else {
+            aberto = false;
+        }
+    }
+    // Dias de semana (Segunda a Sexta)
+    else {
+        aberto = (minutosAtual >= minutosAbertura && minutosAtual < minutosFechamento);
+    }
+    
+    if (aberto) {
+        textoStatus = "Aberto agora";
+        corStatus = "#059669";
+        bgStatus = "#d1fae5";
+        iconStatus = '<img src="/img/clock-open.png" alt="Aberto" style="width: 14px; height: 14px;">';
+    } else {
+        textoStatus = "Fechado";
+        corStatus = "#dc2626";
+        bgStatus = "#fee2e2";
+        iconStatus = '<img src="/img/clock-closed.png" alt="Fechado" style="width: 14px; height: 14px;">';
+    }
+    
+    return {
+        aberto: aberto,
+        texto: textoStatus,
+        cor: corStatus,
+        bg: bgStatus,
+        icon: iconStatus
+    };
+}
+
 // Funções auxiliares para obter URLs com prioridade para coordenadas
 function obterUrlGoogleMaps(item) {
     if (item.latitude && item.longitude) {
@@ -100,7 +200,6 @@ function mostrarMensagemErro(mensagem) {
     }
 }
 
-// Criar um card de farmacia
 function criarCardFarmacia(farmacia) {
     let card = document.createElement('div');
     card.className = 'farmacia-card';
@@ -109,6 +208,9 @@ function criarCardFarmacia(farmacia) {
     
     let plantao = farmacia.plantao === true;
     let badgePlantao = plantao ? '<span class="badge-plantao">Plantao 24h</span>' : '';
+    
+    // Verificar status da farmácia
+    const status = verificarStatusFarmarcia(farmacia);
     
     let servicos = gerarServicos(farmacia, plantao);
     let servicosHTML = '';
@@ -124,7 +226,7 @@ function criarCardFarmacia(farmacia) {
     let nomeCodificado = encodeURIComponent(nome);
     let id = farmacia.id;
     
-    // Obter URLs baseadas em coordenadas (prioridade)
+    // Obter URLs baseadas em coordenadas
     const urlDirecoes = obterUrlDirecoes(farmacia);
     const urlWaze = obterUrlWaze(farmacia);
     
@@ -132,7 +234,12 @@ function criarCardFarmacia(farmacia) {
         <div class="farmacia-header">
             <div class="farmacia-title">
                 <h3>${nome}</h3>
-                ${badgePlantao}
+                <div style="display: flex; gap: 8px; margin-top: 5px; flex-wrap: wrap;">
+                    ${badgePlantao}
+                    <span class="status-badge" style="background: ${status.bg}; color: ${status.cor}; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                        ${status.icon} ${status.texto}
+                    </span>
+                </div>
             </div>
             <span class="farmacia-icon"><img src="/img/comprimidos.png" alt="Farmacia" style="width: 32px; height: 32px;"></span>
         </div>
@@ -167,7 +274,7 @@ function criarCardFarmacia(farmacia) {
                 <img src="/img/ponto.png" alt="Como Chegar" style="width: 14px; height: 14px;"> Como Chegar
             </button>
             <button class="waze-btn" onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                 Waze
+                <img src="/img/waze.png" alt="Waze" style="width: 14px; height: 14px;"> Waze
             </button>
         </div>
     `;
