@@ -1,4 +1,4 @@
-// geolocalizacao.js - Funcionalidade de localização e distância
+// geolocalizacao.js - Versão corrigida
 
 let localizacaoAtual = null;
 let distanciaAtiva = false;
@@ -47,9 +47,9 @@ function obterLocalizacao() {
     });
 }
 
-// Calcular distância entre dois pontos (Fórmula de Haversine)
+// Calcular distância entre dois pontos
 function calcularDistancia(lat1, lng1, lat2, lng2) {
-    const raioTerra = 6371; // km
+    const raioTerra = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLng = (lng2 - lng1) * Math.PI / 180;
     const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -59,7 +59,6 @@ function calcularDistancia(lat1, lng1, lat2, lng2) {
     return raioTerra * c;
 }
 
-// Formatar distância para exibição
 function formatarDistancia(distancia) {
     if (distancia < 1) {
         return `${Math.round(distancia * 1000)} m`;
@@ -67,7 +66,28 @@ function formatarDistancia(distancia) {
     return `${distancia.toFixed(1)} km`;
 }
 
-// Adicionar distância aos cards
+// Buscar coordenadas de um item pelo ID
+async function buscarCoordenadasItem(tipo, id) {
+    try {
+        let items = [];
+        if (tipo === 'farmacia') {
+            items = await apiRequest('/farmacias');
+        } else if (tipo === 'hospital') {
+            items = await apiRequest('/hospitais');
+        } else {
+            items = await apiRequest('/centros');
+        }
+        const item = items.find(i => i.id == id);
+        if (item && item.latitude && item.longitude) {
+            return { lat: item.latitude, lng: item.longitude };
+        }
+        return null;
+    } catch (error) {
+        console.error(`Erro ao buscar ${tipo}:`, error);
+        return null;
+    }
+}
+
 async function adicionarDistanciasAosCards() {
     try {
         if (!localizacaoAtual) {
@@ -77,15 +97,12 @@ async function adicionarDistanciasAosCards() {
             document.body.appendChild(msg);
             
             await obterLocalizacao();
-            
             msg.remove();
         }
         
         distanciaAtiva = true;
         
-        // Buscar todos os cards de farmácias, hospitais e centros
         const cards = document.querySelectorAll('.farmacia-card, .hospital-card, .centro-card');
-        
         console.log(`Encontrados ${cards.length} cards para processar`);
         
         let cardsComDistancia = 0;
@@ -95,72 +112,75 @@ async function adicionarDistanciasAosCards() {
             const tipo = card.classList.contains('farmacia-card') ? 'farmacia' :
                         card.classList.contains('hospital-card') ? 'hospital' : 'centro';
             
-            if (!id) continue;
+            if (!id) {
+                console.log('Card sem ID:', card);
+                continue;
+            }
             
-            try {
-                let item = null;
-                if (tipo === 'farmacia') {
-                    const items = await apiRequest('/farmacias');
-                    item = items.find(i => i.id == id);
-                } else if (tipo === 'hospital') {
-                    const items = await apiRequest('/hospitais');
-                    item = items.find(i => i.id == id);
-                } else {
-                    const items = await apiRequest('/centros');
-                    item = items.find(i => i.id == id);
-                }
+            console.log(`Processando ${tipo} ID: ${id}`);
+            
+            // Buscar coordenadas do item
+            const coords = await buscarCoordenadasItem(tipo, id);
+            
+            if (coords) {
+                const distancia = calcularDistancia(localizacaoAtual.lat, localizacaoAtual.lng, coords.lat, coords.lng);
                 
-                if (item && item.latitude && item.longitude) {
-                    const distancia = calcularDistancia(localizacaoAtual.lat, localizacaoAtual.lng, item.latitude, item.longitude);
-                    
-                    // Procurar ou criar elemento de distância
-                    let distanciaElement = card.querySelector('.distancia-badge');
-                    if (!distanciaElement) {
-                        distanciaElement = document.createElement('div');
-                        distanciaElement.className = 'distancia-badge';
-                        const detailsDiv = card.querySelector('.farmacia-details, .hospital-details, .centro-details');
-                        if (detailsDiv) {
-                            detailsDiv.insertBefore(distanciaElement, detailsDiv.firstChild);
-                        } else {
-                            card.insertBefore(distanciaElement, card.firstChild);
-                        }
-                    }
-                    distanciaElement.innerHTML = ` a ${formatarDistancia(distancia)}`;
-                    distanciaElement.style.cssText = 'background: #7c3aed; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; margin-bottom: 8px; width: fit-content;';
-                    cardsComDistancia++;
+                // Remover badge antigo se existir
+                const badgeAntigo = card.querySelector('.distancia-badge');
+                if (badgeAntigo) badgeAntigo.remove();
+                
+                // Criar novo badge
+                const distanciaBadge = document.createElement('div');
+                distanciaBadge.className = 'distancia-badge';
+                distanciaBadge.innerHTML = ` a ${formatarDistancia(distancia)}`;
+                distanciaBadge.style.cssText = 'background: #7c3aed; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; margin-bottom: 8px; width: fit-content;';
+                
+                // Inserir no início do card
+                const firstChild = card.firstChild;
+                card.insertBefore(distanciaBadge, firstChild);
+                
+                cardsComDistancia++;
+                console.log(` Distância calculada: ${formatarDistancia(distancia)}`);
+            } else {
+                console.log(` ${tipo} ID ${id} sem coordenadas`);
+                
+                // Mostrar mensagem que não tem coordenada
+                const semCoordBadge = card.querySelector('.sem-coordenada');
+                if (!semCoordBadge) {
+                    const badge = document.createElement('div');
+                    badge.className = 'sem-coordenada';
+                    badge.innerHTML = ' Localizacao nao cadastrada';
+                    badge.style.cssText = 'background: #6b7280; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; margin-bottom: 8px; width: fit-content;';
+                    const firstChild = card.firstChild;
+                    card.insertBefore(badge, firstChild);
                 }
-            } catch (error) {
-                console.error(`Erro ao buscar ${tipo} ${id}:`, error);
             }
         }
         
         // Mostrar mensagem de sucesso
         const msgDiv = document.createElement('div');
         msgDiv.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: #059669; color: white; padding: 10px 20px; border-radius: 8px; z-index: 1000; font-size: 14px;';
-        msgDiv.innerHTML = ` Localizacao ativada! ${cardsComDistancia} unidades com distancia calculada.`;
+        msgDiv.innerHTML = ` ${cardsComDistancia} estabelecimentos com distancia calculada.`;
         document.body.appendChild(msgDiv);
         setTimeout(() => msgDiv.remove(), 3000);
         
-        // Mostrar botão de ordenar se tiver distâncias
-        if (cardsComDistancia > 0) {
-            const btnOrdenar = document.getElementById('btn-ordenar-distancia');
-            if (btnOrdenar) btnOrdenar.style.display = 'flex';
+        const btnOrdenar = document.getElementById('btn-ordenar-distancia');
+        if (btnOrdenar && cardsComDistancia > 0) {
+            btnOrdenar.style.display = 'flex';
         }
         
     } catch (error) {
-        console.error('Erro ao calcular distancias:', error);
+        console.error('Erro:', error);
         alert(error.message);
     }
 }
 
-// Ordenar cards por distância
 function ordenarCardsPorDistancia() {
     const container = document.querySelector('.farmacias-grid, .centros-grid, main');
     if (!container) return;
     
     const cards = Array.from(container.querySelectorAll('.farmacia-card, .hospital-card, .centro-card'));
     
-    // Extrair distância de cada card
     const cardsComDistancia = cards.map(card => {
         const distanciaElement = card.querySelector('.distancia-badge');
         let distancia = Infinity;
@@ -179,26 +199,22 @@ function ordenarCardsPorDistancia() {
         return { card, distancia };
     });
     
-    // Ordenar por distância
     cardsComDistancia.sort((a, b) => a.distancia - b.distancia);
     
-    // Reordenar no DOM
     cardsComDistancia.forEach(item => {
         container.appendChild(item.card);
     });
     
     const btnOrdenar = document.getElementById('btn-ordenar-distancia');
     if (btnOrdenar) {
-        btnOrdenar.innerHTML = ' Ordenado por distancia';
+        btnOrdenar.innerHTML = ' Ordenado!';
         setTimeout(() => {
             btnOrdenar.innerHTML = ' Ordenar por distancia';
         }, 2000);
     }
 }
 
-// Criar botões de localização
 function criarBotaoLocalizacao() {
-    // Verificar se já existe
     if (document.querySelector('.btn-localizacao-container')) return;
     
     const filterSection = document.querySelector('.filter-section');
@@ -220,7 +236,7 @@ function criarBotaoLocalizacao() {
     
     btnLocalizar.onclick = async () => {
         btnLocalizar.disabled = true;
-        btnLocalizar.innerHTML = ' Obtendo localizacao...';
+        btnLocalizar.innerHTML = ' Calculando distancias...';
         btnLocalizar.style.opacity = '0.7';
         await adicionarDistanciasAosCards();
         btnLocalizar.disabled = false;
@@ -229,24 +245,17 @@ function criarBotaoLocalizacao() {
         btnLocalizar.style.opacity = '1';
     };
     
-    btnOrdenar.onclick = () => {
-        ordenarCardsPorDistancia();
-    };
+    btnOrdenar.onclick = ordenarCardsPorDistancia;
     
     btnContainer.appendChild(btnLocalizar);
     btnContainer.appendChild(btnOrdenar);
     
-    // Inserir após o filter-section
     filterSection.parentNode.insertBefore(btnContainer, filterSection.nextSibling);
 }
 
-// Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
     const path = window.location.pathname;
     if (path.includes('farm.html') || path.includes('hospital.html') || path.includes('centros.html')) {
-        // Aguardar os cards carregarem
-        setTimeout(() => {
-            criarBotaoLocalizacao();
-        }, 500);
+        setTimeout(criarBotaoLocalizacao, 1000);
     }
 });
