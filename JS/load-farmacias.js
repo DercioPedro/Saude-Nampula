@@ -1,16 +1,14 @@
 // load-farmacias.js - Versão completa com API, coordenadas e status de funcionamento
 
-// Função para verificar se a farmácia está aberta (baseado no horário de Moçambique)
 function verificarStatusFarmacia(farmacia) {
-    // Horário de Moçambique (UTC+2)
     const agora = new Date();
-    const horaMoçambique = new Date(agora.toLocaleString("en-US", {timeZone: "Africa/Maputo"}));
-    const horaAtual = horaMoçambique.getHours();
-    const minutoAtual = horaMoçambique.getMinutes();
-    const diaSemana = horaMoçambique.getDay(); // 0=Domingo, 1=Segunda, ..., 6=Sábado
+    const horaMocambique = new Date(agora.toLocaleString("en-US", {timeZone: "Africa/Maputo"}));
+    const horaAtual = horaMocambique.getHours();
+    const minutoAtual = horaMocambique.getMinutes();
+    const diaSemana = horaMocambique.getDay();
     
-    // Se for plantão 24h, sempre aberto
-    if (farmacia.plantao === true) {
+    // Plantão 24h - sempre aberto
+    if (farmacia.plantao === true || farmacia.horario === "24hr") {
         return {
             aberto: true,
             texto: "Aberto agora",
@@ -20,57 +18,56 @@ function verificarStatusFarmacia(farmacia) {
         };
     }
     
-    // Se não tem horário cadastrado, usar padrão
     let horarioFuncionamento = farmacia.horario || "08:00 - 18:00";
-    
-    // Extrair horários
-    let horarioAbertura = "08:00";
-    let horarioFechamento = "18:00";
-    
-    // Tentar extrair do formato "08:00 - 18:00" ou "08:00-18:00"
-    const match = horarioFuncionamento.match(/(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/);
-    if (match) {
-        horarioAbertura = match[1];
-        horarioFechamento = match[2];
-    }
-    
-    // Converter para minutos
-    const [aberturaH, aberturaM] = horarioAbertura.split(':').map(Number);
-    const [fechamentoH, fechamentoM] = horarioFechamento.split(':').map(Number);
-    
-    const minutosAbertura = aberturaH * 60 + aberturaM;
-    const minutosFechamento = fechamentoH * 60 + fechamentoM;
     const minutosAtual = horaAtual * 60 + minutoAtual;
     
-    // Verificar se está dentro do horário
+    // Função para verificar se está dentro de um intervalo
+    function estaNoIntervalo(intervalo) {
+        // Aceita traços normais e longos: "-" ou "–"
+        const match = intervalo.match(/(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/);
+        if (!match) return false;
+        
+        let abertura = match[1];
+        let fechamento = match[2];
+        
+        const [aberturaH, aberturaM] = abertura.split(':').map(Number);
+        const [fechamentoH, fechamentoM] = fechamento.split(':').map(Number);
+        
+        const minutosAbertura = aberturaH * 60 + aberturaM;
+        const minutosFechamento = fechamentoH * 60 + fechamentoM;
+        
+        return (minutosAtual >= minutosAbertura && minutosAtual < minutosFechamento);
+    }
+    
     let aberto = false;
     
-    // Domingo (dia 0)
-    if (diaSemana === 0) {
-        const temDomingo = horarioFuncionamento.toLowerCase().includes("domingo") || 
-                           horarioFuncionamento.toLowerCase().includes("sunday");
-        
-        if (temDomingo) {
-            aberto = (minutosAtual >= minutosAbertura && minutosAtual < minutosFechamento);
-        } else {
-            aberto = false;
-        }
-    } 
-    // Sábado (dia 6)
-    else if (diaSemana === 6) {
-        const temSabado = horarioFuncionamento.toLowerCase().includes("sábado") || 
-                          horarioFuncionamento.toLowerCase().includes("sabado") ||
-                          horarioFuncionamento.toLowerCase().includes("saturday");
-        
-        if (temSabado) {
-            aberto = (minutosAtual >= minutosAbertura && minutosAtual < minutosFechamento);
-        } else {
-            aberto = false;
+    // Verificar se tem vírgula (múltiplos períodos)
+    if (horarioFuncionamento.indexOf(',') !== -1) {
+        // Exemplo: "08:30–12:00,14:00–20:00"
+        const periodos = horarioFuncionamento.split(',');
+        for (let i = 0; i < periodos.length; i++) {
+            if (estaNoIntervalo(periodos[i].trim())) {
+                aberto = true;
+                break;
+            }
         }
     }
-    // Dias de semana (Segunda a Sexta)
+    // Verificar se tem espaço (dois períodos)
+    else if (horarioFuncionamento.indexOf(' ') !== -1 && horarioFuncionamento.indexOf('-') !== -1) {
+        // Exemplo: "08:00–12:00 14:00–18:00"
+        const periodos = horarioFuncionamento.split(' ');
+        for (let i = 0; i < periodos.length; i++) {
+            if (periodos[i].indexOf('-') !== -1 || periodos[i].indexOf('–') !== -1) {
+                if (estaNoIntervalo(periodos[i])) {
+                    aberto = true;
+                    break;
+                }
+            }
+        }
+    }
+    // Período único
     else {
-        aberto = (minutosAtual >= minutosAbertura && minutosAtual < minutosFechamento);
+        aberto = estaNoIntervalo(horarioFuncionamento);
     }
     
     if (aberto) {
