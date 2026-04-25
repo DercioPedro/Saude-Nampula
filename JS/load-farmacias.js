@@ -1,14 +1,15 @@
 // load-farmacias.js - Versão completa com API, coordenadas e status de funcionamento
 
 function verificarStatusFarmacia(farmacia) {
+    // Horário de Moçambique (UTC+2)
     const agora = new Date();
-    const horaMocambique = new Date(agora.toLocaleString("en-US", {timeZone: "Africa/Maputo"}));
-    const horaAtual = horaMocambique.getHours();
-    const minutoAtual = horaMocambique.getMinutes();
-    const diaSemana = horaMocambique.getDay();
+    const horaMoçambique = new Date(agora.toLocaleString("en-US", {timeZone: "Africa/Maputo"}));
+    const horaAtual = horaMoçambique.getHours();
+    const minutoAtual = horaMoçambique.getMinutes();
+    const minutosAtual = horaAtual * 60 + minutoAtual;
     
     // Plantão 24h - sempre aberto
-    if (farmacia.plantao === true || farmacia.horario === "24hr") {
+    if (farmacia.plantao === true) {
         return {
             aberto: true,
             texto: "Aberto agora",
@@ -18,47 +19,59 @@ function verificarStatusFarmacia(farmacia) {
         };
     }
     
-    let horarioFuncionamento = farmacia.horario || "08:00 - 18:00";
-    const minutosAtual = horaAtual * 60 + minutoAtual;
+    let horario = farmacia.horario || "08:00 - 18:00";
     
-    // Função para verificar se está dentro de um intervalo
-    function estaNoIntervalo(intervalo) {
-        // Aceita traços normais e longos: "-" ou "–"
-        const match = intervalo.match(/(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/);
-        if (!match) return false;
-        
-        let abertura = match[1];
-        let fechamento = match[2];
-        
-        const [aberturaH, aberturaM] = abertura.split(':').map(Number);
-        const [fechamentoH, fechamentoM] = fechamento.split(':').map(Number);
-        
-        const minutosAbertura = aberturaH * 60 + aberturaM;
-        const minutosFechamento = fechamentoH * 60 + fechamentoM;
-        
-        return (minutosAtual >= minutosAbertura && minutosAtual < minutosFechamento);
+    // Função para converter "HH:MM" para minutos
+    function paraMinutos(horaStr) {
+        const partes = horaStr.split(':');
+        if (partes.length !== 2) return 0;
+        return parseInt(partes[0]) * 60 + parseInt(partes[1]);
+    }
+    
+    // Função para extrair horários de um período
+    function extrairHorarios(periodo) {
+        // Aceita "-" e "–"
+        const separadores = ['-', '–'];
+        for (let i = 0; i < separadores.length; i++) {
+            if (periodo.indexOf(separadores[i]) !== -1) {
+                const partes = periodo.split(separadores[i]);
+                if (partes.length === 2) {
+                    return {
+                        inicio: partes[0].trim(),
+                        fim: partes[1].trim()
+                    };
+                }
+            }
+        }
+        return null;
     }
     
     let aberto = false;
     
     // Verificar se tem vírgula (múltiplos períodos)
-    if (horarioFuncionamento.indexOf(',') !== -1) {
-        // Exemplo: "08:30–12:00,14:00–20:00"
-        const periodos = horarioFuncionamento.split(',');
+    if (horario.indexOf(',') !== -1) {
+        const periodos = horario.split(',');
         for (let i = 0; i < periodos.length; i++) {
-            if (estaNoIntervalo(periodos[i].trim())) {
-                aberto = true;
-                break;
+            const hrs = extrairHorarios(periodos[i].trim());
+            if (hrs) {
+                const inicioMin = paraMinutos(hrs.inicio);
+                const fimMin = paraMinutos(hrs.fim);
+                if (minutosAtual >= inicioMin && minutosAtual < fimMin) {
+                    aberto = true;
+                    break;
+                }
             }
         }
     }
     // Verificar se tem espaço (dois períodos)
-    else if (horarioFuncionamento.indexOf(' ') !== -1 && horarioFuncionamento.indexOf('-') !== -1) {
-        // Exemplo: "08:00–12:00 14:00–18:00"
-        const periodos = horarioFuncionamento.split(' ');
-        for (let i = 0; i < periodos.length; i++) {
-            if (periodos[i].indexOf('-') !== -1 || periodos[i].indexOf('–') !== -1) {
-                if (estaNoIntervalo(periodos[i])) {
+    else if (horario.indexOf(' ') !== -1 && (horario.indexOf('-') !== -1 || horario.indexOf('–') !== -1)) {
+        const partes = horario.split(' ');
+        for (let i = 0; i < partes.length; i++) {
+            const hrs = extrairHorarios(partes[i]);
+            if (hrs) {
+                const inicioMin = paraMinutos(hrs.inicio);
+                const fimMin = paraMinutos(hrs.fim);
+                if (minutosAtual >= inicioMin && minutosAtual < fimMin) {
                     aberto = true;
                     break;
                 }
@@ -67,7 +80,12 @@ function verificarStatusFarmacia(farmacia) {
     }
     // Período único
     else {
-        aberto = estaNoIntervalo(horarioFuncionamento);
+        const hrs = extrairHorarios(horario);
+        if (hrs) {
+            const inicioMin = paraMinutos(hrs.inicio);
+            const fimMin = paraMinutos(hrs.fim);
+            aberto = (minutosAtual >= inicioMin && minutosAtual < fimMin);
+        }
     }
     
     if (aberto) {
@@ -88,7 +106,6 @@ function verificarStatusFarmacia(farmacia) {
         };
     }
 }
-
 // Funções auxiliares para obter URLs com prioridade para coordenadas
 function obterUrlGoogleMaps(item) {
     if (item.latitude && item.longitude) {
