@@ -8,8 +8,6 @@ function verificarStatusFarmacia(farmacia) {
     const minutoAtual = horaMoçambique.getMinutes();
     const minutosAtual = horaAtual * 60 + minutoAtual;
     
-    console.log(`Verificando ${farmacia.nome}: ${horaAtual}:${minutoAtual} (${minutosAtual} minutos)`);
-    
     // Plantão 24h - sempre aberto
     if (farmacia.plantao === true || farmacia.horario === "24hr") {
         return {
@@ -22,12 +20,10 @@ function verificarStatusFarmacia(farmacia) {
     }
     
     let horario = farmacia.horario || "08:00 - 18:00";
-    console.log(`  Horario: "${horario}"`);
     
     // Função para converter "HH:MM" para minutos
     function paraMinutos(horaStr) {
         if (!horaStr) return 0;
-        // Limpar espaços
         horaStr = horaStr.trim();
         const partes = horaStr.split(':');
         if (partes.length !== 2) return 0;
@@ -37,20 +33,18 @@ function verificarStatusFarmacia(farmacia) {
         return horas * 60 + minutos;
     }
     
-    // Função para extrair horários de um período
+    // Função para extrair horários - CORRIGIDA
     function extrairHorarios(periodo) {
-        // Aceita "-" e "–"
-        const separadores = ['-', '–'];
-        for (let i = 0; i < separadores.length; i++) {
-            if (periodo.indexOf(separadores[i]) !== -1) {
-                const partes = periodo.split(separadores[i]);
-                if (partes.length === 2) {
-                    return {
-                        inicio: partes[0].trim(),
-                        fim: partes[1].trim()
-                    };
-                }
-            }
+        periodo = periodo.trim();
+        // Aceita "-", "–", com ou sem espaços
+        const padrao = /(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/;
+        const match = periodo.match(padrao);
+        
+        if (match) {
+            return {
+                inicio: match[1],
+                fim: match[2]
+            };
         }
         return null;
     }
@@ -61,11 +55,10 @@ function verificarStatusFarmacia(farmacia) {
     if (horario.indexOf(',') !== -1) {
         const periodos = horario.split(',');
         for (let i = 0; i < periodos.length; i++) {
-            const hrs = extrairHorarios(periodos[i].trim());
+            const hrs = extrairHorarios(periodos[i]);
             if (hrs) {
                 const inicioMin = paraMinutos(hrs.inicio);
                 const fimMin = paraMinutos(hrs.fim);
-                console.log(`  Periodo: ${hrs.inicio}(${inicioMin}) - ${hrs.fim}(${fimMin})`);
                 if (minutosAtual >= inicioMin && minutosAtual < fimMin) {
                     aberto = true;
                     break;
@@ -82,7 +75,6 @@ function verificarStatusFarmacia(farmacia) {
                 if (hrs) {
                     const inicioMin = paraMinutos(hrs.inicio);
                     const fimMin = paraMinutos(hrs.fim);
-                    console.log(`  Periodo: ${hrs.inicio}(${inicioMin}) - ${hrs.fim}(${fimMin})`);
                     if (minutosAtual >= inicioMin && minutosAtual < fimMin) {
                         aberto = true;
                         break;
@@ -97,12 +89,9 @@ function verificarStatusFarmacia(farmacia) {
         if (hrs) {
             const inicioMin = paraMinutos(hrs.inicio);
             const fimMin = paraMinutos(hrs.fim);
-            console.log(`  Periodo: ${hrs.inicio}(${inicioMin}) - ${hrs.fim}(${fimMin})`);
             aberto = (minutosAtual >= inicioMin && minutosAtual < fimMin);
         }
     }
-    
-    console.log(`  Resultado: ${aberto ? 'ABERTO' : 'FECHADO'}`);
     
     if (aberto) {
         return {
