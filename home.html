@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles/home.css">
     <link rel="stylesheet" href="styles/darkmode.css">
     <link rel="icon" type="image/png" href="/img/monitor.png">
+    <script src="JS/loading.js"></script>
 
 </head>
 
@@ -117,6 +118,38 @@
     </footer>
 
     <!-- Adicionar antes dos outros scripts -->
+    <script>
+    // Mostrar loading imediatamente
+    (function() {
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'loading-overlay';
+        loadingDiv.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #059669 0%, #047857 100%); z-index: 9999; display: flex; align-items: center; justify-content: center;';
+        loadingDiv.innerHTML = `
+            <div class="loading-content">
+                <div class="loading-spinner">
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                </div>
+                <div class="loading-logo">
+                    <img src="/img/monitor.png" alt="Saúde Nampula">
+                </div>
+                <div class="loading-text">
+                    <h3>Saúde Nampula</h3>
+                    <p>Carregando informações de saúde...</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(loadingDiv);
+        
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                loadingDiv.style.opacity = '0';
+                setTimeout(() => loadingDiv.remove(), 500);
+            }, 800);
+        });
+    })();
+</script>
     <script src="JS/api-config.js"></script>
     <script src="/JS/home.js"></script>
     <!-- Script para atualizar contadores dinamicamente -->
