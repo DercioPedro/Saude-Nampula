@@ -1,94 +1,127 @@
-// loading.js - Sistema de delay e loading
+// loading.js - Sistema de loading com tempo ajustável e responsivo
 
 class LoadingManager {
     constructor() {
         this.loadingOverlay = null;
-        this.minLoadingTime = 800; // Tempo mínimo de loading em ms (0.8 segundos)
-        this.maxLoadingTime = 3000; // Tempo máximo de loading em ms (3 segundos)
+        this.minLoadingTime = 1500; // 1.5 segundos (mais agradável)
+        this.maxLoadingTime = 2500; // 2.5 segundos máximo
         this.startTime = null;
         this.isLoading = false;
     }
     
-    // Criar o overlay de loading
     createLoadingOverlay() {
-        // Verificar se já existe
         if (document.querySelector('.loading-overlay')) return;
         
         const overlay = document.createElement('div');
         overlay.className = 'loading-overlay';
+        
+        // HTML responsivo
         overlay.innerHTML = `
-            <div class="loading-content">
-                <div class="loading-spinner">
-                    <div class="spinner-ring"></div>
-                    <div class="spinner-ring"></div>
-                    <div class="spinner-ring"></div>
+            <div class="loading-container">
+                <div class="loading-spinner-wrapper">
+                    <div class="loading-spinner">
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ring"></div>
+                    </div>
                 </div>
-                <div class="loading-logo">
-                    <img src="/img/monitor.png" alt="Saúde Nampula">
+                
+                <div class="loading-logo-wrapper">
+                    <div class="loading-logo">
+                        <img src="/img/monitor.png" alt="Saúde Nampula" class="logo-img">
+                    </div>
                 </div>
-                <div class="loading-text">
-                    <h3>Saúde Nampula</h3>
-                    <p>Carregando informações de saúde...</p>
+                
+                <div class="loading-text-wrapper">
+                    <h2 class="loading-title">Saúde Nampula</h2>
+                    <p class="loading-subtitle">Plataforma de Saúde Comunitária</p>
                 </div>
-                <div class="loading-progress">
-                    <div class="progress-bar"></div>
+                
+                <div class="loading-progress-wrapper">
+                    <div class="loading-progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
                 </div>
-                <div class="loading-tip">
-                    <span class="tip-icon">💡</span>
-                    <span class="tip-text">Sempre leve a prescrição médica ao comprar medicamentos</span>
+                
+                <div class="loading-tip-wrapper">
+                    <div class="loading-tip">
+                        <span class="tip-emoji">💡</span>
+                        <span class="tip-message">Sempre leve a prescrição médica</span>
+                    </div>
                 </div>
             </div>
         `;
         
-        // Estilos do overlay
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.5s ease;
-            opacity: 1;
-        `;
-        
-        // Estilos do conteúdo
+        // Estilos CSS responsivos
         const style = document.createElement('style');
         style.textContent = `
-            .loading-content {
-                text-align: center;
-                animation: fadeInUp 0.5s ease;
+            .loading-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, #059669 0%, #047857 100%);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: opacity 0.5s ease;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             }
             
-            @keyframes fadeInUp {
+            .loading-container {
+                text-align: center;
+                padding: 20px;
+                max-width: 90%;
+                width: 400px;
+                animation: fadeInScale 0.4s ease;
+            }
+            
+            @keyframes fadeInScale {
                 from {
                     opacity: 0;
-                    transform: translateY(30px);
+                    transform: scale(0.9);
                 }
                 to {
                     opacity: 1;
-                    transform: translateY(0);
+                    transform: scale(1);
                 }
+            }
+            
+            /* Spinner */
+            .loading-spinner-wrapper {
+                margin-bottom: 30px;
             }
             
             .loading-spinner {
                 position: relative;
-                width: 80px;
-                height: 80px;
-                margin: 0 auto 30px;
+                width: 70px;
+                height: 70px;
+                margin: 0 auto;
+            }
+            
+            @media (max-width: 768px) {
+                .loading-spinner {
+                    width: 55px;
+                    height: 55px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .loading-spinner {
+                    width: 45px;
+                    height: 45px;
+                }
             }
             
             .spinner-ring {
                 position: absolute;
                 width: 100%;
                 height: 100%;
-                border: 4px solid transparent;
+                border: 3px solid transparent;
                 border-radius: 50%;
-                animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+                animation: spinRing 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
             }
             
             .spinner-ring:nth-child(1) {
@@ -106,116 +139,174 @@ class LoadingManager {
                 animation-delay: -0.15s;
             }
             
-            @keyframes spin {
-                0% {
-                    transform: rotate(0deg);
-                }
-                100% {
-                    transform: rotate(360deg);
-                }
+            @keyframes spinRing {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            /* Logo */
+            .loading-logo-wrapper {
+                margin-bottom: 20px;
             }
             
             .loading-logo {
                 width: 80px;
                 height: 80px;
-                margin: 0 auto 20px;
                 background: white;
                 border-radius: 20px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-                animation: pulse 1.5s ease infinite;
+                margin: 0 auto;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+                animation: pulseLogo 1.5s ease infinite;
             }
             
-            .loading-logo img {
+            @keyframes pulseLogo {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+            
+            @media (max-width: 768px) {
+                .loading-logo {
+                    width: 65px;
+                    height: 65px;
+                    border-radius: 16px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .loading-logo {
+                    width: 55px;
+                    height: 55px;
+                    border-radius: 14px;
+                }
+            }
+            
+            .logo-img {
                 width: 50px;
                 height: 50px;
             }
             
-            @keyframes pulse {
-                0%, 100% {
-                    transform: scale(1);
-                }
-                50% {
-                    transform: scale(1.05);
+            @media (max-width: 768px) {
+                .logo-img {
+                    width: 40px;
+                    height: 40px;
                 }
             }
             
-            .loading-text h3 {
+            @media (max-width: 480px) {
+                .logo-img {
+                    width: 32px;
+                    height: 32px;
+                }
+            }
+            
+            /* Textos */
+            .loading-text-wrapper {
+                margin-bottom: 30px;
+            }
+            
+            .loading-title {
                 color: white;
-                font-size: 24px;
-                margin-bottom: 8px;
+                font-size: 28px;
                 font-weight: 600;
+                margin-bottom: 8px;
+                letter-spacing: -0.5px;
             }
             
-            .loading-text p {
-                color: rgba(255, 255, 255, 0.8);
+            .loading-subtitle {
+                color: rgba(255, 255, 255, 0.85);
                 font-size: 14px;
             }
             
-            .loading-progress {
-                width: 200px;
+            @media (max-width: 768px) {
+                .loading-title {
+                    font-size: 24px;
+                }
+                .loading-subtitle {
+                    font-size: 12px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .loading-title {
+                    font-size: 20px;
+                }
+                .loading-subtitle {
+                    font-size: 11px;
+                }
+            }
+            
+            /* Barra de progresso */
+            .loading-progress-wrapper {
+                margin-bottom: 30px;
+                padding: 0 20px;
+            }
+            
+            .loading-progress-bar {
+                width: 100%;
                 height: 4px;
-                background: rgba(255, 255, 255, 0.3);
-                border-radius: 2px;
-                margin: 30px auto 0;
+                background: rgba(255, 255, 255, 0.25);
+                border-radius: 4px;
                 overflow: hidden;
             }
             
-            .progress-bar {
+            .progress-fill {
                 width: 0%;
                 height: 100%;
                 background: white;
-                border-radius: 2px;
+                border-radius: 4px;
                 transition: width 0.3s ease;
             }
             
+            /* Dica */
+            .loading-tip-wrapper {
+                padding: 0 10px;
+            }
+            
             .loading-tip {
-                margin-top: 40px;
+                background: rgba(255, 255, 255, 0.12);
+                backdrop-filter: blur(8px);
                 padding: 12px 20px;
-                background: rgba(255, 255, 255, 0.15);
-                border-radius: 30px;
+                border-radius: 40px;
                 display: inline-flex;
                 align-items: center;
                 gap: 10px;
                 font-size: 13px;
                 color: white;
-                backdrop-filter: blur(5px);
+                max-width: 100%;
             }
             
-            .tip-icon {
+            .tip-emoji {
                 font-size: 18px;
             }
             
-            @media (max-width: 768px) {
-                .loading-spinner {
-                    width: 60px;
-                    height: 60px;
-                }
-                
-                .loading-logo {
-                    width: 60px;
-                    height: 60px;
-                }
-                
-                .loading-logo img {
-                    width: 35px;
-                    height: 35px;
-                }
-                
-                .loading-text h3 {
-                    font-size: 20px;
-                }
-                
-                .loading-progress {
-                    width: 150px;
-                }
-                
+            .tip-message {
+                white-space: nowrap;
+            }
+            
+            @media (max-width: 600px) {
                 .loading-tip {
+                    padding: 10px 16px;
+                    gap: 8px;
+                }
+                .tip-emoji {
+                    font-size: 14px;
+                }
+                .tip-message {
                     font-size: 11px;
-                    max-width: 280px;
-                    text-align: center;
+                    white-space: normal;
+                    line-height: 1.4;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .loading-tip {
+                    padding: 8px 12px;
+                }
+                .tip-message {
+                    font-size: 10px;
                 }
             }
         `;
@@ -224,39 +315,34 @@ class LoadingManager {
         document.body.appendChild(overlay);
         
         this.loadingOverlay = overlay;
-        
-        // Animar a barra de progresso
         this.animateProgressBar();
         
         return overlay;
     }
     
-    // Animar a barra de progresso
     animateProgressBar() {
-        const progressBar = document.querySelector('.progress-bar');
-        if (!progressBar) return;
+        const progressFill = document.querySelector('.progress-fill');
+        if (!progressFill) return;
         
         let width = 0;
         const interval = setInterval(() => {
-            if (width >= 90) {
+            if (width >= 85) {
                 clearInterval(interval);
             } else {
-                width += Math.random() * 10;
-                if (width > 90) width = 90;
-                progressBar.style.width = width + '%';
+                width += Math.random() * 8;
+                if (width > 85) width = 85;
+                progressFill.style.width = width + '%';
             }
-        }, 100);
+        }, 120);
     }
     
-    // Completar a barra de progresso
     completeProgressBar() {
-        const progressBar = document.querySelector('.progress-bar');
-        if (progressBar) {
-            progressBar.style.width = '100%';
+        const progressFill = document.querySelector('.progress-fill');
+        if (progressFill) {
+            progressFill.style.width = '100%';
         }
     }
     
-    // Esconder o loading
     hideLoading() {
         return new Promise((resolve) => {
             if (!this.loadingOverlay) {
@@ -274,11 +360,10 @@ class LoadingManager {
                     }
                     resolve();
                 }, 500);
-            }, 300);
+            }, 200);
         });
     }
     
-    // Mostrar loading e esperar um tempo mínimo
     async showLoading(minTime = null, maxTime = null) {
         this.startTime = Date.now();
         this.isLoading = true;
@@ -288,10 +373,10 @@ class LoadingManager {
         
         this.createLoadingOverlay();
         
-        // Garantir tempo mínimo de loading
+        // Tempo mínimo de loading
         const minPromise = new Promise(resolve => setTimeout(resolve, min));
         
-        // Timeout máximo
+        // Tempo máximo (nunca mais que isso)
         const maxPromise = new Promise(resolve => setTimeout(resolve, max));
         
         await Promise.race([minPromise, maxPromise]);
@@ -300,78 +385,42 @@ class LoadingManager {
         return this.hideLoading();
     }
     
-    // Atualizar as dicas (tips) aleatoriamente
     updateTips() {
         const tips = [
-            'Sempre leve a prescrição médica ao comprar medicamentos',
-            'Mantenha suas vacinas em dia',
-            'Em caso de emergência, ligue 119',
-            'Beba bastante água diariamente',
-            'Faça exercícios físicos regularmente',
-            'Durma pelo menos 8 horas por noite',
-            'Evite a automedicação',
-            'Visite o médico regularmente para check-up',
-            'Lave as mãos frequentemente',
-            'Mantenha uma alimentação saudável'
+            { emoji: '💊', text: 'Sempre leve a prescrição médica' },
+            { emoji: '💉', text: 'Mantenha suas vacinas em dia' },
+            { emoji: '🚑', text: 'Emergência? Ligue 119' },
+            { emoji: '💧', text: 'Beba água regularmente' },
+            { emoji: '🏃', text: 'Pratique exercícios físicos' },
+            { emoji: '😴', text: 'Durma pelo menos 8 horas' },
+            { emoji: '⚠️', text: 'Evite a automedicação' },
+            { emoji: '🩺', text: 'Faça check-ups regulares' },
+            { emoji: '🧼', text: 'Lave as mãos frequentemente' },
+            { emoji: '🍎', text: 'Mantenha alimentação saudável' }
         ];
         
-        const tipElement = document.querySelector('.tip-text');
-        if (tipElement) {
+        const tipEmoji = document.querySelector('.tip-emoji');
+        const tipMessage = document.querySelector('.tip-message');
+        
+        if (tipEmoji && tipMessage) {
             let currentTip = 0;
             setInterval(() => {
                 currentTip = (currentTip + 1) % tips.length;
-                tipElement.textContent = tips[currentTip];
-                tipElement.style.animation = 'fadeInUp 0.3s ease';
-                setTimeout(() => {
-                    tipElement.style.animation = '';
-                }, 300);
-            }, 3000);
+                tipEmoji.textContent = tips[currentTip].emoji;
+                tipMessage.textContent = tips[currentTip].text;
+            }, 3500);
         }
     }
 }
 
-// Criar instância global
+// Instância global
 const loadingManager = new LoadingManager();
 
-// Função para inicializar o loading na página
-async function initPageWithLoading() {
-    // Mostrar loading
-    await loadingManager.showLoading(800, 3000);
-    
-    // Atualizar dicas
+// Inicializar
+document.addEventListener('DOMContentLoaded', function() {
+    loadingManager.showLoading(1200, 2500);
     loadingManager.updateTips();
-    
-    // Disparar evento que a página carregou
-    document.dispatchEvent(new Event('pageLoaded'));
-}
-
-// Detectar quando a página está carregando
-let hasLoaded = false;
-
-window.addEventListener('load', function() {
-    if (!hasLoaded) {
-        hasLoaded = true;
-        // Pequeno delay para garantir que tudo carregou
-        setTimeout(() => {
-            if (loadingManager.isLoading) {
-                loadingManager.hideLoading();
-            }
-        }, 500);
-    }
 });
 
-// Se a página já estiver carregada
-if (document.readyState === 'complete') {
-    if (!hasLoaded) {
-        hasLoaded = true;
-        setTimeout(() => {
-            if (loadingManager.isLoading) {
-                loadingManager.hideLoading();
-            }
-        }, 500);
-    }
-}
-
-// Expor funções globalmente
+// Exportar funções
 window.loadingManager = loadingManager;
-window.initPageWithLoading = initPageWithLoading;
