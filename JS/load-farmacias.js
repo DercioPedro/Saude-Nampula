@@ -218,7 +218,6 @@ function criarCardFarmacia(farmacia) {
     let plantao = farmacia.plantao === true;
     let badgePlantao = plantao ? '<span class="badge-plantao">Plantao 24h</span>' : '';
     
-    // Verificar status da farmácia
     const status = verificarStatusFarmacia(farmacia);
     
     let servicos = gerarServicos(farmacia, plantao);
@@ -235,7 +234,6 @@ function criarCardFarmacia(farmacia) {
     let nomeCodificado = encodeURIComponent(nome);
     let id = farmacia.id;
     
-    // Obter URLs baseadas em coordenadas
     const urlDirecoes = obterUrlDirecoes(farmacia);
     const urlWaze = obterUrlWaze(farmacia);
     
@@ -283,16 +281,14 @@ function criarCardFarmacia(farmacia) {
                 <img src="/img/ponto.png" alt="Como Chegar" style="width: 14px; height: 14px;"> Como Chegar
             </button>
             <button class="waze-btn" onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                 Waze
+                Waze
             </button>
         </div>
-
-                    // Adicionar no card.innerHTML
-<div class="avaliar-container" style="margin-top: 10px;">
-    <button class="avaliar-btn" onclick="abrirModalAvaliacao('${tipo}', ${id})">
-        ⭐ Avaliar
-    </button>
-</div>
+        <div class="avaliar-container" style="margin-top: 10px;">
+            <button class="avaliar-btn" onclick="abrirModalAvaliacao('farmacia', ${id})">
+                ⭐ Avaliar
+            </button>
+        </div>
     `;
     
     return card;
