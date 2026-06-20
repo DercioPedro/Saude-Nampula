@@ -1,4 +1,16 @@
-// load-hospitais.js - Versão com API e priorização de coordenadas
+// load-hospitais.js - Versão com API, coordenadas e avaliações
+
+async function buscarStatsAvaliacao(tipo, id) {
+    try {
+        const API_URL = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : 'https://saude-nampula-backend.onrender.com/api';
+        const response = await fetch(`${API_URL}/avaliacoes/estatisticas?tipo=${tipo}&tipo_id=${id}`);
+        if (!response.ok) return { total: 0, media: 0 };
+        const stats = await response.json();
+        return stats;
+    } catch (error) {
+        return { total: 0, media: 0 };
+    }
+}
 
 function obterUrlGoogleMaps(hospital) {
     if (hospital.latitude && hospital.longitude) {
@@ -56,7 +68,7 @@ async function carregarHospitais() {
         }
         
         for (let i = 0; i < hospitais.length; i++) {
-            let card = criarCard(hospitais[i]);
+            let card = await criarCard(hospitais[i]);
             main.appendChild(card);
         }
     } catch (error) {
@@ -80,10 +92,15 @@ function mostrarMensagemErroHospitais() {
     }
 }
 
-function criarCard(hospital) {
+async function criarCard(hospital) {
     let card = document.createElement('div');
     card.className = 'hospital-card';
     card.setAttribute('data-id', hospital.id);
+    
+    // Buscar estatísticas de avaliações
+    const stats = await buscarStatsAvaliacao('hospital', hospital.id);
+    const media = stats.media || 0;
+    const total = stats.total || 0;
     
     let servicos = [];
     if (hospital.servicos) {
@@ -115,10 +132,30 @@ function criarCard(hospital) {
     const urlDirecoes = obterUrlDirecoes(hospital);
     const urlWaze = obterUrlWaze(hospital);
     
+    // Criar estrelas
+    const estrelasCheias = Math.round(media);
+    let estrelasHTML = '';
+    for (let i = 0; i < 5; i++) {
+        if (i < estrelasCheias) {
+            estrelasHTML += '<span style="color: #fbbf24;">★</span>';
+        } else {
+            estrelasHTML += '<span style="color: #d1d5db;">☆</span>';
+        }
+    }
+    
     card.innerHTML = `
         <div class="hospital-header">
             <div class="hospital-title">
                 <h3>${hospital.nome}</h3>
+                <div class="avaliacao-stats" style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                    ${total > 0 ? `
+                        <span style="font-size: 14px;">${estrelasHTML}</span>
+                        <span style="font-size: 13px; font-weight: 600; color: #059669;">${media.toFixed(1)}</span>
+                        <span style="font-size: 12px; color: #6b7280;">(${total} avaliações)</span>
+                    ` : `
+                        <span style="font-size: 13px; color: #6b7280;">Ainda sem avaliações</span>
+                    `}
+                </div>
                 <span class="hospital-type">Hospital</span>
             </div>
             <span class="hospital-icon"><img src="/img/hospital.png" alt=""></span>
