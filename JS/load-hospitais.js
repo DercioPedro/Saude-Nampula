@@ -149,13 +149,14 @@ function criarCard(hospital) {
                  Waze
             </button>
 
-            // Adicionar no card.innerHTML
+        </div>
+
+                    // Adicionar no card.innerHTML
 <div class="avaliar-container" style="margin-top: 10px;">
     <button class="avaliar-btn" onclick="abrirModalAvaliacao('${tipo}', ${id})">
         ⭐ Avaliar
     </button>
 </div>
-        </div>
     `;
     
     return card;
