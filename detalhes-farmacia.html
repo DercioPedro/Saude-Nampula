@@ -16,6 +16,31 @@
         <!-- O conteúdo será carregado dinamicamente pelo JavaScript -->
     </div>
 
+
+    <!-- Seção de avaliações -->
+<div class="avaliacoes-section">
+    <div id="avaliacoes-container"></div>
+</div>
+
+<script>
+    // Inicializar avaliações para o estabelecimento específico
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        
+        if (id) {
+            // Determinar o tipo baseado na página
+            let tipo = 'farmacia';
+            if (window.location.pathname.includes('hospital')) tipo = 'hospital';
+            if (window.location.pathname.includes('centros')) tipo = 'centro';
+            
+            if (typeof inicializarAvaliacoes === 'function') {
+                inicializarAvaliacoes('avaliacoes-container', tipo, parseInt(id));
+            }
+        }
+    });
+</script>
+
     <!-- Adicionar antes dos outros scripts -->
 <script src="JS/api-config.js"></script>
 <script src="JS/load-farmacias.js"></script
