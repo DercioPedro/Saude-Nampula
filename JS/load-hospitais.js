@@ -139,24 +139,21 @@ function criarCard(hospital) {
         </div>
         ${htmlServicos}
         <div class="button-container" style="display: flex; gap: 8px; margin-top: 15px;">
-            <button class="details-btn" onclick="verDetalhes(${hospital.id})" style="flex: 1;"> Ver Detalhes</button>
+            <button class="details-btn" onclick="verDetalhes(${hospital.id})" style="flex: 1;">Ver Detalhes</button>
         </div>
         <div class="directions-container" style="display: flex; gap: 8px; margin-top: 10px;">
             <button class="directions-btn" onclick="window.open('${urlDirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                 Como Chegar
+                Como Chegar
             </button>
             <button class="waze-btn" onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                 Waze
+                Waze
             </button>
-
         </div>
-
-                    // Adicionar no card.innerHTML
-<div class="avaliar-container" style="margin-top: 10px;">
-    <button class="avaliar-btn" onclick="abrirModalAvaliacao('${tipo}', ${id})">
-        ⭐ Avaliar
-    </button>
-</div>
+        <div class="avaliar-container" style="margin-top: 10px;">
+            <button class="avaliar-btn" onclick="abrirModalAvaliacao('hospital', ${hospital.id})">
+                ⭐ Avaliar
+            </button>
+        </div>
     `;
     
     return card;
