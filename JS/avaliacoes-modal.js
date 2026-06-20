@@ -126,12 +126,6 @@ async function enviarAvaliacaoModal(tipo, id) {
         alert('✅ Avaliação enviada com sucesso!');
         fecharModalAvaliacao();
         
-        // Recarregar avaliações se houver container
-        if (window.sistemaAvaliacoes) {
-            await window.sistemaAvaliacoes.carregarAvaliacoes();
-            await window.sistemaAvaliacoes.carregarEstatisticas();
-        }
-        
         // Recarregar a página para mostrar a nova avaliação
         setTimeout(() => {
             location.reload();
