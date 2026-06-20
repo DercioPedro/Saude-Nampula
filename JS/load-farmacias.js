@@ -285,14 +285,14 @@ function criarCardFarmacia(farmacia) {
             <button class="waze-btn" onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
                  Waze
             </button>
+        </div>
 
-            // Adicionar no card.innerHTML
+                    // Adicionar no card.innerHTML
 <div class="avaliar-container" style="margin-top: 10px;">
     <button class="avaliar-btn" onclick="abrirModalAvaliacao('${tipo}', ${id})">
         ⭐ Avaliar
     </button>
 </div>
-        </div>
     `;
     
     return card;
