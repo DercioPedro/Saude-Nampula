@@ -1,4 +1,4 @@
-// load-farmacias.js - Versão completa com API, status, avaliações e direções priorizando endereço
+// load-farmacias.js - Versão corrigida com direções funcionando
 
 // ==================== FUNÇÃO PARA BUSCAR ESTATÍSTICAS DE AVALIAÇÕES ====================
 async function buscarStatsAvaliacao(tipo, id) {
@@ -13,65 +13,83 @@ async function buscarStatsAvaliacao(tipo, id) {
     }
 }
 
-// ==================== FUNÇÃO PARA OBTER LOCALIZAÇÃO ATUAL ====================
+// ==================== FUNÇÃO PARA OBTER LOCALIZAÇÃO ATUAL (COM FALLBACK) ====================
 function obterLocalizacaoAtual() {
     return new Promise((resolve) => {
+        // Verificar se o navegador suporta geolocalização
         if (!navigator.geolocation) {
+            console.warn('Geolocalização não suportada pelo navegador');
             resolve(null);
             return;
         }
         
+        // Tentar obter localização
         navigator.geolocation.getCurrentPosition(
+            // Sucesso
             (position) => {
+                console.log('📍 Localização obtida:', position.coords.latitude, position.coords.longitude);
                 resolve({
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude
                 });
             },
-            () => {
-                resolve(null); // Usuário negou ou erro
+            // Erro
+            (error) => {
+                console.warn('Erro ao obter localização:', error.message);
+                resolve(null);
             },
+            // Opções
             {
                 enableHighAccuracy: true,
-                timeout: 10000,
+                timeout: 15000,
                 maximumAge: 60000
             }
         );
+        
+        // Timeout de segurança (se demorar mais de 5 segundos)
+        setTimeout(() => {
+            resolve(null);
+        }, 5000);
     });
 }
 
-// ==================== FUNÇÕES DE DIREÇÕES PRIORIZANDO ENDEREÇO ====================
+// ==================== FUNÇÕES DE DIREÇÕES CORRIGIDAS ====================
 
-// Função principal para obter direções (Google Maps com origem)
+// Função para obter direções (Google Maps)
 async function obterUrlDirecoes(item) {
     // Tentar obter localização atual
     let origem = await obterLocalizacaoAtual();
     
+    // Construir destino (priorizar endereço)
     let destino = '';
-    // PRIORIZAR ENDEREÇO primeiro
     if (item.endereco) {
         destino = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
     } else if (item.latitude && item.longitude) {
         destino = `${item.latitude},${item.longitude}`;
     } else {
+        console.error('Sem endereço ou coordenadas para:', item);
         return '#';
     }
     
-    // Se tiver localização atual, usar como origem
+    console.log('📍 Destino:', destino);
+    console.log('📍 Origem:', origem);
+    
+    // Se tiver localização atual, usar Google Maps com rota
     if (origem) {
+        // Usar formato que funciona melhor no Google Maps
         return `https://www.google.com/maps/dir/?api=1&origin=${origem.latitude},${origem.longitude}&destination=${destino}&travelmode=driving`;
     }
     
-    // Fallback: sem origem (abre só o destino)
+    // Fallback: se não tiver localização, abrir só o destino
+    // Mas ainda assim mostrar como pesquisar
     return `https://www.google.com/maps/search/?api=1&query=${destino}`;
 }
 
-// Função para Waze com localização atual
+// Função para Waze
 async function obterUrlWaze(item) {
     let origem = await obterLocalizacaoAtual();
     
     let destino = '';
-    // PRIORIZAR ENDEREÇO primeiro
     if (item.endereco) {
         destino = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
     } else if (item.latitude && item.longitude) {
@@ -80,60 +98,85 @@ async function obterUrlWaze(item) {
         return '#';
     }
     
-    // Waze usa parâmetros diferentes
+    // Waze: se tiver origem, usar navigate=yes
     if (origem) {
-        return `https://www.waze.com/ul?q=${destino}&navigate=yes&from=${origem.latitude},${origem.longitude}`;
+        return `https://www.waze.com/ul?q=${destino}&navigate=yes`;
     }
     
-    return `https://www.waze.com/ul?q=${destino}&navigate=yes`;
+    return `https://www.waze.com/ul?q=${destino}`;
 }
 
-// Google Maps (compatibilidade)
-async function obterUrlGoogleMaps(item) {
-    let origem = await obterLocalizacaoAtual();
-    
-    let destino = '';
-    // PRIORIZAR ENDEREÇO primeiro
-    if (item.endereco) {
-        destino = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
-    } else if (item.latitude && item.longitude) {
-        destino = `${item.latitude},${item.longitude}`;
-    } else {
-        return '#';
-    }
-    
-    if (origem) {
-        return `https://www.google.com/maps/dir/?api=1&origin=${origem.latitude},${origem.longitude}&destination=${destino}`;
-    }
-    
-    return `https://www.google.com/maps/search/?api=1&query=${destino}`;
-}
-
-// ==================== FUNÇÕES AUXILIARES PARA BOTÕES ====================
+// ==================== FUNÇÃO CORRIGIDA PARA ABRIR DIREÇÕES ====================
 
 async function abrirDirecoes(farmaciaId) {
     try {
+        // Mostrar feedback ao usuário
+        const btn = event?.target || document.activeElement;
+        if (btn) {
+            btn.textContent = '⏳ Carregando...';
+            btn.disabled = true;
+        }
+        
+        // Buscar dados da farmácia
         const farmacia = await apiRequest(`/farmacias/${farmaciaId}`);
+        
+        if (!farmacia) {
+            alert('Farmácia não encontrada!');
+            return;
+        }
+        
+        // Verificar se tem endereço ou coordenadas
+        if (!farmacia.endereco && !(farmacia.latitude && farmacia.longitude)) {
+            alert('Esta farmácia não tem endereço ou coordenadas cadastradas.');
+            return;
+        }
+        
+        // Obter URL com direções
         const url = await obterUrlDirecoes(farmacia);
+        
+        console.log('🔗 URL gerada:', url);
+        
         if (url && url !== '#') {
+            // Abrir em nova aba
             window.open(url, '_blank');
         } else {
-            alert('Não foi possível obter o endereço da farmácia.');
+            alert('Não foi possível gerar as direções.');
         }
     } catch (error) {
         console.error('Erro ao abrir direções:', error);
         alert('Erro ao carregar as direções. Tente novamente.');
+    } finally {
+        // Restaurar botão
+        const btn = event?.target || document.activeElement;
+        if (btn) {
+            btn.textContent = '📍 Como Chegar';
+            btn.disabled = false;
+        }
     }
 }
 
 async function abrirWaze(farmaciaId) {
     try {
         const farmacia = await apiRequest(`/farmacias/${farmaciaId}`);
+        
+        if (!farmacia) {
+            alert('Farmácia não encontrada!');
+            return;
+        }
+        
+        if (!farmacia.endereco && !(farmacia.latitude && farmacia.longitude)) {
+            alert('Esta farmácia não tem endereço ou coordenadas cadastradas.');
+            return;
+        }
+        
         const url = await obterUrlWaze(farmacia);
+        
+        console.log('🔗 URL Waze gerada:', url);
+        
         if (url && url !== '#') {
             window.open(url, '_blank');
         } else {
-            alert('Não foi possível obter o endereço da farmácia.');
+            alert('Não foi possível gerar as direções no Waze.');
         }
     } catch (error) {
         console.error('Erro ao abrir Waze:', error);
@@ -397,10 +440,10 @@ async function criarCardFarmacia(farmacia) {
         </div>
         <div class="directions-container" style="display: flex; gap: 8px;">
             <button class="directions-btn" onclick="abrirDirecoes(${id})" style="flex: 1; background: #4285F4; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                <img src="/img/ponto.png" alt="Como Chegar" style="width: 14px; height: 14px;"> Como Chegar
+                📍 Como Chegar
             </button>
             <button class="waze-btn" onclick="abrirWaze(${id})" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                <img src="/img/waze.png" alt="Waze" style="width: 14px; height: 14px;"> Waze
+                🗺️ Waze
             </button>
         </div>
         <div class="avaliar-container" style="margin-top: 10px;">
@@ -573,10 +616,10 @@ async function carregarMedicamentosDaFarmacia() {
                 </div>
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <button onclick="window.open('${urlDirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                        <img src="/img/ponto.png" alt="Como Chegar" style="width: 16px; height: 16px; vertical-align: middle;"> Como Chegar (Google Maps)
+                        📍 Como Chegar (Google Maps)
                     </button>
                     <button onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                        <img src="/img/waze.png" alt="Waze" style="width: 16px; height: 16px; vertical-align: middle;"> Abrir no Waze
+                        🗺️ Abrir no Waze
                     </button>
                 </div>
                 <div style="margin-top: 20px; text-align: center;">
@@ -659,10 +702,10 @@ async function carregarDetalhesDaFarmacia() {
                             </div>
                             <div style="display: flex; gap: 10px;">
                                 <button onclick="window.open('${urlDirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                                    <img src="/img/ponto.png" alt="Como Chegar" style="width: 14px; height: 14px;"> Como Chegar
+                                    📍 Como Chegar
                                 </button>
                                 <button onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                                    <img src="/img/waze.png" alt="Waze" style="width: 14px; height: 14px;"> Waze
+                                    🗺️ Waze
                                 </button>
                             </div>
                         </div>
@@ -731,7 +774,6 @@ async function carregarDetalhesDaFarmacia() {
 window.obterLocalizacaoAtual = obterLocalizacaoAtual;
 window.obterUrlDirecoes = obterUrlDirecoes;
 window.obterUrlWaze = obterUrlWaze;
-window.obterUrlGoogleMaps = obterUrlGoogleMaps;
 window.abrirDirecoes = abrirDirecoes;
 window.abrirWaze = abrirWaze;
 window.filtrarFarmacias = filtrarFarmacias;
