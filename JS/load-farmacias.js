@@ -1,4 +1,4 @@
-// load-farmacias.js - Versão completa com API, coordenadas, status e avaliações
+// load-farmacias.js - Versão completa com API, coordenadas, status, avaliações e direções com localização atual
 
 // ==================== FUNÇÃO PARA BUSCAR ESTATÍSTICAS DE AVALIAÇÕES ====================
 async function buscarStatsAvaliacao(tipo, id) {
@@ -13,6 +13,132 @@ async function buscarStatsAvaliacao(tipo, id) {
     }
 }
 
+// ==================== FUNÇÃO PARA OBTER LOCALIZAÇÃO ATUAL ====================
+function obterLocalizacaoAtual() {
+    return new Promise((resolve) => {
+        if (!navigator.geolocation) {
+            resolve(null);
+            return;
+        }
+        
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                resolve({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                });
+            },
+            () => {
+                resolve(null); // Usuário negou ou erro
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 60000
+            }
+        );
+    });
+}
+
+// ==================== FUNÇÕES DE DIREÇÕES COM LOCALIZAÇÃO ATUAL ====================
+
+// Função principal para obter direções (Google Maps com origem)
+async function obterUrlDirecoes(item) {
+    // Tentar obter localização atual
+    let origem = await obterLocalizacaoAtual();
+    
+    let destino = '';
+    if (item.latitude && item.longitude) {
+        destino = `${item.latitude},${item.longitude}`;
+    } else if (item.endereco) {
+        destino = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
+    } else {
+        return '#';
+    }
+    
+    // Se tiver localização atual, usar como origem
+    if (origem) {
+        return `https://www.google.com/maps/dir/?api=1&origin=${origem.latitude},${origem.longitude}&destination=${destino}&travelmode=driving`;
+    }
+    
+    // Fallback: sem origem (abre só o destino)
+    return `https://www.google.com/maps/search/?api=1&query=${destino}`;
+}
+
+// Função para Waze com localização atual
+async function obterUrlWaze(item) {
+    let origem = await obterLocalizacaoAtual();
+    
+    let destino = '';
+    if (item.latitude && item.longitude) {
+        destino = `${item.latitude},${item.longitude}`;
+    } else if (item.endereco) {
+        destino = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
+    } else {
+        return '#';
+    }
+    
+    // Waze usa parâmetros diferentes
+    if (origem) {
+        return `https://www.waze.com/ul?ll=${destino}&navigate=yes&from=${origem.latitude},${origem.longitude}`;
+    }
+    
+    return `https://www.waze.com/ul?ll=${destino}&navigate=yes`;
+}
+
+// Google Maps (compatibilidade)
+async function obterUrlGoogleMaps(item) {
+    let origem = await obterLocalizacaoAtual();
+    
+    let destino = '';
+    if (item.latitude && item.longitude) {
+        destino = `${item.latitude},${item.longitude}`;
+    } else if (item.endereco) {
+        destino = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
+    } else {
+        return '#';
+    }
+    
+    if (origem) {
+        return `https://www.google.com/maps/dir/?api=1&origin=${origem.latitude},${origem.longitude}&destination=${destino}`;
+    }
+    
+    return `https://www.google.com/maps/search/?api=1&query=${destino}`;
+}
+
+// ==================== FUNÇÕES AUXILIARES PARA BOTÕES ====================
+
+async function abrirDirecoes(farmaciaId) {
+    try {
+        const farmacia = await apiRequest(`/farmacias/${farmaciaId}`);
+        const url = await obterUrlDirecoes(farmacia);
+        if (url && url !== '#') {
+            window.open(url, '_blank');
+        } else {
+            alert('Não foi possível obter a localização da farmácia.');
+        }
+    } catch (error) {
+        console.error('Erro ao abrir direções:', error);
+        alert('Erro ao carregar as direções. Tente novamente.');
+    }
+}
+
+async function abrirWaze(farmaciaId) {
+    try {
+        const farmacia = await apiRequest(`/farmacias/${farmaciaId}`);
+        const url = await obterUrlWaze(farmacia);
+        if (url && url !== '#') {
+            window.open(url, '_blank');
+        } else {
+            alert('Não foi possível obter a localização da farmácia.');
+        }
+    } catch (error) {
+        console.error('Erro ao abrir Waze:', error);
+        alert('Erro ao carregar o Waze. Tente novamente.');
+    }
+}
+
+// ==================== FUNÇÃO DE STATUS DA FARMÁCIA ====================
 function verificarStatusFarmacia(farmacia) {
     const agora = new Date();
     const horaMoçambique = new Date(agora.toLocaleString("en-US", {timeZone: "Africa/Maputo"}));
@@ -111,36 +237,7 @@ function verificarStatusFarmacia(farmacia) {
     }
 }
 
-function obterUrlGoogleMaps(item) {
-    if (item.latitude && item.longitude) {
-        return `https://www.google.com/maps/search/?api=1&query=${item.latitude},${item.longitude}`;
-    } else if (item.endereco) {
-        const enderecoCompleto = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
-        return `https://www.google.com/maps/search/?api=1&query=${enderecoCompleto}`;
-    }
-    return '#';
-}
-
-function obterUrlWaze(item) {
-    if (item.latitude && item.longitude) {
-        return `https://www.waze.com/ul?ll=${item.latitude},${item.longitude}&navigate=yes`;
-    } else if (item.endereco) {
-        const enderecoCompleto = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
-        return `https://www.waze.com/ul?q=${enderecoCompleto}&navigate=yes`;
-    }
-    return '#';
-}
-
-function obterUrlDirecoes(item) {
-    if (item.latitude && item.longitude) {
-        return `https://www.google.com/maps/dir/?api=1&destination=${item.latitude},${item.longitude}`;
-    } else if (item.endereco) {
-        const enderecoCompleto = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
-        return `https://www.google.com/maps/dir/?api=1&destination=${enderecoCompleto}`;
-    }
-    return '#';
-}
-
+// ==================== FUNÇÃO PARA CARREGAR FARMÁCIAS ====================
 async function carregarFarmacias() {
     try {
         const farmacias = await apiRequest('/farmacias');
@@ -204,6 +301,7 @@ function mostrarMensagemErro(mensagem) {
     }
 }
 
+// ==================== FUNÇÃO PARA CRIAR CARD DA FARMÁCIA ====================
 async function criarCardFarmacia(farmacia) {
     let card = document.createElement('div');
     card.className = 'farmacia-card';
@@ -234,9 +332,6 @@ async function criarCardFarmacia(farmacia) {
     
     let nomeCodificado = encodeURIComponent(nome);
     let id = farmacia.id;
-    
-    const urlDirecoes = obterUrlDirecoes(farmacia);
-    const urlWaze = obterUrlWaze(farmacia);
     
     // Criar estrelas
     const estrelasCheias = Math.round(media);
@@ -298,11 +393,11 @@ async function criarCardFarmacia(farmacia) {
             </button>
         </div>
         <div class="directions-container" style="display: flex; gap: 8px;">
-            <button class="directions-btn" onclick="window.open('${urlDirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+            <button class="directions-btn" onclick="abrirDirecoes(${id})" style="flex: 1; background: #4285F4; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
                 <img src="/img/ponto.png" alt="Como Chegar" style="width: 14px; height: 14px;"> Como Chegar
             </button>
-            <button class="waze-btn" onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                Waze
+            <button class="waze-btn" onclick="abrirWaze(${id})" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                <img src="/img/waze.png" alt="Waze" style="width: 14px; height: 14px;"> Waze
             </button>
         </div>
         <div class="avaliar-container" style="margin-top: 10px;">
@@ -328,6 +423,7 @@ function gerarServicos(farmacia, plantao) {
     return [...new Set(servicos)];
 }
 
+// ==================== FUNÇÃO PARA FILTRAR FARMÁCIAS ====================
 function filtrarFarmacias(filtro) {
     let cards = document.querySelectorAll('.farmacia-card');
     if (cards.length === 0) return;
@@ -387,6 +483,10 @@ async function carregarMedicamentosDaFarmacia() {
         const produtos = await apiRequest(`/produtos?farmaciaId=${id}`);
         
         let container = document.querySelector('.medicamentos-container') || document.body;
+        
+        // Gerar URLs com localização atual
+        const urlDirecoes = await obterUrlDirecoes(farmacia);
+        const urlWaze = await obterUrlWaze(farmacia);
         
         let medicamentosHTML = `
             <div style="max-width: 800px; margin: 40px auto; padding: 30px; background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
@@ -460,9 +560,6 @@ async function carregarMedicamentosDaFarmacia() {
             `;
         }
         
-        const urlDirecoes = obterUrlDirecoes(farmacia);
-        const urlWaze = obterUrlWaze(farmacia);
-        
         medicamentosHTML += `
                 </div>
                 <div style="margin-top: 30px; padding: 20px; background: #faf5ff; border-radius: 8px;">
@@ -476,7 +573,7 @@ async function carregarMedicamentosDaFarmacia() {
                         <img src="/img/ponto.png" alt="Como Chegar" style="width: 16px; height: 16px; vertical-align: middle;"> Como Chegar (Google Maps)
                     </button>
                     <button onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                        Abrir no Waze
+                        <img src="/img/waze.png" alt="Waze" style="width: 16px; height: 16px; vertical-align: middle;"> Abrir no Waze
                     </button>
                 </div>
                 <div style="margin-top: 20px; text-align: center;">
@@ -519,8 +616,9 @@ async function carregarDetalhesDaFarmacia() {
         
         let enderecoCompleto = farmacia.endereco || 'Endereco nao informado';
         
-        const urldirecoes = obterUrlDirecoes(farmacia);
-        const urlWaze = obterUrlWaze(farmacia);
+        // Gerar URLs com localização atual
+        const urlDirecoes = await obterUrlDirecoes(farmacia);
+        const urlWaze = await obterUrlWaze(farmacia);
         
         let detalhesHTML = `
             <div style="max-width: 900px; margin: 40px auto; padding: 30px; background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
@@ -557,7 +655,7 @@ async function carregarDetalhesDaFarmacia() {
                                 </a>
                             </div>
                             <div style="display: flex; gap: 10px;">
-                                <button onclick="window.open('${urldirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+                                <button onclick="window.open('${urlDirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
                                     <img src="/img/ponto.png" alt="Como Chegar" style="width: 14px; height: 14px;"> Como Chegar
                                 </button>
                                 <button onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
@@ -624,15 +722,22 @@ async function carregarDetalhesDaFarmacia() {
     }
 }
 
-// ==================== INICIALIZACAO ====================
+// ==================== INICIALIZAÇÃO ====================
 
+// Exportar funções para uso global
+window.obterLocalizacaoAtual = obterLocalizacaoAtual;
 window.obterUrlDirecoes = obterUrlDirecoes;
 window.obterUrlWaze = obterUrlWaze;
 window.obterUrlGoogleMaps = obterUrlGoogleMaps;
+window.abrirDirecoes = abrirDirecoes;
+window.abrirWaze = abrirWaze;
 window.filtrarFarmacias = filtrarFarmacias;
 window.carregarFarmacias = carregarFarmacias;
 window.carregarMedicamentosDaFarmacia = carregarMedicamentosDaFarmacia;
 window.carregarDetalhesDaFarmacia = carregarDetalhesDaFarmacia;
+window.verificarStatusFarmacia = verificarStatusFarmacia;
+window.buscarStatsAvaliacao = buscarStatsAvaliacao;
+window.criarCardFarmacia = criarCardFarmacia;
 
 let inicializado = false;
 
