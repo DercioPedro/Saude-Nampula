@@ -1,4 +1,4 @@
-// load-farmacias.js - Versão completa com API, coordenadas, status, avaliações e direções com localização atual
+// load-farmacias.js - Versão completa com API, status, avaliações e direções priorizando endereço
 
 // ==================== FUNÇÃO PARA BUSCAR ESTATÍSTICAS DE AVALIAÇÕES ====================
 async function buscarStatsAvaliacao(tipo, id) {
@@ -40,7 +40,7 @@ function obterLocalizacaoAtual() {
     });
 }
 
-// ==================== FUNÇÕES DE DIREÇÕES COM LOCALIZAÇÃO ATUAL ====================
+// ==================== FUNÇÕES DE DIREÇÕES PRIORIZANDO ENDEREÇO ====================
 
 // Função principal para obter direções (Google Maps com origem)
 async function obterUrlDirecoes(item) {
@@ -48,10 +48,11 @@ async function obterUrlDirecoes(item) {
     let origem = await obterLocalizacaoAtual();
     
     let destino = '';
-    if (item.latitude && item.longitude) {
-        destino = `${item.latitude},${item.longitude}`;
-    } else if (item.endereco) {
+    // PRIORIZAR ENDEREÇO primeiro
+    if (item.endereco) {
         destino = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
+    } else if (item.latitude && item.longitude) {
+        destino = `${item.latitude},${item.longitude}`;
     } else {
         return '#';
     }
@@ -70,20 +71,21 @@ async function obterUrlWaze(item) {
     let origem = await obterLocalizacaoAtual();
     
     let destino = '';
-    if (item.latitude && item.longitude) {
-        destino = `${item.latitude},${item.longitude}`;
-    } else if (item.endereco) {
+    // PRIORIZAR ENDEREÇO primeiro
+    if (item.endereco) {
         destino = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
+    } else if (item.latitude && item.longitude) {
+        destino = `${item.latitude},${item.longitude}`;
     } else {
         return '#';
     }
     
     // Waze usa parâmetros diferentes
     if (origem) {
-        return `https://www.waze.com/ul?ll=${destino}&navigate=yes&from=${origem.latitude},${origem.longitude}`;
+        return `https://www.waze.com/ul?q=${destino}&navigate=yes&from=${origem.latitude},${origem.longitude}`;
     }
     
-    return `https://www.waze.com/ul?ll=${destino}&navigate=yes`;
+    return `https://www.waze.com/ul?q=${destino}&navigate=yes`;
 }
 
 // Google Maps (compatibilidade)
@@ -91,10 +93,11 @@ async function obterUrlGoogleMaps(item) {
     let origem = await obterLocalizacaoAtual();
     
     let destino = '';
-    if (item.latitude && item.longitude) {
-        destino = `${item.latitude},${item.longitude}`;
-    } else if (item.endereco) {
+    // PRIORIZAR ENDEREÇO primeiro
+    if (item.endereco) {
         destino = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
+    } else if (item.latitude && item.longitude) {
+        destino = `${item.latitude},${item.longitude}`;
     } else {
         return '#';
     }
@@ -115,7 +118,7 @@ async function abrirDirecoes(farmaciaId) {
         if (url && url !== '#') {
             window.open(url, '_blank');
         } else {
-            alert('Não foi possível obter a localização da farmácia.');
+            alert('Não foi possível obter o endereço da farmácia.');
         }
     } catch (error) {
         console.error('Erro ao abrir direções:', error);
@@ -130,7 +133,7 @@ async function abrirWaze(farmaciaId) {
         if (url && url !== '#') {
             window.open(url, '_blank');
         } else {
-            alert('Não foi possível obter a localização da farmácia.');
+            alert('Não foi possível obter o endereço da farmácia.');
         }
     } catch (error) {
         console.error('Erro ao abrir Waze:', error);
