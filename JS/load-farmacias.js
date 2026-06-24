@@ -440,7 +440,7 @@ async function criarCardFarmacia(farmacia) {
         </div>
         <div class="directions-container" style="display: flex; gap: 8px;">
             <button class="directions-btn" onclick="abrirDirecoes(${id})" style="flex: 1; background: #4285F4; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                📍 Como Chegar
+                <img src="/img/ponto.png" alt="Como Chegar" style="width: 14px; height: 14px;"> Como Chegar
             </button>
             <button class="waze-btn" onclick="abrirWaze(${id})" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
                 🗺️ Waze
