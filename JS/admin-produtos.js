@@ -1,4 +1,4 @@
-// admin-produtos.js - Versão com API
+// admin-produtos.js - Versão com API (CORRIGIDO)
 
 // ==================== VERIFICAÇÃO DE AUTENTICAÇÃO ====================
 (function verificarAutenticacao() {
@@ -172,7 +172,7 @@ function editarProduto(id) {
     
     document.getElementById('formTitulo').innerHTML = ' Editar Produto';
     document.getElementById('produtoId').value = produto.id;
-    document.getElementById('farmaciaId').value = produto.farmaciaId;
+    document.getElementById('farmaciaId').value = produto.farmacia_id; // ← CORRIGIDO
     document.getElementById('produtoNome').value = produto.nome || '';
     document.getElementById('produtoCategoria').value = produto.categoria || '';
     document.getElementById('produtoPreco').value = produto.preco || '';
@@ -185,7 +185,7 @@ function editarProduto(id) {
     document.getElementById('formProduto').scrollIntoView({ behavior: 'smooth' });
 }
 
-// ==================== FUNÇÕES CRUD ====================
+// ==================== FUNÇÕES CRUD (CORRIGIDAS) ====================
 async function salvarProduto() {
     let nome = document.getElementById('produtoNome').value.trim();
     let categoria = document.getElementById('produtoCategoria').value;
@@ -215,29 +215,35 @@ async function salvarProduto() {
     
     let produtoId = document.getElementById('produtoId').value;
     
+    // 🔧 CORREÇÃO AQUI: usar farmacia_id em vez de farmaciaId
     let produto = {
-        farmaciaId: parseInt(farmaciaId),
+        farmacia_id: parseInt(farmaciaId),  // ← MUDOU DE farmaciaId PARA farmacia_id
         nome: nome,
         categoria: categoria,
         preco: parseFloat(preco),
         quantidade: parseInt(quantidade),
         fabricante: document.getElementById('produtoFabricante').value.trim(),
-        validade: document.getElementById('produtoValidade').value,
+        validade: document.getElementById('produtoValidade').value || null,
         descricao: document.getElementById('produtoDescricao').value.trim()
     };
     
     try {
+        const token = getAuthToken();
+        
         if (produtoId) {
-            await apiRequest(`/produtos/${produtoId}`, 'PUT', produto, getAuthToken());
+            // Atualizar produto existente
+            await apiRequest(`/produtos/${produtoId}`, 'PUT', produto, token);
             mostrarToast('Produto atualizado com sucesso!');
         } else {
-            await apiRequest('/produtos', 'POST', produto, getAuthToken());
+            // Criar novo produto
+            await apiRequest('/produtos', 'POST', produto, token);
             mostrarToast('Produto adicionado com sucesso!');
         }
         
         fecharFormularioProduto();
         await carregarProdutosDaFarmacia();
     } catch (error) {
+        console.error('Erro detalhado:', error);
         mostrarToast('Erro ao salvar produto: ' + error.message, 'erro');
     }
 }
@@ -250,7 +256,7 @@ async function excluirProduto(id) {
         mostrarToast('Produto excluído com sucesso!');
         await carregarProdutosDaFarmacia();
     } catch (error) {
-        mostrarToast('Erro ao excluir produto', 'erro');
+        mostrarToast('Erro ao excluir produto: ' + error.message, 'erro');
     }
 }
 
@@ -262,11 +268,20 @@ function fazerLogout() {
 
 function mostrarToast(mensagem, tipo = 'sucesso') {
     let toast = document.getElementById('toast');
-    toast.textContent = mensagem;
-    toast.className = 'toast mostrar';
-    if (tipo === 'erro') toast.classList.add('erro');
+    if (!toast) {
+        // Criar toast se não existir
+        const toastDiv = document.createElement('div');
+        toastDiv.id = 'toast';
+        toastDiv.className = 'toast';
+        document.body.appendChild(toastDiv);
+    }
     
-    setTimeout(() => toast.classList.remove('mostrar'), 3000);
+    let toastElement = document.getElementById('toast');
+    toastElement.textContent = mensagem;
+    toastElement.className = 'toast mostrar';
+    if (tipo === 'erro') toastElement.classList.add('erro');
+    
+    setTimeout(() => toastElement.classList.remove('mostrar'), 3000);
 }
 
 // Exportar funções
