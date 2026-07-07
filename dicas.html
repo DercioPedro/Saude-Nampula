@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saúde Nampula - Informações de Saúde</title>
+    <link rel="stylesheet" href="styles/dicas.css">
+    <link rel="stylesheet" href="styles/informacoes.css">
+    <link rel="icon" type="image/png" href="/img/monitor.png">
+    <link rel="stylesheet" href="styles/home.css">
+    <link rel="stylesheet" href="styles/darkmode.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="/img/monitor.png" alt="Saúde Nampula">
+                </div>
+                <h1>Saúde Nampula</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Início</a></li>
+                <li><a href="hospital.html">Hospitais</a></li>
+                <li><a href="centros.html">Centros de Saúde</a></li>
+                <li><a href="farm.html">Farmácias</a></li>
+                <li><a href="emer.html">Emergências</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+                <li><a href="dicas.html" class="active">Informações</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2>Informações de Saúde</h2>
+            <p>Fique por dentro das últimas notícias, dicas e orientações sobre saúde em Nampula</p>
+        </div>
+
+        <!-- Filtro -->
+        <div class="filtro-publicacoes">
+            <label for="filtroCategoria">Filtrar por categoria:</label>
+            <select id="filtroCategoria" onchange="filtrarPublicacoes()">
+                <option value="">Todas as categorias</option>
+                <option value="Noticia">Notícias</option>
+                <option value="Dica">Dicas</option>
+                <option value="Alerta">Alertas</option>
+                <option value="Evento">Eventos</option>
+                <option value="Campanha">Campanhas</option>
+                <option value="Informacao">Informações</option>
+            </select>
+        </div>
+
+        <!-- Grid de Publicações -->
+        <div id="publicacoesContainer">
+            <div class="loader-publicacoes">
+                <div class="spinner"></div>
+                <p>Carregando publicações...</p>
+            </div>
+        </div>
+
+        <!-- Modal de Detalhes -->
+        <div class="modal-publicacao" id="modalPublicacao">
+            <div class="modal-publicacao-content">
+                <button class="modal-fechar" onclick="fecharModalPublicacao()">×</button>
+                <div id="modalPublicacaoBody">
+                    <!-- Conteúdo carregado via JS -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Saúde Nampula - Plataforma de Saúde Comunitária</p>
+        <p class="footer-subtitle">Melhorando o acesso à informação em saúde em Nampula</p>
+    </footer>
+
+    <script src="JS/api-config.js"></script>
+    <script src="JS/informacoes.js"></script>
+    <script src="JS/home.js"></script>
+    <script src="JS/avaliacao-modal.js"></script>
+    <script src="JS/darkmode.js"></script>
+</body>
+</html>
