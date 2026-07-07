@@ -4,7 +4,7 @@
 async function buscarStatsAvaliacao(tipo, id) {
     try {
         const API_URL = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : 'https://saude-nampula-backend.onrender.com/api';
-        const response = await fetch(`${API_URL}/avaliacoes/estatisticas?tipo=${tipo}&tipo_id=${id}`);
+        const response = await fetch(API_URL + '/avaliacoes/estatisticas?tipo=' + tipo + '&tipo_id=' + id);
         if (!response.ok) return { total: 0, media: 0 };
         const stats = await response.json();
         return stats;
@@ -15,30 +15,25 @@ async function buscarStatsAvaliacao(tipo, id) {
 
 // ==================== FUNÇÃO PARA OBTER LOCALIZAÇÃO ATUAL (COM FALLBACK) ====================
 function obterLocalizacaoAtual() {
-    return new Promise((resolve) => {
-        // Verificar se o navegador suporta geolocalização
+    return new Promise(function(resolve) {
         if (!navigator.geolocation) {
             console.warn('Geolocalização não suportada pelo navegador');
             resolve(null);
             return;
         }
         
-        // Tentar obter localização
         navigator.geolocation.getCurrentPosition(
-            // Sucesso
-            (position) => {
-                console.log('📍 Localização obtida:', position.coords.latitude, position.coords.longitude);
+            function(position) {
+                console.log('Localização obtida:', position.coords.latitude, position.coords.longitude);
                 resolve({
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude
                 });
             },
-            // Erro
-            (error) => {
+            function(error) {
                 console.warn('Erro ao obter localização:', error.message);
                 resolve(null);
             },
-            // Opções
             {
                 enableHighAccuracy: true,
                 timeout: 15000,
@@ -46,98 +41,78 @@ function obterLocalizacaoAtual() {
             }
         );
         
-        // Timeout de segurança (se demorar mais de 5 segundos)
-        setTimeout(() => {
+        setTimeout(function() {
             resolve(null);
         }, 5000);
     });
 }
 
-// ==================== FUNÇÕES DE DIREÇÕES CORRIGIDAS ====================
+// ==================== FUNÇÕES DE DIREÇÕES ====================
 
-// Função para obter direções (Google Maps)
 async function obterUrlDirecoes(item) {
-    // Tentar obter localização atual
-    let origem = await obterLocalizacaoAtual();
+    var origem = await obterLocalizacaoAtual();
     
-    // Construir destino (priorizar endereço)
-    let destino = '';
+    var destino = '';
     if (item.endereco) {
         destino = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
     } else if (item.latitude && item.longitude) {
-        destino = `${item.latitude},${item.longitude}`;
+        destino = item.latitude + ',' + item.longitude;
     } else {
         console.error('Sem endereço ou coordenadas para:', item);
         return '#';
     }
     
-    console.log('📍 Destino:', destino);
-    console.log('📍 Origem:', origem);
-    
-    // Se tiver localização atual, usar Google Maps com rota
     if (origem) {
-        // Usar formato que funciona melhor no Google Maps
-        return `https://www.google.com/maps/dir/?api=1&origin=${origem.latitude},${origem.longitude}&destination=${destino}&travelmode=driving`;
+        return 'https://www.google.com/maps/dir/?api=1&origin=' + origem.latitude + ',' + origem.longitude + '&destination=' + destino + '&travelmode=driving';
     }
     
-    // Fallback: se não tiver localização, abrir só o destino
-    // Mas ainda assim mostrar como pesquisar
-    return `https://www.google.com/maps/search/?api=1&query=${destino}`;
+    return 'https://www.google.com/maps/search/?api=1&query=' + destino;
 }
 
-// Função para Waze
 async function obterUrlWaze(item) {
-    let origem = await obterLocalizacaoAtual();
+    var origem = await obterLocalizacaoAtual();
     
-    let destino = '';
+    var destino = '';
     if (item.endereco) {
         destino = encodeURIComponent(item.endereco + ', Nampula, Moçambique');
     } else if (item.latitude && item.longitude) {
-        destino = `${item.latitude},${item.longitude}`;
+        destino = item.latitude + ',' + item.longitude;
     } else {
         return '#';
     }
     
-    // Waze: se tiver origem, usar navigate=yes
     if (origem) {
-        return `https://www.waze.com/ul?q=${destino}&navigate=yes`;
+        return 'https://www.waze.com/ul?q=' + destino + '&navigate=yes';
     }
     
-    return `https://www.waze.com/ul?q=${destino}`;
+    return 'https://www.waze.com/ul?q=' + destino;
 }
 
-// ==================== FUNÇÃO CORRIGIDA PARA ABRIR DIREÇÕES ====================
+// ==================== FUNÇÃO PARA ABRIR DIREÇÕES ====================
 
 async function abrirDirecoes(farmaciaId) {
     try {
-        // Mostrar feedback ao usuário
-        const btn = event?.target || document.activeElement;
+        var btn = event && event.target ? event.target : document.activeElement;
         if (btn) {
-            btn.textContent = '⏳ Carregando...';
+            btn.textContent = 'Carregando...';
             btn.disabled = true;
         }
         
-        // Buscar dados da farmácia
-        const farmacia = await apiRequest(`/farmacias/${farmaciaId}`);
+        var farmacia = await apiRequest('/farmacias/' + farmaciaId);
         
         if (!farmacia) {
             alert('Farmácia não encontrada!');
             return;
         }
         
-        // Verificar se tem endereço ou coordenadas
         if (!farmacia.endereco && !(farmacia.latitude && farmacia.longitude)) {
             alert('Esta farmácia não tem endereço ou coordenadas cadastradas.');
             return;
         }
         
-        // Obter URL com direções
-        const url = await obterUrlDirecoes(farmacia);
-        
-        console.log('🔗 URL gerada:', url);
+        var url = await obterUrlDirecoes(farmacia);
         
         if (url && url !== '#') {
-            // Abrir em nova aba
             window.open(url, '_blank');
         } else {
             alert('Não foi possível gerar as direções.');
@@ -146,10 +121,9 @@ async function abrirDirecoes(farmaciaId) {
         console.error('Erro ao abrir direções:', error);
         alert('Erro ao carregar as direções. Tente novamente.');
     } finally {
-        // Restaurar botão
-        const btn = event?.target || document.activeElement;
+        var btn = event && event.target ? event.target : document.activeElement;
         if (btn) {
-            btn.textContent = '📍 Como Chegar';
+            btn.textContent = 'Como Chegar';
             btn.disabled = false;
         }
     }
@@ -157,7 +131,7 @@ async function abrirDirecoes(farmaciaId) {
 
 async function abrirWaze(farmaciaId) {
     try {
-        const farmacia = await apiRequest(`/farmacias/${farmaciaId}`);
+        var farmacia = await apiRequest('/farmacias/' + farmaciaId);
         
         if (!farmacia) {
             alert('Farmácia não encontrada!');
@@ -169,9 +143,7 @@ async function abrirWaze(farmaciaId) {
             return;
         }
         
-        const url = await obterUrlWaze(farmacia);
-        
-        console.log('🔗 URL Waze gerada:', url);
+        var url = await obterUrlWaze(farmacia);
         
         if (url && url !== '#') {
             window.open(url, '_blank');
@@ -186,54 +158,54 @@ async function abrirWaze(farmaciaId) {
 
 // ==================== FUNÇÃO DE STATUS DA FARMÁCIA ====================
 function verificarStatusFarmacia(farmacia) {
-    const agora = new Date();
-    const horaMoçambique = new Date(agora.toLocaleString("en-US", {timeZone: "Africa/Maputo"}));
-    const horaAtual = horaMoçambique.getHours();
-    const minutoAtual = horaMoçambique.getMinutes();
-    const minutosAtual = horaAtual * 60 + minutoAtual;
+    var agora = new Date();
+    var horaMoçambique = new Date(agora.toLocaleString('en-US', { timeZone: 'Africa/Maputo' }));
+    var horaAtual = horaMoçambique.getHours();
+    var minutoAtual = horaMoçambique.getMinutes();
+    var minutosAtual = horaAtual * 60 + minutoAtual;
     
-    if (farmacia.plantao === true || farmacia.horario === "24hr") {
+    if (farmacia.plantao === true || farmacia.horario === '24hr') {
         return {
             aberto: true,
-            texto: "Aberto agora",
-            cor: "#059669",
-            bg: "#d1fae5",
+            texto: 'Aberto agora',
+            cor: '#059669',
+            bg: '#d1fae5',
             icon: '<img src="/img/clock.png" alt="Aberto" style="width: 14px; height: 14px;">'
         };
     }
     
-    let horario = farmacia.horario || "08:00 - 18:00";
+    var horario = farmacia.horario || '08:00 - 18:00';
     
     function paraMinutos(horaStr) {
         if (!horaStr) return 0;
         horaStr = horaStr.trim();
-        const partes = horaStr.split(':');
+        var partes = horaStr.split(':');
         if (partes.length !== 2) return 0;
-        const horas = parseInt(partes[0]);
-        const minutos = parseInt(partes[1]);
+        var horas = parseInt(partes[0]);
+        var minutos = parseInt(partes[1]);
         if (isNaN(horas) || isNaN(minutos)) return 0;
         return horas * 60 + minutos;
     }
     
     function extrairHorarios(periodo) {
         periodo = periodo.trim();
-        const padrao = /(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/;
-        const match = periodo.match(padrao);
+        var padrao = /(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/;
+        var match = periodo.match(padrao);
         if (match) {
             return { inicio: match[1], fim: match[2] };
         }
         return null;
     }
     
-    let aberto = false;
+    var aberto = false;
     
     if (horario.indexOf(',') !== -1) {
-        const periodos = horario.split(',');
-        for (let i = 0; i < periodos.length; i++) {
-            const hrs = extrairHorarios(periodos[i]);
+        var periodos = horario.split(',');
+        for (var i = 0; i < periodos.length; i++) {
+            var hrs = extrairHorarios(periodos[i]);
             if (hrs) {
-                const inicioMin = paraMinutos(hrs.inicio);
-                const fimMin = paraMinutos(hrs.fim);
+                var inicioMin = paraMinutos(hrs.inicio);
+                var fimMin = paraMinutos(hrs.fim);
                 if (minutosAtual >= inicioMin && minutosAtual < fimMin) {
                     aberto = true;
                     break;
@@ -241,13 +213,13 @@ function verificarStatusFarmacia(farmacia) {
             }
         }
     } else if (horario.indexOf(' ') !== -1 && (horario.indexOf('-') !== -1 || horario.indexOf('–') !== -1)) {
-        const partes = horario.split(' ');
-        for (let i = 0; i < partes.length; i++) {
-            if (partes[i].indexOf('-') !== -1 || partes[i].indexOf('–') !== -1) {
-                const hrs = extrairHorarios(partes[i]);
+        var partes = horario.split(' ');
+        for (var j = 0; j < partes.length; j++) {
+            if (partes[j].indexOf('-') !== -1 || partes[j].indexOf('–') !== -1) {
+                var hrs = extrairHorarios(partes[j]);
                 if (hrs) {
-                    const inicioMin = paraMinutos(hrs.inicio);
-                    const fimMin = paraMinutos(hrs.fim);
+                    var inicioMin = paraMinutos(hrs.inicio);
+                    var fimMin = paraMinutos(hrs.fim);
                     if (minutosAtual >= inicioMin && minutosAtual < fimMin) {
                         aberto = true;
                         break;
@@ -256,10 +228,10 @@ function verificarStatusFarmacia(farmacia) {
             }
         }
     } else {
-        const hrs = extrairHorarios(horario);
+        var hrs = extrairHorarios(horario);
         if (hrs) {
-            const inicioMin = paraMinutos(hrs.inicio);
-            const fimMin = paraMinutos(hrs.fim);
+            var inicioMin = paraMinutos(hrs.inicio);
+            var fimMin = paraMinutos(hrs.fim);
             aberto = (minutosAtual >= inicioMin && minutosAtual < fimMin);
         }
     }
@@ -267,17 +239,17 @@ function verificarStatusFarmacia(farmacia) {
     if (aberto) {
         return {
             aberto: true,
-            texto: "Aberto agora",
-            cor: "#059669",
-            bg: "#d1fae5",
+            texto: 'Aberto agora',
+            cor: '#059669',
+            bg: '#d1fae5',
             icon: '<img src="/img/clock.png" alt="Aberto" style="width: 14px; height: 14px;">'
         };
     } else {
         return {
             aberto: false,
-            texto: "Fechado",
-            cor: "#dc2626",
-            bg: "#fee2e2",
+            texto: 'Fechado',
+            cor: '#dc2626',
+            bg: '#fee2e2',
             icon: '<img src="/img/clock.png" alt="Fechado" style="width: 14px; height: 14px;">'
         };
     }
@@ -286,17 +258,17 @@ function verificarStatusFarmacia(farmacia) {
 // ==================== FUNÇÃO PARA CARREGAR FARMÁCIAS ====================
 async function carregarFarmacias() {
     try {
-        const farmacias = await apiRequest('/farmacias');
+        var farmacias = await apiRequest('/farmacias');
         
-        let farmaciasGrid = document.querySelector('.farmacias-grid');
+        var farmaciasGrid = document.querySelector('.farmacias-grid');
         if (!farmaciasGrid) {
-            console.error("Elemento .farmacias-grid nao encontrado!");
+            console.error('Elemento .farmacias-grid nao encontrado!');
             return;
         }
         
         farmaciasGrid.innerHTML = '';
         
-        let msgVazia = document.querySelector('.empty-message');
+        var msgVazia = document.querySelector('.empty-message');
         if (msgVazia) msgVazia.remove();
         
         if (farmacias.length === 0) {
@@ -304,8 +276,8 @@ async function carregarFarmacias() {
             return;
         }
         
-        for (let i = 0; i < farmacias.length; i++) {
-            let card = await criarCardFarmacia(farmacias[i]);
+        for (var i = 0; i < farmacias.length; i++) {
+            var card = await criarCardFarmacia(farmacias[i]);
             farmaciasGrid.appendChild(card);
         }
         
@@ -316,7 +288,7 @@ async function carregarFarmacias() {
 }
 
 function mostrarMensagemVazia(gridElement) {
-    let msg = document.createElement('div');
+    var msg = document.createElement('div');
     msg.className = 'empty-message';
     msg.innerHTML = `
         <div style="text-align: center; padding: 40px 20px; background: white; border-radius: 12px; grid-column: 1/-1;">
@@ -329,9 +301,9 @@ function mostrarMensagemVazia(gridElement) {
 }
 
 function mostrarMensagemErro(mensagem) {
-    let farmaciasGrid = document.querySelector('.farmacias-grid');
+    var farmaciasGrid = document.querySelector('.farmacias-grid');
     if (farmaciasGrid) {
-        let msg = document.createElement('div');
+        var msg = document.createElement('div');
         msg.className = 'empty-message';
         msg.innerHTML = `
             <div style="text-align: center; padding: 40px 20px; background: #fee2e2; border-radius: 12px; grid-column: 1/-1;">
@@ -349,41 +321,39 @@ function mostrarMensagemErro(mensagem) {
 
 // ==================== FUNÇÃO PARA CRIAR CARD DA FARMÁCIA ====================
 async function criarCardFarmacia(farmacia) {
-    let card = document.createElement('div');
+    var card = document.createElement('div');
     card.className = 'farmacia-card';
     card.setAttribute('data-id', farmacia.id);
     card.dataset.id = farmacia.id;
     card.dataset.plantao = farmacia.plantao || false;
     
-    let plantao = farmacia.plantao === true;
-    let badgePlantao = plantao ? '<span class="badge-plantao">Plantao 24h</span>' : '';
+    var plantao = farmacia.plantao === true;
+    var badgePlantao = plantao ? '<span class="badge-plantao">Plantao 24h</span>' : '';
     
-    const status = verificarStatusFarmacia(farmacia);
+    var status = verificarStatusFarmacia(farmacia);
     
-    // Buscar estatísticas de avaliações
-    const stats = await buscarStatsAvaliacao('farmacia', farmacia.id);
-    const media = stats.media || 0;
-    const total = stats.total || 0;
+    var stats = await buscarStatsAvaliacao('farmacia', farmacia.id);
+    var media = stats.media || 0;
+    var total = stats.total || 0;
     
-    let servicos = gerarServicos(farmacia, plantao);
-    let servicosHTML = '';
-    for (let j = 0; j < servicos.length; j++) {
-        servicosHTML += `<li>${servicos[j]}</li>`;
+    var servicos = gerarServicos(farmacia, plantao);
+    var servicosHTML = '';
+    for (var j = 0; j < servicos.length; j++) {
+        servicosHTML += '<li>' + servicos[j] + '</li>';
     }
     
-    let horario = farmacia.horario || (plantao ? '24 horas' : '08:00 - 18:00');
-    let telefone = farmacia.telefone || 'Telefone nao informado';
-    let endereco = farmacia.endereco || 'Endereco nao informado';
-    let nome = farmacia.nome || 'Farmacia';
+    var horario = farmacia.horario || (plantao ? '24 horas' : '08:00 - 18:00');
+    var telefone = farmacia.telefone || 'Telefone nao informado';
+    var endereco = farmacia.endereco || 'Endereco nao informado';
+    var nome = farmacia.nome || 'Farmacia';
     
-    let nomeCodificado = encodeURIComponent(nome);
-    let id = farmacia.id;
+    var nomeCodificado = encodeURIComponent(nome);
+    var id = farmacia.id;
     
-    // Criar estrelas
-    const estrelasCheias = Math.round(media);
-    let estrelasHTML = '';
-    for (let i = 0; i < 5; i++) {
-        if (i < estrelasCheias) {
+    var estrelasCheias = Math.round(media);
+    var estrelasHTML = '';
+    for (var k = 0; k < 5; k++) {
+        if (k < estrelasCheias) {
             estrelasHTML += '<span style="color: #fbbf24;">★</span>';
         } else {
             estrelasHTML += '<span style="color: #d1d5db;">☆</span>';
@@ -443,12 +413,12 @@ async function criarCardFarmacia(farmacia) {
                 <img src="/img/ponto.png" alt="Como Chegar" style="width: 14px; height: 14px;"> Como Chegar
             </button>
             <button class="waze-btn" onclick="abrirWaze(${id})" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                🗺️ Waze
+                Waze
             </button>
         </div>
         <div class="avaliar-container" style="margin-top: 10px;">
             <button class="avaliar-btn" onclick="abrirModalAvaliacao('farmacia', ${id})">
-                ⭐ Avaliar
+                Avaliar
             </button>
         </div>
     `;
@@ -457,7 +427,7 @@ async function criarCardFarmacia(farmacia) {
 }
 
 function gerarServicos(farmacia, plantao) {
-    let servicos = ['Venda de medicamentos', 'Consultas farmaceuticas'];
+    var servicos = ['Venda de medicamentos', 'Consultas farmaceuticas'];
     if (plantao) servicos.push('Atendimento 24 horas');
     servicos.push('Medicao de pressao arterial');
     if (farmacia.nome && farmacia.nome.toLowerCase().includes('popular')) {
@@ -466,21 +436,21 @@ function gerarServicos(farmacia, plantao) {
     if (farmacia.nome && farmacia.nome.toLowerCase().includes('central')) {
         servicos.push('Ampla variedade');
     }
-    return [...new Set(servicos)];
+    return Array.from(new Set(servicos));
 }
 
 // ==================== FUNÇÃO PARA FILTRAR FARMÁCIAS ====================
 function filtrarFarmacias(filtro) {
-    let cards = document.querySelectorAll('.farmacia-card');
+    var cards = document.querySelectorAll('.farmacia-card');
     if (cards.length === 0) return;
     
-    let contador = 0;
-    for (let i = 0; i < cards.length; i++) {
+    var contador = 0;
+    for (var i = 0; i < cards.length; i++) {
         if (filtro === 'todas') {
             cards[i].style.display = 'block';
             contador++;
         } else if (filtro === 'plantao') {
-            let badge = cards[i].querySelector('.badge-plantao');
+            var badge = cards[i].querySelector('.badge-plantao');
             if (badge) {
                 cards[i].style.display = 'block';
                 contador++;
@@ -490,13 +460,13 @@ function filtrarFarmacias(filtro) {
         }
     }
     
-    let msgNenhum = document.querySelector('.nenhum-resultado');
+    var msgNenhum = document.querySelector('.nenhum-resultado');
     if (msgNenhum) msgNenhum.remove();
     
     if (contador === 0) {
-        let grid = document.querySelector('.farmacias-grid');
+        var grid = document.querySelector('.farmacias-grid');
         if (grid) {
-            let msg = document.createElement('div');
+            var msg = document.createElement('div');
             msg.className = 'nenhum-resultado';
             msg.style.cssText = 'grid-column: 1/-1; text-align: center; padding: 40px; background: white; border-radius: 12px; margin-top: 20px;';
             msg.innerHTML = `
@@ -512,29 +482,28 @@ function filtrarFarmacias(filtro) {
 // ==================== FUNÇÕES PARA AS PÁGINAS DESTINO ====================
 
 async function carregarMedicamentosDaFarmacia() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const nomeFarmacia = urlParams.get('farmacia');
-    const id = urlParams.get('id');
+    var urlParams = new URLSearchParams(window.location.search);
+    var nomeFarmacia = urlParams.get('farmacia');
+    var id = urlParams.get('id');
     
     if (!nomeFarmacia) {
         document.body.innerHTML = '<div style="text-align: center; padding: 50px;">Farmacia nao encontrada</div>';
         return;
     }
     
-    const nomeDecodificado = decodeURIComponent(nomeFarmacia);
-    document.title = `Medicamentos - ${nomeDecodificado}`;
+    var nomeDecodificado = decodeURIComponent(nomeFarmacia);
+    document.title = 'Medicamentos - ' + nomeDecodificado;
     
     try {
-        const farmacia = await apiRequest(`/farmacias/${id}`);
-        const produtos = await apiRequest(`/produtos?farmaciaId=${id}`);
+        var farmacia = await apiRequest('/farmacias/' + id);
+        var produtos = await apiRequest('/produtos?farmaciaId=' + id);
         
-        let container = document.querySelector('.medicamentos-container') || document.body;
+        var container = document.querySelector('.medicamentos-container') || document.body;
         
-        // Gerar URLs com localização atual
-        const urlDirecoes = await obterUrlDirecoes(farmacia);
-        const urlWaze = await obterUrlWaze(farmacia);
+        var urlDirecoes = await obterUrlDirecoes(farmacia);
+        var urlWaze = await obterUrlWaze(farmacia);
         
-        let medicamentosHTML = `
+        var medicamentosHTML = `
             <div style="max-width: 800px; margin: 40px auto; padding: 30px; background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                 <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px;">
                     <a href="farm.html" style="text-decoration: none; color: #7c3aed; font-size: 18px;">← Voltar</a>
@@ -552,21 +521,22 @@ async function carregarMedicamentosDaFarmacia() {
         `;
         
         if (produtos && produtos.length > 0) {
-            let medicamentos = produtos.filter(p => p.categoria === 'Medicamento' || p.categoria === 'Generico');
-            let outros = produtos.filter(p => p.categoria !== 'Medicamento' && p.categoria !== 'Generico');
+            var medicamentos = produtos.filter(function(p) { return p.categoria === 'Medicamento' || p.categoria === 'Generico'; });
+            var outros = produtos.filter(function(p) { return p.categoria !== 'Medicamento' && p.categoria !== 'Generico'; });
             
             if (medicamentos.length > 0) {
-                medicamentosHTML += `<h3 style="color: #059669; margin-top: 10px;"><img src="/img/comprimidos.png" alt="Medicamentos" style="width: 20px; height: 20px;"> Medicamentos</h3>`;
-                for (let p of medicamentos) {
-                    let statusText = p.quantidade > 0 ? 'Em stock' : 'Indisponivel';
-                    let statusBg = p.quantidade > 0 ? '#d1fae5' : '#f3f4f6';
-                    let statusColor = p.quantidade > 0 ? '#047857' : '#6b7280';
+                medicamentosHTML += '<h3 style="color: #059669; margin-top: 10px;"><img src="/img/comprimidos.png" alt="Medicamentos" style="width: 20px; height: 20px;"> Medicamentos</h3>';
+                for (var m = 0; m < medicamentos.length; m++) {
+                    var p = medicamentos[m];
+                    var statusText = p.quantidade > 0 ? 'Em stock' : 'Indisponivel';
+                    var statusBg = p.quantidade > 0 ? '#d1fae5' : '#f3f4f6';
+                    var statusColor = p.quantidade > 0 ? '#047857' : '#6b7280';
                     
                     medicamentosHTML += `
                         <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border-left: 4px solid #059669; display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <span style="font-weight: 500;">${p.nome}</span>
-                                ${p.fabricante ? `<br><small style="color: #6b7280;">${p.fabricante}</small>` : ''}
+                                ${p.fabricante ? '<br><small style="color: #6b7280;">' + p.fabricante + '</small>' : ''}
                             </div>
                             <div style="text-align: right;">
                                 <span style="font-weight: bold; color: #059669; display: block;">${p.preco} MZN</span>
@@ -578,10 +548,11 @@ async function carregarMedicamentosDaFarmacia() {
             }
             
             if (outros.length > 0) {
-                medicamentosHTML += `<h3 style="color: #7c3aed; margin-top: 20px;"><img src="/img/details.png" alt="Outros Produtos" style="width: 20px; height: 20px;"> Outros Produtos</h3>`;
-                for (let p of outros) {
-                    let statusText = p.quantidade > 0 ? 'Em stock' : 'Indisponivel';
-                    let statusBg = p.quantidade > 0 ? '#d1fae5' : '#f3f4f6';
+                medicamentosHTML += '<h3 style="color: #7c3aed; margin-top: 20px;"><img src="/img/details.png" alt="Outros Produtos" style="width: 20px; height: 20px;"> Outros Produtos</h3>';
+                for (var o = 0; o < outros.length; o++) {
+                    var p = outros[o];
+                    var statusText = p.quantidade > 0 ? 'Em stock' : 'Indisponivel';
+                    var statusBg = p.quantidade > 0 ? '#d1fae5' : '#f3f4f6';
                     
                     medicamentosHTML += `
                         <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border-left: 4px solid #7c3aed; display: flex; justify-content: space-between; align-items: center;">
@@ -616,10 +587,10 @@ async function carregarMedicamentosDaFarmacia() {
                 </div>
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <button onclick="window.open('${urlDirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                        📍 Como Chegar (Google Maps)
+                        Como Chegar (Google Maps)
                     </button>
                     <button onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                        🗺️ Abrir no Waze
+                        Abrir no Waze
                     </button>
                 </div>
                 <div style="margin-top: 20px; text-align: center;">
@@ -640,33 +611,32 @@ async function carregarMedicamentosDaFarmacia() {
 }
 
 async function carregarDetalhesDaFarmacia() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const nomeFarmacia = urlParams.get('farmacia');
-    const id = urlParams.get('id');
+    var urlParams = new URLSearchParams(window.location.search);
+    var nomeFarmacia = urlParams.get('farmacia');
+    var id = urlParams.get('id');
     
     if (!nomeFarmacia) {
         document.body.innerHTML = '<div style="text-align: center; padding: 50px;">Farmacia nao encontrada</div>';
         return;
     }
     
-    const nomeDecodificado = decodeURIComponent(nomeFarmacia);
-    document.title = `Detalhes - ${nomeDecodificado}`;
+    var nomeDecodificado = decodeURIComponent(nomeFarmacia);
+    document.title = 'Detalhes - ' + nomeDecodificado;
     
     try {
-        const farmacia = await apiRequest(`/farmacias/${id}`);
-        const produtos = await apiRequest(`/produtos?farmaciaId=${id}`);
+        var farmacia = await apiRequest('/farmacias/' + id);
+        var produtos = await apiRequest('/produtos?farmaciaId=' + id);
         
-        const status = verificarStatusFarmacia(farmacia);
+        var status = verificarStatusFarmacia(farmacia);
         
-        let container = document.querySelector('.detalhes-container') || document.body;
+        var container = document.querySelector('.detalhes-container') || document.body;
         
-        let enderecoCompleto = farmacia.endereco || 'Endereco nao informado';
+        var enderecoCompleto = farmacia.endereco || 'Endereco nao informado';
         
-        // Gerar URLs com localização atual
-        const urlDirecoes = await obterUrlDirecoes(farmacia);
-        const urlWaze = await obterUrlWaze(farmacia);
+        var urlDirecoes = await obterUrlDirecoes(farmacia);
+        var urlWaze = await obterUrlWaze(farmacia);
         
-        let detalhesHTML = `
+        var detalhesHTML = `
             <div style="max-width: 900px; margin: 40px auto; padding: 30px; background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                 <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
                     <a href="farm.html" style="text-decoration: none; color: #7c3aed; font-size: 18px;">← Voltar</a>
@@ -702,10 +672,10 @@ async function carregarDetalhesDaFarmacia() {
                             </div>
                             <div style="display: flex; gap: 10px;">
                                 <button onclick="window.open('${urlDirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                                    📍 Como Chegar
+                                    Como Chegar
                                 </button>
                                 <button onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                                    🗺️ Waze
+                                    Waze
                                 </button>
                             </div>
                         </div>
@@ -715,7 +685,7 @@ async function carregarDetalhesDaFarmacia() {
                             <div style="background: white; padding: 15px; border-radius: 8px;">
                                 ${farmacia.plantao ? 
                                     '<div>Segunda a Domingo: <strong style="color: #059669;">24 horas</strong></div>' :
-                                    `<div>Horario: <strong>${farmacia.horario || '08:00 - 18:00'}</strong></div>`
+                                    '<div>Horario: <strong>' + (farmacia.horario || '08:00 - 18:00') + '</strong></div>'
                                 }
                             </div>
                             ${farmacia.plantao ? 
@@ -784,27 +754,33 @@ window.verificarStatusFarmacia = verificarStatusFarmacia;
 window.buscarStatsAvaliacao = buscarStatsAvaliacao;
 window.criarCardFarmacia = criarCardFarmacia;
 
-let inicializado = false;
+var inicializado = false;
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     if (inicializado) return;
     inicializado = true;
     
-    const path = window.location.pathname;
+    var path = window.location.pathname;
+    
+    // VERIFICAR SE É PÁGINA DE LOGIN - NÃO EXECUTAR NADA
+    if (path.includes('login-farmacia.html') || path.includes('admin-login.html')) {
+        console.log('Página de login - carregamento de farmácias ignorado');
+        return;
+    }
     
     if (path.includes('medicamentos.html')) {
         carregarMedicamentosDaFarmacia();
     } else if (path.includes('detalhes-farmacia.html')) {
         carregarDetalhesDaFarmacia();
     } else if (path.includes('farm.html') || path === '/' || path.includes('farm')) {
-        setTimeout(() => {
+        setTimeout(function() {
             carregarFarmacias();
         }, 100);
         
-        let filterSelect = document.getElementById('filter-select');
+        var filterSelect = document.getElementById('filter-select');
         if (filterSelect && !filterSelect.hasAttribute('data-listener')) {
             filterSelect.setAttribute('data-listener', 'true');
-            filterSelect.addEventListener('change', function (e) {
+            filterSelect.addEventListener('change', function(e) {
                 filtrarFarmacias(e.target.value);
             });
         }
