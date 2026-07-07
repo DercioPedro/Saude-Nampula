@@ -1,0 +1,77 @@
+/* Estilos para o contador de visitantes */
+#contador-visitantes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #059669, #047857);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    max-width: fit-content;
+    margin: 16px auto;
+    cursor: default;
+    user-select: none;
+}
+
+#contador-visitantes .icone {
+    font-size: 18px;
+}
+
+#contador-visitantes .label {
+    font-weight: 300;
+}
+
+#contador-visitantes .valor {
+    font-size: 22px;
+    font-weight: 700;
+    min-width: 60px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+#contador-visitantes .status {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* Animacao de pulso ao atualizar */
+#contador-visitantes .valor.atualizando {
+    transform: scale(1.2);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    #contador-visitantes {
+        padding: 10px 16px;
+        font-size: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    #contador-visitantes .valor {
+        font-size: 18px;
+        min-width: 40px;
+    }
+    
+    #contador-visitantes .icone {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    #contador-visitantes {
+        padding: 8px 12px;
+        font-size: 11px;
+        border-radius: 8px;
+        margin: 8px auto;
+    }
+    
+    #contador-visitantes .valor {
+        font-size: 16px;
+        min-width: 30px;
+    }
+}
