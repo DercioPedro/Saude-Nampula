@@ -19,16 +19,22 @@
                 </div>
                 <h1>Saúde Nampula</h1>
             </div>
-            <ul class="nav-links">
+
+                         <!-- Botão Hambúrguer -->
+            <button class="menu-hamburguer" id="menuHamburguer" aria-label="Abrir menu">
+                <span class="barra"></span>
+                <span class="barra"></span>
+                <span class="barra"></span>
+            </button>
+
+            
+            <ul class="nav-links" id="navLinks">
                 <li><a href="home.html">Início</a></li>
                 <li><a href="hospital.html" class="active">Hospitais</a></li>
                 <li><a href="centros.html">Centros de Saúde</a></li>
                 <li><a href="farm.html">Farmácias</a></li>
                 <li><a href="emer.html">Emergências</a></li>
                 <li><a href="sobre.html">Sobre</a></li>
-                <!-- <li><a href="admin-login.html" class="admin-link"
-                        style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600;">🔐
-                        Admin</a></li> -->
             </ul>
         </div>
     </nav>
@@ -182,9 +188,10 @@
     </footer>
 
     <!-- Adicionar antes dos outros scripts -->
-<script src="JS/api-config.js"></script>
-
+    <script src="JS/api-config.js"></script>
     <script src="JS/hospital-detalhes.js"></script>
+    <script src="JS/menu-mobile.js"></script>
+
 </body>
 
 </html>
