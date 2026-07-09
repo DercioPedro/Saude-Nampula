@@ -12,20 +12,20 @@ function realizarBusca() {
     
     // Buscar em diferentes categorias
     if (termoBusca.includes('hospital')) {
-        window.location.href = 'hospital.html';
+        window.location.href = '/hospital';
     } else if (termoBusca.includes('centro') || termoBusca.includes('saúde')) {
-        window.location.href = 'centros.html';
+        window.location.href = '/centros';
     } else if (termoBusca.includes('farmácia') || termoBusca.includes('farmacia')) {
-        window.location.href = 'farm.html';
+        window.location.href = '/farm';
     } else if (termoBusca.includes('emergência') || termoBusca.includes('emergencia')) {
-        window.location.href = 'emer.html';
+        window.location.href = '/emer';
     } else {
         // Buscar por bairro
         const bairros = ['mucatine', 'muhala', 'namicopo', 'centro', 'marrere', 'napipine'];
         const bairroEncontrado = bairros.find(b => termoBusca.includes(b));
         
         if (bairroEncontrado) {
-            window.location.href = `centros.html?bairro=${bairroEncontrado}`;
+            window.location.href = `/centros?bairro=${bairroEncontrado}`;
         } else {
             alert('Não encontramos resultados para: ' + termoBusca);
         }
