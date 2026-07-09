@@ -27,7 +27,7 @@ loginForm.addEventListener('submit', async function (e) {
             localStorage.setItem('loginTime', new Date().toISOString());
             
             showAlert('Login realizado com sucesso! Redirecionando...', 'success');
-            setTimeout(() => window.location.href = 'admin-panel.html', 1000);
+            setTimeout(() => window.location.href = '/admin-panel', 1000);
         }
     } catch (error) {
         console.error('Erro:', error);
@@ -37,5 +37,5 @@ loginForm.addEventListener('submit', async function (e) {
 });
 
 if (localStorage.getItem('adminLoggedIn') === 'true' && getAuthToken()) {
-    window.location.href = 'admin-panel.html';
+    window.location.href = '/admin-panel';
 }
