@@ -6,7 +6,7 @@ let token = null;
 function checkAuth() {
     token = getAuthToken();
     if (!token) {
-        window.location.href = 'admin-login.html';
+        window.location.href = '/admin-login';
         return false;
     }
     return true;
