@@ -197,7 +197,7 @@ async function criarCard(hospital) {
 }
 
 function verDetalhes(id) {
-    window.location.href = 'hospital-detalhes.html?id=' + id;
+    window.location.href = '/hospital-detalhes?id=' + id;
 }
 
 window.addEventListener('DOMContentLoaded', function () {
