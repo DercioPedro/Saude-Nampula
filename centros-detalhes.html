@@ -20,16 +20,23 @@
                 </div>
                 <h1>Saúde Nampula</h1>
             </div>
-            <ul class="nav-links">
+
+
+                         <!-- Botão Hambúrguer -->
+            <button class="menu-hamburguer" id="menuHamburguer" aria-label="Abrir menu">
+                <span class="barra"></span>
+                <span class="barra"></span>
+                <span class="barra"></span>
+            </button>
+
+            
+            <ul class="nav-links" id="navLinks">
                 <li><a href="home.html">Início</a></li>
                 <li><a href="hospital.html">Hospitais</a></li>
                 <li><a href="centros.html" class="active">Centros de Saúde</a></li>
                 <li><a href="farm.html">Farmácias</a></li>
                 <li><a href="emer.html">Emergências</a></li>
                 <li><a href="sobre.html">Sobre</a></li>
-                <!-- <li><a href="admin-login.html" class="admin-link"
-                        style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600;">🔐
-                        Admin</a></li> -->
             </ul>
         </div>
     </nav>
@@ -134,7 +141,7 @@
                     </div>
                 </div>
                 <div class="marcacao-box">
-                    <p>📌 <strong>Importante:</strong> Para marcar consultas, contacte o centro durante o horário de
+                    <p> <strong>Importante:</strong> Para marcar consultas, contacte o centro durante o horário de
                         funcionamento.</p>
                 </div>
             </div>
@@ -180,7 +187,7 @@
             <!-- Dicas Importantes -->
             <div class="section-card dicas-card">
                 <h2>
-                    <span class="section-icon">💡</span>
+                    <span class="section-icon"></span>
                     Dicas para sua Visita
                 </h2>
                 <div class="dicas-list">
@@ -229,7 +236,7 @@
                             <img src="/img/ponto.png" alt=""> Obter Direções GPS
                         </button>
                         <button class="btn-share-location" onclick="compartilharLocalizacao()">
-                            📤 Compartilhar Localização
+                             Compartilhar Localização
                         </button>
                     </div>
                 </div>
@@ -242,7 +249,7 @@
                 ← Voltar para Centros de Saúde
             </button>
             <button class="btn-emergency" onclick="window.location.href='emer.html'">
-                🚨 Contactos de Emergência
+                 Contactos de Emergência
             </button>
         </div>
     </main>
@@ -257,7 +264,7 @@
 <script src="JS/api-config.js"></script>
     <script src="JS/centros-detalhes.js"></script>
     <script src="JS/geolocalizacao.js"></script>
-    <!-- <script src="JS/darkmode.js"></script> -->
+    <script src="JS/menu-mobile.js"></script>
 </body>
 
 </html>
