@@ -25,7 +25,7 @@ function realizarBusca() {
         const bairroEncontrado = bairros.find(b => termoBusca.includes(b));
         
         if (bairroEncontrado) {
-            window.location.href = `/centros?bairro=${bairroEncontrado}`;
+            window.location.href = `/centros? bairro=${bairroEncontrado}`;
         } else {
             alert('Não encontramos resultados para: ' + termoBusca);
         }
