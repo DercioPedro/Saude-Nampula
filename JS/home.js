@@ -43,7 +43,7 @@ function buscarComEnter(event) {
 function ligarEmergencia() {
     const confirmar = confirm('Deseja ligar para o número de emergência 119?');
     if (confirmar) {
-        window.location.href = 'tel:119';
+        window.location.href = '/emer';
     }
 }
 
