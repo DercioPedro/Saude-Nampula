@@ -47,7 +47,7 @@ async function carregarDetalhes() {
     } catch (error) {
         console.error('Erro ao carregar detalhes:', error);
         alert('Erro ao carregar detalhes do hospital');
-        window.location.href = 'hospital.html';
+        window.location.href = '/hospital';
     }
 }
 
