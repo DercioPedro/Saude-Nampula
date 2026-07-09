@@ -147,6 +147,26 @@ function filtrarPublicacoes() {
     renderizarPublicacoes(lista);
 }
 
+
+// Verificar se tem publicação para abrir
+var urlParams = new URLSearchParams(window.location.search);
+var abrirId = urlParams.get('abrir');
+
+if (abrirId) {
+    // Aguardar as publicações carregarem
+    var checkPublicacoes = setInterval(function() {
+        if (typeof publicacoes !== 'undefined' && publicacoes.length > 0) {
+            clearInterval(checkPublicacoes);
+            var pub = publicacoes.find(function(p) { return p.id === parseInt(abrirId); });
+            if (pub) {
+                setTimeout(function() {
+                    abrirPublicacao(pub.id);
+                }, 500);
+            }
+        }
+    }, 200);
+}
+
 // ========================================
 // ABRIR PUBLICAÇÃO (MODAL)
 // ========================================
