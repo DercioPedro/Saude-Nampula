@@ -763,16 +763,16 @@ document.addEventListener('DOMContentLoaded', function() {
     var path = window.location.pathname;
     
     // VERIFICAR SE É PÁGINA DE LOGIN - NÃO EXECUTAR NADA
-    if (path.includes('login-farmacia.html') || path.includes('admin-login.html')) {
+    if (path.includes('/login-farmacia') || path.includes('/admin-login')) {
         console.log('Página de login - carregamento de farmácias ignorado');
         return;
     }
     
-    if (path.includes('medicamentos.html')) {
+    if (path.includes('/medicamentos')) {
         carregarMedicamentosDaFarmacia();
-    } else if (path.includes('detalhes-farmacia.html')) {
+    } else if (path.includes('/detalhes-farmacia')) {
         carregarDetalhesDaFarmacia();
-    } else if (path.includes('farm.html') || path === '/' || path.includes('farm')) {
+    } else if (path.includes('/farm') || path === '/' || path.includes('farm')) {
         setTimeout(function() {
             carregarFarmacias();
         }, 100);
