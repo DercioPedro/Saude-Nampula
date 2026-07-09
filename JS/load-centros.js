@@ -225,7 +225,7 @@ function filtrarCentros(bairro) {
 }
 
 function verDetalhes(id) {
-    window.location.href = 'centros-detalhes.html?id=' + id;
+    window.location.href = '/centros-detalhes?id=' + id;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
