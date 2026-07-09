@@ -47,7 +47,7 @@ function renderizarPublicacoes(lista) {
     if (!lista || lista.length === 0) {
         container.innerHTML = `
             <div class="empty-publicacoes">
-                <span class="icon">📝</span>
+                <span class="icon"></span>
                 <h3>Nenhuma publicacao disponivel</h3>
                 <p>Volte em breve para novas informacoes de saude.</p>
             </div>
