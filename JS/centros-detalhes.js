@@ -52,7 +52,7 @@ async function carregarDetalhes() {
     
     if (!id) {
         alert('Centro de saúde não encontrado!');
-        window.location.href = 'centros.html';
+        window.location.href = '/centros';
         return;
     }
     
@@ -153,7 +153,7 @@ async function carregarDetalhes() {
     } catch (error) {
         console.error('Erro ao carregar detalhes:', error);
         alert('Erro ao carregar detalhes do centro de saúde');
-        window.location.href = 'centros.html';
+        window.location.href = '/centros';
     }
 }
 
