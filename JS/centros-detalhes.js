@@ -39,12 +39,12 @@ function obterUrlDirecoes(centro) {
 // Obter texto de localização para exibição
 function obterTextoLocalizacao(centro) {
     if (temCoordenadas(centro)) {
-        return `📍 Coordenadas: ${centro.latitude}, ${centro.longitude}`;
+        return `Coordenadas: ${centro.latitude}, ${centro.longitude}`;
     }
     if (centro.endereco && centro.endereco !== 'Endereço não informado') {
-        return `📍 ${centro.endereco}, Nampula`;
+        return `${centro.endereco}, Nampula`;
     }
-    return '📍 Localização não informada';
+    return 'ocalização não informada';
 }
 
 async function carregarDetalhes() {
@@ -136,7 +136,7 @@ async function carregarDetalhes() {
                     const badge = document.createElement('span');
                     badge.className = 'coordenadas-badge';
                     badge.style.cssText = 'background: #059669; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-left: 10px;';
-                    badge.innerHTML = '📍 GPS';
+                    badge.innerHTML = 'GPS';
                     title.appendChild(badge);
                 }
             }
