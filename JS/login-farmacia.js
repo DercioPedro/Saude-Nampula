@@ -84,7 +84,7 @@ async function fazerLogin() {
             mostrarSucesso('Login realizado com sucesso! Redirecionando...');
             
             setTimeout(() => {
-                window.location.href = `admin-produtos.html?farmacia=${encodeURIComponent(result.farmacia.nome)}&id=${result.farmacia.id}`;
+                window.location.href = `/admin-produtos?farmacia=${encodeURIComponent(result.farmacia.nome)}&id=${result.farmacia.id}`;
             }, 1500);
         }
     } catch (error) {
@@ -179,7 +179,7 @@ async function criarSenhaPrimeiroAcesso() {
             mostrarSucesso('Senha criada com sucesso! Redirecionando...');
             
             setTimeout(() => {
-                window.location.href = `admin-produtos.html?farmacia=${encodeURIComponent(result.farmacia.nome)}&id=${result.farmacia.id}`;
+                window.location.href = `/admin-produtos?farmacia=${encodeURIComponent(result.farmacia.nome)}&id=${result.farmacia.id}`;
             }, 1500);
         }
     } catch (error) {
