@@ -97,12 +97,12 @@ async function adicionarDistanciasAosCards() {
             itens = farmacias.map(function(f) { return { ...f, tipo: 'farmacia' }; });
             tipoCard = 'farmacia-card';
             console.log(itens.length + ' farmacias para processar');
-        } else if (path.indexOf('hospital.html') !== -1) {
+        } else if (path.indexOf('/hospital') !== -1) {
             const hospitais = await apiRequest('/hospitais');
             itens = hospitais.map(function(h) { return { ...h, tipo: 'hospital' }; });
             tipoCard = 'hospital-card';
             console.log(itens.length + ' hospitais para processar');
-        } else if (path.indexOf('centros.html') !== -1) {
+        } else if (path.indexOf('/centros') !== -1) {
             const centros = await apiRequest('/centros');
             itens = centros.map(function(c) { return { ...c, tipo: 'centro' }; });
             tipoCard = 'centro-card';
@@ -258,9 +258,9 @@ function criarBotaoLocalizacao() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    if (window.location.pathname.indexOf('farm.html') !== -1 ||
-        window.location.pathname.indexOf('hospital.html') !== -1 ||
-        window.location.pathname.indexOf('centros.html') !== -1) {
+    if (window.location.pathname.indexOf('/farm') !== -1 ||
+        window.location.pathname.indexOf('/hospital') !== -1 ||
+        window.location.pathname.indexOf('/centros') !== -1) {
         setTimeout(criarBotaoLocalizacao, 1000);
     }
 });
