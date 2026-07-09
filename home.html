@@ -85,6 +85,27 @@
             <button class="emergency-btn" id="confim">LIGAR AGORA</button>
         </div>
 
+        <!-- ==================== CARROSSEL DE PUBLICAÇÕES ==================== -->
+<section class="carrossel-publicacoes">
+    <div class="carrossel-header">
+        <h3>Últimas Informações de Saúde</h3>
+        <a href="/dicas" class="ver-todas">Ver todas →</a>
+    </div>
+    
+    <div class="carrossel-container" id="carrosselContainer">
+        <button class="carrossel-btn btn-anterior" id="btnAnterior">‹</button>
+        <div class="carrossel-slides" id="carrosselSlides">
+            <!-- Slides serão carregados via JavaScript -->
+            <div class="carrossel-loading">Carregando publicações...</div>
+        </div>
+        <button class="carrossel-btn btn-proximo" id="btnProximo">›</button>
+    </div>
+    
+    <div class="carrossel-indicadores" id="carrosselIndicadores">
+        <!-- Indicadores serão gerados via JavaScript -->
+    </div>
+</section>
+
         <!-- Cards de acesso rapido -->
         <div class="acesso-rapido">
             <div class="card card-blue" onclick="navegarPara('/hospital')">
