@@ -147,28 +147,93 @@ function filtrarPublicacoes() {
     renderizarPublicacoes(lista);
 }
 
+// ========================================
+// COMPARTILHAR PUBLICAÇÃO
+// ========================================
 
-// Verificar se tem publicação para abrir
-var urlParams = new URLSearchParams(window.location.search);
-var abrirId = urlParams.get('abrir');
+// Função para gerar link da publicação
+function gerarLinkPublicacao(id) {
+    var url = window.location.origin + '/dicas?abrir=' + id;
+    return url;
+}
 
-if (abrirId) {
-    // Aguardar as publicações carregarem
-    var checkPublicacoes = setInterval(function() {
-        if (typeof publicacoes !== 'undefined' && publicacoes.length > 0) {
-            clearInterval(checkPublicacoes);
-            var pub = publicacoes.find(function(p) { return p.id === parseInt(abrirId); });
-            if (pub) {
-                setTimeout(function() {
-                    abrirPublicacao(pub.id);
-                }, 500);
-            }
-        }
-    }, 200);
+// Função para copiar link
+function copiarLinkPublicacao(id) {
+    var link = gerarLinkPublicacao(id);
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(function() {
+            mostrarMensagem('Link copiado com sucesso!');
+        }).catch(function() {
+            copiarLinkFallback(link);
+        });
+    } else {
+        copiarLinkFallback(link);
+    }
+}
+
+// Fallback para copiar link (método antigo)
+function copiarLinkFallback(link) {
+    var input = document.createElement('input');
+    input.value = link;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input);
+    mostrarMensagem('Link copiado com sucesso!');
+}
+
+// Função para compartilhar via WhatsApp
+function compartilharWhatsApp(id) {
+    var link = gerarLinkPublicacao(id);
+    var titulo = publicacaoAtual ? publicacaoAtual.titulo : 'Publicação';
+    var texto = encodeURIComponent('Confira esta publicação do Saúde Nampula: ' + titulo + '\n\n' + link);
+    window.open('https://api.whatsapp.com/send?text=' + texto, '_blank');
+}
+
+// Função para compartilhar via Facebook
+function compartilharFacebook(id) {
+    var link = gerarLinkPublicacao(id);
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(link), '_blank');
+}
+
+// Função para compartilhar via Twitter/X
+function compartilharTwitter(id) {
+    var link = gerarLinkPublicacao(id);
+    var titulo = publicacaoAtual ? publicacaoAtual.titulo : 'Publicação';
+    var texto = encodeURIComponent(titulo + ' - ' + link);
+    window.open('https://twitter.com/intent/tweet?text=' + texto, '_blank');
+}
+
+// Função para compartilhar via Email
+function compartilharEmail(id) {
+    var link = gerarLinkPublicacao(id);
+    var titulo = publicacaoAtual ? publicacaoAtual.titulo : 'Publicação';
+    var assunto = encodeURIComponent('Saúde Nampula - ' + titulo);
+    var corpo = encodeURIComponent('Olá! Encontrei esta publicação interessante no Saúde Nampula:\n\n' + titulo + '\n\n' + link + '\n\nVisite: ' + window.location.origin);
+    window.location.href = 'mailto:?subject=' + assunto + '&body=' + corpo;
+}
+
+// Função para mostrar mensagem de confirmação
+function mostrarMensagem(texto) {
+    var mensagem = document.getElementById('mensagemCompartilhar');
+    if (!mensagem) {
+        mensagem = document.createElement('div');
+        mensagem.id = 'mensagemCompartilhar';
+        mensagem.style.cssText = 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #059669; color: white; padding: 12px 24px; border-radius: 8px; z-index: 9999; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none;';
+        document.body.appendChild(mensagem);
+    }
+    
+    mensagem.textContent = texto;
+    mensagem.style.display = 'block';
+    
+    setTimeout(function() {
+        mensagem.style.display = 'none';
+    }, 3000);
 }
 
 // ========================================
-// ABRIR PUBLICAÇÃO (MODAL)
+// ABRIR PUBLICAÇÃO (MODAL) - VERSÃO ATUALIZADA COM COMPARTILHAR
 // ========================================
 function abrirPublicacao(id) {
     var pub = publicacoes.find(function(p) {
@@ -206,6 +271,23 @@ function abrirPublicacao(id) {
             </div>
             <div class="conteudo-completo">
                 ${pub.conteudo}
+            </div>
+            <div class="modal-acoes-compartilhar">
+                <button class="btn-compartilhar" onclick="copiarLinkPublicacao(${pub.id})">
+                    Copiar Link
+                </button>
+                <button class="btn-compartilhar btn-whatsapp" onclick="compartilharWhatsApp(${pub.id})">
+                    WhatsApp
+                </button>
+                <button class="btn-compartilhar btn-facebook" onclick="compartilharFacebook(${pub.id})">
+                    Facebook
+                </button>
+                <button class="btn-compartilhar btn-twitter" onclick="compartilharTwitter(${pub.id})">
+                    Twitter
+                </button>
+                <button class="btn-compartilhar btn-email" onclick="compartilharEmail(${pub.id})">
+                    Email
+                </button>
             </div>
         </div>
     `;
@@ -251,6 +333,31 @@ document.getElementById('modalPublicacao').addEventListener('click', function(e)
 });
 
 // ========================================
+// VERIFICAR SE TEM PUBLICAÇÃO PARA ABRIR VIA LINK
+// ========================================
+
+// Verificar se tem publicação para abrir via parâmetro URL
+var urlParams = new URLSearchParams(window.location.search);
+var abrirId = urlParams.get('abrir');
+
+if (abrirId) {
+    // Aguardar as publicações carregarem
+    var checkPublicacoes = setInterval(function() {
+        if (publicacoes.length > 0) {
+            clearInterval(checkPublicacoes);
+            var pub = publicacoes.find(function(p) { 
+                return p.id === parseInt(abrirId); 
+            });
+            if (pub) {
+                setTimeout(function() {
+                    abrirPublicacao(pub.id);
+                }, 800);
+            }
+        }
+    }, 200);
+}
+
+// ========================================
 // INICIALIZAR
 // ========================================
 document.addEventListener('DOMContentLoaded', function() {
@@ -264,3 +371,9 @@ window.abrirPublicacao = abrirPublicacao;
 window.fecharModalPublicacao = fecharModalPublicacao;
 window.filtrarPublicacoes = filtrarPublicacoes;
 window.carregarPublicacoes = carregarPublicacoes;
+window.copiarLinkPublicacao = copiarLinkPublicacao;
+window.compartilharWhatsApp = compartilharWhatsApp;
+window.compartilharFacebook = compartilharFacebook;
+window.compartilharTwitter = compartilharTwitter;
+window.compartilharEmail = compartilharEmail;
+window.gerarLinkPublicacao = gerarLinkPublicacao;
