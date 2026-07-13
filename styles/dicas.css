@@ -2,7 +2,7 @@
    INFORMACOES.CSS - Estilos para página de publicações
    ======================================== */
 
-/* -------------------- GRID DE PUBLICAÇÕES -------------------- */
+/* -------------------- GRID DE PUBLICACOES -------------------- */
 .publicacoes-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -25,7 +25,7 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
-/* -------------------- IMAGEM DA PUBLICAÇÃO -------------------- */
+/* -------------------- IMAGEM DA PUBLICACAO -------------------- */
 .publicacao-imagem {
     width: 100%;
     height: 200px;
@@ -45,12 +45,12 @@
     font-weight: 300;
 }
 
-/* -------------------- CONTEÚDO DA PUBLICAÇÃO -------------------- */
+/* -------------------- CONTEUDO DA PUBLICACAO -------------------- */
 .publicacao-conteudo {
     padding: 20px;
 }
 
-.filtro-categoria {
+.publicacao-categoria {
     display: inline-block;
     padding: 4px 12px;
     border-radius: 20px;
@@ -127,6 +127,7 @@
     color: #059669;
     font-weight: 600;
     font-size: 13px;
+    cursor: pointer;
 }
 
 .publicacao-ler-mais:hover {
@@ -185,8 +186,40 @@
     }
 }
 
+/* -------------------- FILTRO -------------------- */
+.filtro-publicacoes {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 20px 0 10px;
+    align-items: center;
+}
+
+.filtro-publicacoes label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 14px;
+}
+
+.filtro-publicacoes select {
+    padding: 10px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    min-width: 200px;
+    transition: all 0.3s;
+}
+
+.filtro-publicacoes select:focus {
+    outline: none;
+    border-color: #059669;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
 /* ========================================
-   MODAL DE DETALHES - CORRIGIDO
+   MODAL DE DETALHES
    ======================================== */
 
 .modal-publicacao {
@@ -196,7 +229,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.6);
     z-index: 99999;
     overflow-y: auto;
     padding: 20px;
@@ -206,18 +239,6 @@
     display: flex !important;
     align-items: flex-start;
     justify-content: center;
-}
-
-/* Overlay para bloquear o clique fora */
-.modal-publicacao::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: -1;
 }
 
 .modal-publicacao-content {
@@ -230,7 +251,6 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     animation: slideUpModal 0.3s ease;
     position: relative;
-    z-index: 100000;
 }
 
 @keyframes slideUpModal {
@@ -335,7 +355,7 @@
 }
 
 /* ========================================
-   BOTÕES DE COMPARTILHAR NO MODAL
+   BOTOES DE COMPARTILHAR NO MODAL
    ======================================== */
 
 .modal-acoes-compartilhar {
@@ -367,51 +387,65 @@
     transform: translateY(0);
 }
 
-.btn-compartilhar:first-child {
+.btn-compartilhar.btn-copiar {
     background: #6b7280;
 }
 
-.btn-compartilhar:first-child:hover {
+.btn-compartilhar.btn-copiar:hover {
     background: #4b5563;
 }
 
-.btn-whatsapp {
+.btn-compartilhar.btn-whatsapp {
     background: #25D366;
 }
 
-.btn-whatsapp:hover {
+.btn-compartilhar.btn-whatsapp:hover {
     background: #1da851;
 }
 
-.btn-facebook {
+.btn-compartilhar.btn-facebook {
     background: #1877F2;
 }
 
-.btn-facebook:hover {
+.btn-compartilhar.btn-facebook:hover {
     background: #0d65d9;
 }
 
-.btn-twitter {
+.btn-compartilhar.btn-twitter {
     background: #000000;
 }
 
-.btn-twitter:hover {
+.btn-compartilhar.btn-twitter:hover {
     background: #1a1a1a;
 }
 
-.btn-email {
+.btn-compartilhar.btn-email {
     background: #ea4335;
 }
 
-.btn-email:hover {
+.btn-compartilhar.btn-email:hover {
     background: #d33426;
 }
 
 /* ========================================
-   RESPONSIVIDADE DO MODAL
+   RESPONSIVIDADE
    ======================================== */
 
 @media (max-width: 768px) {
+    .publicacoes-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .filtro-publicacoes {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filtro-publicacoes select {
+        min-width: 100%;
+    }
+
     .modal-publicacao-content {
         margin: 20px auto;
         border-radius: 12px;
@@ -437,9 +471,40 @@
         top: 12px;
         margin: 0 12px 0 0;
     }
+
+    .modal-acoes-compartilhar {
+        gap: 8px;
+    }
+
+    .btn-compartilhar {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
 }
 
 @media (max-width: 480px) {
+    .publicacao-imagem {
+        height: 150px;
+    }
+
+    .publicacao-imagem-placeholder {
+        height: 150px;
+        font-size: 32px;
+    }
+
+    .publicacao-conteudo {
+        padding: 16px;
+    }
+
+    .publicacao-titulo {
+        font-size: 16px;
+    }
+
+    .publicacao-resumo {
+        font-size: 13px;
+        -webkit-line-clamp: 2;
+    }
+
     .modal-publicacao-body {
         padding: 16px;
     }
@@ -476,5 +541,11 @@
         text-align: center;
         padding: 10px;
         font-size: 14px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .publicacoes-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
