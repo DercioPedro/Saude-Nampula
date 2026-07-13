@@ -1,16 +1,16 @@
 // ========================================
-// INFORMACOES.JS - Sistema de publicações
+// INFORMACOES.JS - Sistema de publicacoes
 // ========================================
 
-// Configuração
+// Configuracao
 const API_URL = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : 'https://saude-nampula-backend.onrender.com/api';
 
-// Variáveis globais
+// Variaveis globais
 let publicacoes = [];
 let publicacaoAtual = null;
 
 // ========================================
-// CARREGAR PUBLICAÇÕES
+// CARREGAR PUBLICACOES
 // ========================================
 async function carregarPublicacoes() {
     const container = document.getElementById('publicacoesContainer');
@@ -24,7 +24,6 @@ async function carregarPublicacoes() {
             publicacoes = [];
         }
 
-        // Ordenar por data (mais recentes primeiro)
         publicacoes.sort(function(a, b) {
             return new Date(b.data) - new Date(a.data);
         });
@@ -39,7 +38,7 @@ async function carregarPublicacoes() {
 }
 
 // ========================================
-// RENDERIZAR PUBLICAÇÕES
+// RENDERIZAR PUBLICACOES
 // ========================================
 function renderizarPublicacoes(lista) {
     const container = document.getElementById('publicacoesContainer');
@@ -80,8 +79,8 @@ function renderizarPublicacoes(lista) {
                     <h3 class="publicacao-titulo">${escapeHtml(pub.titulo)}</h3>
                     <p class="publicacao-resumo">${escapeHtml(pub.resumo)}</p>
                     <div class="publicacao-meta">
-                        <span>📅 ${dataFormatada}</span>
-                        <span class="publicacao-ler-mais">Ler mais →</span>
+                        <span>${dataFormatada}</span>
+                        <span class="publicacao-ler-mais">Ler mais</span>
                     </div>
                 </div>
             </div>
@@ -93,7 +92,7 @@ function renderizarPublicacoes(lista) {
 }
 
 // ========================================
-// FUNÇÕES AUXILIARES DE CATEGORIA
+// FUNCOES AUXILIARES DE CATEGORIA
 // ========================================
 function getCategoriaClass(categoria) {
     var classes = {
@@ -132,7 +131,7 @@ function getCategoriaIcon(categoria) {
 }
 
 // ========================================
-// FILTRAR PUBLICAÇÕES
+// FILTRAR PUBLICACOES
 // ========================================
 function filtrarPublicacoes() {
     var filtro = document.getElementById('filtroCategoria').value;
@@ -148,16 +147,14 @@ function filtrarPublicacoes() {
 }
 
 // ========================================
-// COMPARTILHAR PUBLICAÇÃO
+// COMPARTILHAR PUBLICACAO
 // ========================================
 
-// Função para gerar link da publicação
 function gerarLinkPublicacao(id) {
     var url = window.location.origin + '/dicas?abrir=' + id;
     return url;
 }
 
-// Função para copiar link
 function copiarLinkPublicacao(id) {
     var link = gerarLinkPublicacao(id);
     
@@ -172,7 +169,6 @@ function copiarLinkPublicacao(id) {
     }
 }
 
-// Fallback para copiar link (método antigo)
 function copiarLinkFallback(link) {
     var input = document.createElement('input');
     input.value = link;
@@ -183,38 +179,33 @@ function copiarLinkFallback(link) {
     mostrarMensagem('Link copiado com sucesso!');
 }
 
-// Função para compartilhar via WhatsApp
 function compartilharWhatsApp(id) {
     var link = gerarLinkPublicacao(id);
-    var titulo = publicacaoAtual ? publicacaoAtual.titulo : 'Publicação';
-    var texto = encodeURIComponent('Confira esta publicação do Saúde Nampula: ' + titulo + '\n\n' + link);
+    var titulo = publicacaoAtual ? publicacaoAtual.titulo : 'Publicacao';
+    var texto = encodeURIComponent('Confira esta publicacao do Saude Nampula: ' + titulo + '\n\n' + link);
     window.open('https://api.whatsapp.com/send?text=' + texto, '_blank');
 }
 
-// Função para compartilhar via Facebook
 function compartilharFacebook(id) {
     var link = gerarLinkPublicacao(id);
     window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(link), '_blank');
 }
 
-// Função para compartilhar via Twitter/X
 function compartilharTwitter(id) {
     var link = gerarLinkPublicacao(id);
-    var titulo = publicacaoAtual ? publicacaoAtual.titulo : 'Publicação';
+    var titulo = publicacaoAtual ? publicacaoAtual.titulo : 'Publicacao';
     var texto = encodeURIComponent(titulo + ' - ' + link);
     window.open('https://twitter.com/intent/tweet?text=' + texto, '_blank');
 }
 
-// Função para compartilhar via Email
 function compartilharEmail(id) {
     var link = gerarLinkPublicacao(id);
-    var titulo = publicacaoAtual ? publicacaoAtual.titulo : 'Publicação';
-    var assunto = encodeURIComponent('Saúde Nampula - ' + titulo);
-    var corpo = encodeURIComponent('Olá! Encontrei esta publicação interessante no Saúde Nampula:\n\n' + titulo + '\n\n' + link + '\n\nVisite: ' + window.location.origin);
+    var titulo = publicacaoAtual ? publicacaoAtual.titulo : 'Publicacao';
+    var assunto = encodeURIComponent('Saude Nampula - ' + titulo);
+    var corpo = encodeURIComponent('Ola! Encontrei esta publicacao interessante no Saude Nampula:\n\n' + titulo + '\n\n' + link + '\n\nVisite: ' + window.location.origin);
     window.location.href = 'mailto:?subject=' + assunto + '&body=' + corpo;
 }
 
-// Função para mostrar mensagem de confirmação
 function mostrarMensagem(texto) {
     var mensagem = document.getElementById('mensagemCompartilhar');
     if (!mensagem) {
@@ -233,7 +224,7 @@ function mostrarMensagem(texto) {
 }
 
 // ========================================
-// ABRIR PUBLICAÇÃO (MODAL) - VERSÃO ATUALIZADA COM COMPARTILHAR
+// ABRIR PUBLICACAO (MODAL)
 // ========================================
 function abrirPublicacao(id) {
     var pub = publicacoes.find(function(p) {
@@ -266,8 +257,8 @@ function abrirPublicacao(id) {
             <span class="categoria ${categoriaClass}">${categoriaLabel}</span>
             <h2>${escapeHtml(pub.titulo)}</h2>
             <div class="meta">
-                <span>👤 ${escapeHtml(pub.autor || 'Anonimo')}</span>
-                <span>📅 ${dataFormatada}</span>
+                <span>${escapeHtml(pub.autor || 'Anonimo')}</span>
+                <span>${dataFormatada}</span>
             </div>
             <div class="conteudo-completo">
                 ${pub.conteudo}
@@ -300,7 +291,8 @@ function abrirPublicacao(id) {
 // FECHAR MODAL
 // ========================================
 function fecharModalPublicacao() {
-    document.getElementById('modalPublicacao').classList.remove('active');
+    var modal = document.getElementById('modalPublicacao');
+    modal.classList.remove('active');
     document.body.style.overflow = 'auto';
 }
 
@@ -318,14 +310,12 @@ function escapeHtml(texto) {
 // EVENTOS
 // ========================================
 
-// Fechar modal com ESC
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         fecharModalPublicacao();
     }
 });
 
-// Fechar modal clicando fora
 document.getElementById('modalPublicacao').addEventListener('click', function(e) {
     if (e.target === this) {
         fecharModalPublicacao();
@@ -333,15 +323,13 @@ document.getElementById('modalPublicacao').addEventListener('click', function(e)
 });
 
 // ========================================
-// VERIFICAR SE TEM PUBLICAÇÃO PARA ABRIR VIA LINK
+// VERIFICAR SE TEM PUBLICACAO PARA ABRIR VIA LINK
 // ========================================
 
-// Verificar se tem publicação para abrir via parâmetro URL
 var urlParams = new URLSearchParams(window.location.search);
 var abrirId = urlParams.get('abrir');
 
 if (abrirId) {
-    // Aguardar as publicações carregarem
     var checkPublicacoes = setInterval(function() {
         if (publicacoes.length > 0) {
             clearInterval(checkPublicacoes);
@@ -365,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ========================================
-// EXPORTAR FUNÇÕES
+// EXPORTAR FUNCOES
 // ========================================
 window.abrirPublicacao = abrirPublicacao;
 window.fecharModalPublicacao = fecharModalPublicacao;
