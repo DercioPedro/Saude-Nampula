@@ -798,17 +798,10 @@
 
 /* ========================================
    DARK MODE - DETALHES DA FARMÁCIA
-   Baseado na estrutura real da página
    ======================================== */
 
-/* === FUNDO DO BODY === */
-.dark-mode body {
-    background: #0d1117 !important;
-}
-
-/* === FUNDO DOS CARDS PRINCIPAIS === */
-.dark-mode body > div:first-child,
-.dark-mode .detalhes-container > div,
+/* === FUNDO DOS CARDS === */
+.dark-mode .detalhes-container > div:first-child,
 .dark-mode .detalhes-container .info-card,
 .dark-mode .detalhes-container .horario-box,
 .dark-mode .detalhes-container .endereco-box,
@@ -817,21 +810,10 @@
 .dark-mode .detalhes-container .horarios-detalhados,
 .dark-mode .detalhes-container .avaliacoes-section {
     background: #0d1117 !important;
-    border: 1px solid #30363d !important;
+    border-color: #30363d !important;
 }
 
 /* === TODOS OS TEXTOS EM BRANCO === */
-.dark-mode body h1,
-.dark-mode body h2,
-.dark-mode body h3,
-.dark-mode body h4,
-.dark-mode body p,
-.dark-mode body span,
-.dark-mode body div,
-.dark-mode body strong,
-.dark-mode body b,
-.dark-mode body label,
-.dark-mode body small,
 .dark-mode .detalhes-container h1,
 .dark-mode .detalhes-container h2,
 .dark-mode .detalhes-container h3,
@@ -842,220 +824,219 @@
 .dark-mode .detalhes-container strong,
 .dark-mode .detalhes-container b,
 .dark-mode .detalhes-container label,
-.dark-mode .detalhes-container small {
-    color: var(--dm-text-primary) !important;
-}
-
-/* === CORREÇÃO DOS TEXTOS DOS CARDS === */
-.dark-mode .farmacia-card,
-.dark-mode .info-card,
-.dark-mode .info-value,
-.dark-mode .info-label,
-.dark-mode .stat-label,
-.dark-mode .stat-number,
-.dark-mode .horario-box,
-.dark-mode .horario-box div,
-.dark-mode .horario-box strong,
-.dark-mode .horario-box small,
-.dark-mode .endereco-box,
-.dark-mode .endereco-box p,
-.dark-mode .endereco-box small,
-.dark-mode .endereco-box strong,
-.dark-mode .pagamento-item,
-.dark-mode .status-badge {
+.dark-mode .detalhes-container small,
+.dark-mode .detalhes-container .info-label,
+.dark-mode .detalhes-container .info-value,
+.dark-mode .detalhes-container .stat-label,
+.dark-mode .detalhes-container .stat-number,
+.dark-mode .detalhes-container .horario-box div,
+.dark-mode .detalhes-container .horario-box strong,
+.dark-mode .detalhes-container .horario-box small,
+.dark-mode .detalhes-container .endereco-box p,
+.dark-mode .detalhes-container .endereco-box small,
+.dark-mode .detalhes-container .endereco-box strong,
+.dark-mode .detalhes-container .meta span,
+.dark-mode .detalhes-container .pagamento-item,
+.dark-mode .detalhes-container .horarios-detalhados h4,
+.dark-mode .detalhes-container .horarios-detalhados .legenda,
+.dark-mode .detalhes-container .tabela-horarios th,
+.dark-mode .detalhes-container .tabela-horarios td,
+.dark-mode .detalhes-container .tabela-horarios td strong,
+.dark-mode .detalhes-container .avaliacao-nome strong,
+.dark-mode .detalhes-container .avaliacao-data,
+.dark-mode .detalhes-container .avaliacao-comentario,
+.dark-mode .detalhes-container .resposta-texto,
+.dark-mode .detalhes-container .nenhuma-avaliacao,
+.dark-mode .detalhes-container .avaliacoes-form h4,
+.dark-mode .detalhes-container .avaliacoes-form label,
+.dark-mode .detalhes-container .avaliacoes-form input,
+.dark-mode .detalhes-container .avaliacoes-form textarea,
+.dark-mode .detalhes-container .modal-publicacao-body h2,
+.dark-mode .detalhes-container .modal-publicacao-body .meta,
+.dark-mode .detalhes-container .modal-publicacao-body .conteudo-completo,
+.dark-mode .detalhes-container .modal-publicacao-body .conteudo-completo p,
+.dark-mode .detalhes-container .modal-publicacao-body .conteudo-completo li,
+.dark-mode .detalhes-container .modal-publicacao-body .conteudo-completo strong,
+.dark-mode .detalhes-container .modal-publicacao-body .conteudo-completo h1,
+.dark-mode .detalhes-container .modal-publicacao-body .conteudo-completo h2,
+.dark-mode .detalhes-container .modal-publicacao-body .conteudo-completo h3,
+.dark-mode .detalhes-container .modal-fechar,
+.dark-mode .detalhes-container .status-badge {
     color: #ffffff !important;
 }
 
 /* === TABELA DE HORÁRIOS === */
-.dark-mode .tabela-horarios {
+.dark-mode .detalhes-container .tabela-horarios {
     background: #0d1117 !important;
 }
 
-.dark-mode .tabela-horarios th {
+.dark-mode .detalhes-container .tabela-horarios th {
     background: #1a1a2e !important;
     color: #ffffff !important;
     border-bottom: 2px solid #30363d !important;
 }
 
-.dark-mode .tabela-horarios td {
+.dark-mode .detalhes-container .tabela-horarios td {
     color: #ffffff !important;
     border-bottom: 1px solid #30363d !important;
 }
 
-.dark-mode .tabela-horarios td strong {
+.dark-mode .detalhes-container .tabela-horarios td strong {
     color: #ffffff !important;
 }
 
-.dark-mode .tabela-horarios tr:hover td {
+.dark-mode .detalhes-container .tabela-horarios tr:hover td {
     background: #1a1a2e !important;
 }
 
-.dark-mode .tabela-horarios .dia-atual {
+.dark-mode .detalhes-container .tabela-horarios .dia-atual {
     background: rgba(5, 150, 105, 0.2) !important;
 }
 
-.dark-mode .tabela-horarios .dia-atual td {
+.dark-mode .detalhes-container .tabela-horarios .dia-atual td {
     background: rgba(5, 150, 105, 0.2) !important;
 }
 
-.dark-mode .tabela-horarios .fechado {
+.dark-mode .detalhes-container .tabela-horarios .fechado {
     color: #fca5a5 !important;
 }
 
-.dark-mode .tabela-horarios .aberto {
+.dark-mode .detalhes-container .tabela-horarios .aberto {
     color: #6ee7b7 !important;
 }
 
-.dark-mode .tabela-horarios .intervalo {
+.dark-mode .detalhes-container .tabela-horarios .intervalo {
     color: #fcd34d !important;
 }
 
 /* === BADGES === */
-.dark-mode .status-dia-aberto {
+.dark-mode .detalhes-container .status-dia-aberto {
     background: rgba(5, 150, 105, 0.2) !important;
     color: #6ee7b7 !important;
 }
 
-.dark-mode .status-dia-fechado {
+.dark-mode .detalhes-container .status-dia-fechado {
     background: rgba(220, 38, 38, 0.2) !important;
     color: #fca5a5 !important;
 }
 
-.dark-mode .status-dia-intervalo {
+.dark-mode .detalhes-container .status-dia-intervalo {
     background: rgba(245, 158, 11, 0.2) !important;
     color: #fcd34d !important;
 }
 
-.dark-mode .horario-especial-badge {
+.dark-mode .detalhes-container .horario-especial-badge {
     background: rgba(245, 158, 11, 0.2) !important;
     color: #fcd34d !important;
 }
 
-.dark-mode .intervalo-info {
+.dark-mode .detalhes-container .intervalo-info {
     background: rgba(245, 158, 11, 0.15) !important;
     color: #fcd34d !important;
 }
 
 /* === BOTÕES === */
-.dark-mode .btn-ligar {
+.dark-mode .detalhes-container .btn-ligar {
     background: #7c3aed !important;
     color: #ffffff !important;
 }
 
-.dark-mode .btn-ligar:hover {
+.dark-mode .detalhes-container .btn-ligar:hover {
     background: #6d28d9 !important;
 }
 
-.dark-mode .btn-whatsapp {
+.dark-mode .detalhes-container .btn-whatsapp {
     background: #1da851 !important;
     color: #ffffff !important;
 }
 
-.dark-mode .btn-mapa {
+.dark-mode .detalhes-container .btn-mapa {
     background: #1a1a2e !important;
     border: 1px solid #3b82f6 !important;
     color: #3b82f6 !important;
 }
 
-.dark-mode .btn-mapa:hover {
+.dark-mode .detalhes-container .btn-mapa:hover {
     background: #3b82f6 !important;
     color: #ffffff !important;
 }
 
-.dark-mode .btn-waze {
+.dark-mode .detalhes-container .btn-waze {
     background: #1a1a2e !important;
     border: 1px solid #33CCFF !important;
     color: #33CCFF !important;
 }
 
-.dark-mode .btn-waze:hover {
+.dark-mode .detalhes-container .btn-waze:hover {
     background: #33CCFF !important;
     color: #ffffff !important;
 }
 
-.dark-mode .btn-medicamentos {
+.dark-mode .detalhes-container .btn-medicamentos {
     background: #059669 !important;
     color: #ffffff !important;
 }
 
-.dark-mode .btn-medicamentos:hover {
+.dark-mode .detalhes-container .btn-medicamentos:hover {
     background: #047857 !important;
 }
 
-.dark-mode .btn-voltar {
+.dark-mode .detalhes-container .btn-voltar {
     background: #1a1a2e !important;
     border: 1px solid #7c3aed !important;
     color: #7c3aed !important;
 }
 
-.dark-mode .btn-voltar:hover {
+.dark-mode .detalhes-container .btn-voltar:hover {
     background: #7c3aed !important;
     color: #ffffff !important;
 }
 
 /* === AVALIAÇÕES === */
-.dark-mode .avaliacoes-section {
-    background: #0d1117 !important;
-    border: 1px solid #30363d !important;
-}
-
-.dark-mode .avaliacao-item {
-    background: #0d1117 !important;
-    border: 1px solid #30363d !important;
-}
-
-.dark-mode .avaliacao-item:hover {
-    background: #1a1a2e !important;
-}
-
-.dark-mode .avaliacao-nome strong {
-    color: #ffffff !important;
-}
-
-.dark-mode .avaliacao-data {
-    color: #ffffff !important;
-}
-
-.dark-mode .avaliacao-comentario {
-    color: #ffffff !important;
-}
-
-.dark-mode .avaliacao-resposta {
+.dark-mode .detalhes-container .avaliacao-resposta {
     background: rgba(5, 150, 105, 0.1) !important;
     border-left: 3px solid #059669 !important;
 }
 
-.dark-mode .resposta-header {
+.dark-mode .detalhes-container .resposta-header {
     color: #6ee7b7 !important;
 }
 
-.dark-mode .resposta-texto {
-    color: #ffffff !important;
-}
-
-.dark-mode .avaliacoes-stats {
+.dark-mode .detalhes-container .avaliacoes-stats {
     background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
 }
 
-.dark-mode .avaliacoes-form {
+.dark-mode .detalhes-container .avaliacoes-form {
     background: #0d1117 !important;
     border: 1px solid #30363d !important;
 }
 
-.dark-mode .avaliacoes-form input,
-.dark-mode .avaliacoes-form textarea {
+.dark-mode .detalhes-container .avaliacoes-form input,
+.dark-mode .detalhes-container .avaliacoes-form textarea {
     background: #1a1a2e !important;
     border: 1px solid #30363d !important;
     color: #ffffff !important;
 }
 
-/* === LEGENDA === */
-.dark-mode .legenda,
-.dark-mode .legenda span {
+/* === LOADING === */
+.dark-mode .detalhes-container .loading {
     color: #ffffff !important;
 }
 
-/* ==================== CENTROS DETALHES ==================== */
+.dark-mode .detalhes-container .loading::after {
+    border-color: #30363d !important;
+    border-top-color: #7c3aed !important;
+}
+
+.dark-mode .detalhes-container .error {
+    color: #fca5a5 !important;
+    background: rgba(220, 38, 38, 0.1) !important;
+}
+
+/* ========================================
+   DARK MODE - CENTROS DETALHES
+   ======================================== */
+
 .dark-mode .centro-header-section {
     background: linear-gradient(135deg, var(--dm-green) 0%, var(--dm-green-dark) 100%) !important;
 }
@@ -1121,7 +1102,10 @@
     border-color: var(--dm-border) !important;
 }
 
-/* ==================== HOSPITAL DETALHES ==================== */
+/* ========================================
+   DARK MODE - HOSPITAL DETALHES
+   ======================================== */
+
 .dark-mode .hospital-header-section {
     background: linear-gradient(135deg, var(--dm-green) 0%, var(--dm-green-dark) 100%) !important;
 }
@@ -1134,7 +1118,10 @@
     color: var(--dm-text-secondary) !important;
 }
 
-/* ==================== INFO PAGE ==================== */
+/* ========================================
+   DARK MODE - INFO PAGE
+   ======================================== */
+
 .dark-mode .page-header {
     background: linear-gradient(135deg, var(--dm-purple-dark) 0%, var(--dm-purple) 100%) !important;
 }
@@ -1166,7 +1153,10 @@
     color: var(--dm-text-secondary) !important;
 }
 
-/* ==================== LOGIN FARMACIA ==================== */
+/* ========================================
+   DARK MODE - LOGIN FARMACIA
+   ======================================== */
+
 .dark-mode .login-container {
     background: var(--dm-bg-card) !important;
 }
@@ -1209,7 +1199,10 @@
     color: #6ee7b7 !important;
 }
 
-/* ==================== ADMIN PANEL - CORREÇÕES ADICIONAIS ==================== */
+/* ========================================
+   DARK MODE - ADMIN PANEL CORREÇÕES
+   ======================================== */
+
 .dark-mode .action-buttons .btn-edit {
     background: var(--dm-blue) !important;
     color: white !important;
@@ -1256,7 +1249,10 @@
     border-color: var(--dm-border) !important;
 }
 
-/* ==================== CONTADOR DE VISITANTES ==================== */
+/* ========================================
+   DARK MODE - CONTADOR DE VISITANTES
+   ======================================== */
+
 .dark-mode #contador-visitantes {
     background: linear-gradient(135deg, var(--dm-bg-card) 0%, var(--dm-bg-secondary) 100%) !important;
     border-color: var(--dm-border) !important;
@@ -1292,7 +1288,10 @@
     color: var(--dm-text-secondary) !important;
 }
 
-/* ==================== SCROLLBAR ==================== */
+/* ========================================
+   DARK MODE - SCROLLBAR
+   ======================================== */
+
 .dark-mode ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -1311,7 +1310,10 @@
     background: var(--dm-purple-dark);
 }
 
-/* ==================== RESPONSIVO ==================== */
+/* ========================================
+   DARK MODE - RESPONSIVO
+   ======================================== */
+
 @media (max-width: 768px) {
     .dark-mode-toggle {
         padding: 10px 16px;
