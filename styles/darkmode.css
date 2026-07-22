@@ -1107,3 +1107,369 @@
         right: 10px;
     }
 }
+
+
+/* ========================================
+   DARK MODE - DETALHES DA FARMÁCIA
+   ======================================== */
+
+.dark-mode .horarios-detalhados {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .horarios-detalhados h4 {
+    color: var(--dm-text-primary) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+.dark-mode .tabela-horarios th {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-primary) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+.dark-mode .tabela-horarios td {
+    color: var(--dm-text-secondary) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+.dark-mode .tabela-horarios tr:hover td {
+    background: var(--dm-bg-hover) !important;
+}
+
+.dark-mode .tabela-horarios .dia-atual {
+    background: rgba(5, 150, 105, 0.15) !important;
+}
+
+.dark-mode .tabela-horarios .dia-atual td {
+    background: rgba(5, 150, 105, 0.15) !important;
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .tabela-horarios .fechado {
+    color: #fca5a5 !important;
+}
+
+.dark-mode .tabela-horarios .aberto {
+    color: #6ee7b7 !important;
+}
+
+.dark-mode .tabela-horarios .intervalo {
+    color: #fcd34d !important;
+}
+
+.dark-mode .status-dia-aberto {
+    background: rgba(5, 150, 105, 0.2) !important;
+    color: #6ee7b7 !important;
+}
+
+.dark-mode .status-dia-fechado {
+    background: rgba(220, 38, 38, 0.2) !important;
+    color: #fca5a5 !important;
+}
+
+.dark-mode .status-dia-intervalo {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: #fcd34d !important;
+}
+
+.dark-mode .status-dia-dom {
+    background: rgba(59, 130, 246, 0.2) !important;
+    color: #93c5fd !important;
+}
+
+.dark-mode .horario-especial-badge {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: #fcd34d !important;
+}
+
+.dark-mode .intervalo-info {
+    background: rgba(245, 158, 11, 0.15) !important;
+    color: #fcd34d !important;
+}
+
+.dark-mode .horarios-detalhados .legenda {
+    color: var(--dm-text-muted) !important;
+}
+
+/* ========================================
+   DARK MODE - SEÇÃO DE AVALIAÇÕES
+   ======================================== */
+
+.dark-mode .avaliacoes-section {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .avaliacao-item {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .avaliacao-item:hover {
+    background: var(--dm-bg-hover) !important;
+}
+
+.dark-mode .avaliacao-nome strong {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .avaliacao-data {
+    color: var(--dm-text-muted) !important;
+}
+
+.dark-mode .avaliacao-comentario {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .avaliacao-resposta {
+    background: rgba(5, 150, 105, 0.1) !important;
+    border-left-color: var(--dm-green) !important;
+}
+
+.dark-mode .resposta-header {
+    color: var(--dm-green) !important;
+}
+
+.dark-mode .resposta-texto {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .nenhuma-avaliacao {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .avaliacoes-form {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .avaliacoes-form h4 {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .avaliacoes-form label {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .avaliacoes-form input,
+.dark-mode .avaliacoes-form textarea {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .avaliacoes-form input:focus,
+.dark-mode .avaliacoes-form textarea:focus {
+    border-color: var(--dm-purple) !important;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2) !important;
+}
+
+.dark-mode .avaliacoes-stats {
+    background: linear-gradient(135deg, var(--dm-purple) 0%, var(--dm-purple-dark) 100%) !important;
+}
+
+.dark-mode .stats-nota {
+    color: white !important;
+}
+
+.dark-mode .stars-display {
+    color: white !important;
+}
+
+.dark-mode .stats-total {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* ========================================
+   DARK MODE - DETALHES DO CONTAINER
+   ======================================== */
+
+.dark-mode .detalhes-container {
+    background: var(--dm-bg-primary) !important;
+}
+
+.dark-mode .detalhes-container > div {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode .detalhes-container h1 {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .detalhes-container h3 {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .detalhes-container .info-card {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .detalhes-container .endereco-box {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .detalhes-container .endereco-box p {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .detalhes-container .endereco-box small {
+    color: var(--dm-text-muted) !important;
+}
+
+.dark-mode .detalhes-container .horario-box {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .detalhes-container .horario-box div {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .detalhes-container .horario-box strong {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .detalhes-container .stat-item {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .detalhes-container .stat-number {
+    color: var(--dm-purple) !important;
+}
+
+.dark-mode .detalhes-container .stat-label {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .detalhes-container .pagamento-item {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .detalhes-container .btn-voltar {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-purple) !important;
+    color: var(--dm-purple) !important;
+}
+
+.dark-mode .detalhes-container .btn-voltar:hover {
+    background: var(--dm-purple) !important;
+    color: white !important;
+}
+
+.dark-mode .detalhes-container .btn-medicamentos {
+    background: var(--dm-green) !important;
+    color: white !important;
+}
+
+.dark-mode .detalhes-container .btn-medicamentos:hover {
+    background: var(--dm-green-dark) !important;
+}
+
+.dark-mode .detalhes-container .btn-ligar {
+    background: var(--dm-purple) !important;
+    color: white !important;
+}
+
+.dark-mode .detalhes-container .btn-ligar:hover {
+    background: var(--dm-purple-dark) !important;
+}
+
+.dark-mode .detalhes-container .btn-whatsapp {
+    background: #1da851 !important;
+    color: white !important;
+}
+
+.dark-mode .detalhes-container .btn-mapa {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-blue) !important;
+    color: var(--dm-blue) !important;
+}
+
+.dark-mode .detalhes-container .btn-mapa:hover {
+    background: var(--dm-blue) !important;
+    color: white !important;
+}
+
+.dark-mode .detalhes-container .btn-waze {
+    background: var(--dm-bg-secondary) !important;
+    border-color: #33CCFF !important;
+    color: #33CCFF !important;
+}
+
+.dark-mode .detalhes-container .btn-waze:hover {
+    background: #33CCFF !important;
+    color: white !important;
+}
+
+.dark-mode .detalhes-container .status-badge {
+    background: var(--dm-bg-secondary) !important;
+}
+
+.dark-mode .detalhes-container .horario-24h {
+    color: #6ee7b7 !important;
+}
+
+.dark-mode .detalhes-container .horario-fechado {
+    color: #fca5a5 !important;
+}
+
+.dark-mode .detalhes-container .coordenadas-badge {
+    background: var(--dm-green) !important;
+    color: white !important;
+}
+
+.dark-mode .detalhes-container .loading {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .detalhes-container .loading::after {
+    border-color: var(--dm-border) !important;
+    border-top-color: var(--dm-purple) !important;
+}
+
+.dark-mode .detalhes-container .error {
+    color: #fca5a5 !important;
+    background: rgba(220, 38, 38, 0.1) !important;
+}
+
+/* ========================================
+   DARK MODE - RESPONSIVO
+   ======================================== */
+
+@media (max-width: 768px) {
+    .dark-mode .horarios-detalhados {
+        padding: 15px !important;
+    }
+    
+    .dark-mode .horarios-detalhados .tabela-horarios th,
+    .dark-mode .horarios-detalhados .tabela-horarios td {
+        font-size: 12px !important;
+        padding: 6px 8px !important;
+    }
+    
+    .dark-mode .detalhes-container .info-card {
+        padding: 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .dark-mode .horarios-detalhados {
+        padding: 12px !important;
+    }
+    
+    .dark-mode .tabela-horarios th,
+    .dark-mode .tabela-horarios td {
+        font-size: 11px !important;
+        padding: 4px 6px !important;
+    }
+}
