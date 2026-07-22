@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="styles/detalhes-farmacia.css">
     <link rel="icon" type="image/png" href="/img/monitor.png">
     <script src="JS/loading.js"></script>
-    <script src="https://pl30412009.effectivecpmnetwork.com/e0/32/e9/e032e9553695eb8f33d7773ddeb6b2d8.js"></script>
 </head>
 
 <body>
@@ -18,37 +17,34 @@
         <!-- O conteúdo será carregado dinamicamente pelo JavaScript -->
     </div>
 
-
     <!-- Seção de avaliações -->
-<div class="avaliacoes-section">
-    <div id="avaliacoes-container"></div>
-</div>
+    <div class="avaliacoes-section">
+        <div id="avaliacoes-container"></div>
+    </div>
 
-<script>
-    // Inicializar avaliações para o estabelecimento específico
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
-        
-        if (id) {
-            // Determinar o tipo baseado na página
-            let tipo = 'farmacia';
-            if (window.location.pathname.includes('hospital')) tipo = 'hospital';
-            if (window.location.pathname.includes('centros')) tipo = 'centro';
+    <script>
+        // Inicializar avaliações para o estabelecimento específico
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
             
-            if (typeof inicializarAvaliacoes === 'function') {
-                inicializarAvaliacoes('avaliacoes-container', tipo, parseInt(id));
+            if (id) {
+                let tipo = 'farmacia';
+                if (window.location.pathname.includes('hospital')) tipo = 'hospital';
+                if (window.location.pathname.includes('centros')) tipo = 'centro';
+                
+                if (typeof inicializarAvaliacoes === 'function') {
+                    inicializarAvaliacoes('avaliacoes-container', tipo, parseInt(id));
+                }
             }
-        }
-    });
-</script>
+        });
+    </script>
 
-    <!-- Adicionar antes dos outros scripts -->
-<script src="JS/api-config.js"></script>
-<script src="JS/load-farmacias.js"></script
-<script src="JS/geolocalizacao.js"></script>
-<script src="JS/avaliacao-modal.js"></script>
-<script src="JS/darkmode.js"></script>
+    <script src="JS/api-config.js"></script>
+    <script src="JS/load-farmacias.js"></script>
+    <script src="JS/geolocalizacao.js"></script>
+    <script src="JS/avaliacao-modal.js"></script>
+    <script src="JS/darkmode.js"></script>
 </body>
 
 </html>
