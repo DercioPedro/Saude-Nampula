@@ -796,41 +796,263 @@
     color: var(--dm-purple-dark) !important;
 }
 
-/* ==================== DETALHES FARMACIA ==================== */
-.dark-mode .detalhes-header {
-    background: linear-gradient(135deg, var(--dm-purple-dark) 0%, var(--dm-purple) 100%) !important;
+/* ========================================
+   DARK MODE - DETALHES DA FARMÁCIA
+   Baseado na estrutura real da página
+   ======================================== */
+
+/* === FUNDO DO BODY === */
+.dark-mode body {
+    background: #0d1117 !important;
 }
 
-.dark-mode .endereco-box {
-    background: var(--dm-bg-secondary) !important;
-    border-color: var(--dm-border) !important;
+/* === FUNDO DOS CARDS PRINCIPAIS === */
+.dark-mode body > div:first-child,
+.dark-mode .detalhes-container > div,
+.dark-mode .detalhes-container .info-card,
+.dark-mode .detalhes-container .horario-box,
+.dark-mode .detalhes-container .endereco-box,
+.dark-mode .detalhes-container .stat-item,
+.dark-mode .detalhes-container .pagamento-item,
+.dark-mode .detalhes-container .horarios-detalhados,
+.dark-mode .detalhes-container .avaliacoes-section {
+    background: #0d1117 !important;
+    border: 1px solid #30363d !important;
 }
 
-.dark-mode .horario-box {
-    background: var(--dm-bg-secondary) !important;
-    border-color: var(--dm-border) !important;
+/* === TODOS OS TEXTOS EM BRANCO === */
+.dark-mode body h1,
+.dark-mode body h2,
+.dark-mode body h3,
+.dark-mode body h4,
+.dark-mode body p,
+.dark-mode body span,
+.dark-mode body div,
+.dark-mode body strong,
+.dark-mode body b,
+.dark-mode body label,
+.dark-mode body small,
+.dark-mode .detalhes-container h1,
+.dark-mode .detalhes-container h2,
+.dark-mode .detalhes-container h3,
+.dark-mode .detalhes-container h4,
+.dark-mode .detalhes-container p,
+.dark-mode .detalhes-container span,
+.dark-mode .detalhes-container div,
+.dark-mode .detalhes-container strong,
+.dark-mode .detalhes-container b,
+.dark-mode .detalhes-container label,
+.dark-mode .detalhes-container small {
+    color: #ffffff !important;
 }
 
-.dark-mode .horario-valor {
-    color: var(--dm-text-primary) !important;
+/* === CORREÇÃO DOS TEXTOS DOS CARDS === */
+.dark-mode .farmacia-card,
+.dark-mode .info-card,
+.dark-mode .info-value,
+.dark-mode .info-label,
+.dark-mode .stat-label,
+.dark-mode .stat-number,
+.dark-mode .horario-box,
+.dark-mode .horario-box div,
+.dark-mode .horario-box strong,
+.dark-mode .horario-box small,
+.dark-mode .endereco-box,
+.dark-mode .endereco-box p,
+.dark-mode .endereco-box small,
+.dark-mode .endereco-box strong,
+.dark-mode .pagamento-item,
+.dark-mode .status-badge {
+    color: #ffffff !important;
 }
 
-.dark-mode .horario-label {
-    color: var(--dm-text-secondary) !important;
+/* === TABELA DE HORÁRIOS === */
+.dark-mode .tabela-horarios {
+    background: #0d1117 !important;
 }
 
-.dark-mode .stat-item {
-    background: var(--dm-bg-secondary) !important;
-    border-color: var(--dm-border) !important;
+.dark-mode .tabela-horarios th {
+    background: #1a1a2e !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid #30363d !important;
 }
 
-.dark-mode .stat-number {
-    color: var(--dm-purple) !important;
+.dark-mode .tabela-horarios td {
+    color: #ffffff !important;
+    border-bottom: 1px solid #30363d !important;
 }
 
-.dark-mode .pagamento-item {
-    background: var(--dm-bg-secondary) !important;
-    border-color: var(--dm-border) !important;
+.dark-mode .tabela-horarios td strong {
+    color: #ffffff !important;
+}
+
+.dark-mode .tabela-horarios tr:hover td {
+    background: #1a1a2e !important;
+}
+
+.dark-mode .tabela-horarios .dia-atual {
+    background: rgba(5, 150, 105, 0.2) !important;
+}
+
+.dark-mode .tabela-horarios .dia-atual td {
+    background: rgba(5, 150, 105, 0.2) !important;
+}
+
+.dark-mode .tabela-horarios .fechado {
+    color: #fca5a5 !important;
+}
+
+.dark-mode .tabela-horarios .aberto {
+    color: #6ee7b7 !important;
+}
+
+.dark-mode .tabela-horarios .intervalo {
+    color: #fcd34d !important;
+}
+
+/* === BADGES === */
+.dark-mode .status-dia-aberto {
+    background: rgba(5, 150, 105, 0.2) !important;
+    color: #6ee7b7 !important;
+}
+
+.dark-mode .status-dia-fechado {
+    background: rgba(220, 38, 38, 0.2) !important;
+    color: #fca5a5 !important;
+}
+
+.dark-mode .status-dia-intervalo {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: #fcd34d !important;
+}
+
+.dark-mode .horario-especial-badge {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: #fcd34d !important;
+}
+
+.dark-mode .intervalo-info {
+    background: rgba(245, 158, 11, 0.15) !important;
+    color: #fcd34d !important;
+}
+
+/* === BOTÕES === */
+.dark-mode .btn-ligar {
+    background: #7c3aed !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .btn-ligar:hover {
+    background: #6d28d9 !important;
+}
+
+.dark-mode .btn-whatsapp {
+    background: #1da851 !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .btn-mapa {
+    background: #1a1a2e !important;
+    border: 1px solid #3b82f6 !important;
+    color: #3b82f6 !important;
+}
+
+.dark-mode .btn-mapa:hover {
+    background: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .btn-waze {
+    background: #1a1a2e !important;
+    border: 1px solid #33CCFF !important;
+    color: #33CCFF !important;
+}
+
+.dark-mode .btn-waze:hover {
+    background: #33CCFF !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .btn-medicamentos {
+    background: #059669 !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .btn-medicamentos:hover {
+    background: #047857 !important;
+}
+
+.dark-mode .btn-voltar {
+    background: #1a1a2e !important;
+    border: 1px solid #7c3aed !important;
+    color: #7c3aed !important;
+}
+
+.dark-mode .btn-voltar:hover {
+    background: #7c3aed !important;
+    color: #ffffff !important;
+}
+
+/* === AVALIAÇÕES === */
+.dark-mode .avaliacoes-section {
+    background: #0d1117 !important;
+    border: 1px solid #30363d !important;
+}
+
+.dark-mode .avaliacao-item {
+    background: #0d1117 !important;
+    border: 1px solid #30363d !important;
+}
+
+.dark-mode .avaliacao-item:hover {
+    background: #1a1a2e !important;
+}
+
+.dark-mode .avaliacao-nome strong {
+    color: #ffffff !important;
+}
+
+.dark-mode .avaliacao-data {
+    color: #ffffff !important;
+}
+
+.dark-mode .avaliacao-comentario {
+    color: #ffffff !important;
+}
+
+.dark-mode .avaliacao-resposta {
+    background: rgba(5, 150, 105, 0.1) !important;
+    border-left: 3px solid #059669 !important;
+}
+
+.dark-mode .resposta-header {
+    color: #6ee7b7 !important;
+}
+
+.dark-mode .resposta-texto {
+    color: #ffffff !important;
+}
+
+.dark-mode .avaliacoes-stats {
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+}
+
+.dark-mode .avaliacoes-form {
+    background: #0d1117 !important;
+    border: 1px solid #30363d !important;
+}
+
+.dark-mode .avaliacoes-form input,
+.dark-mode .avaliacoes-form textarea {
+    background: #1a1a2e !important;
+    border: 1px solid #30363d !important;
+    color: #ffffff !important;
+}
+
+/* === LEGENDA === */
+.dark-mode .legenda,
+.dark-mode .legenda span {
+    color: #ffffff !important;
 }
 
 /* ==================== CENTROS DETALHES ==================== */
