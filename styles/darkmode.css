@@ -843,7 +843,7 @@
 .dark-mode .detalhes-container b,
 .dark-mode .detalhes-container label,
 .dark-mode .detalhes-container small {
-    color: #ffffff !important;
+    color: var(--dm-text-primary) !important;
 }
 
 /* === CORREÇÃO DOS TEXTOS DOS CARDS === */
