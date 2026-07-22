@@ -533,6 +533,164 @@ body {
     }
 }
 
+/* ========================================
+   HORÁRIOS DETALHADOS - DETALHES FARMÁCIA
+   ======================================== */
+
+.horarios-detalhados {
+    margin-top: 20px;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+}
+
+.horarios-detalhados h4 {
+    color: #1f2937;
+    font-size: 16px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.horarios-detalhados h4 img {
+    width: 20px;
+    height: 20px;
+}
+
+.tabela-horarios {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela-horarios th {
+    background: #f3f4f6;
+    color: #374151;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.tabela-horarios td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+    font-size: 14px;
+}
+
+.tabela-horarios tr:hover td {
+    background: #f9fafb;
+}
+
+.tabela-horarios .dia-atual {
+    background: #d1fae5 !important;
+    font-weight: 600;
+}
+
+.tabela-horarios .dia-atual td {
+    background: #d1fae5 !important;
+}
+
+.tabela-horarios .fechado {
+    color: #dc2626;
+}
+
+.tabela-horarios .aberto {
+    color: #059669;
+}
+
+.tabela-horarios .intervalo {
+    color: #f59e0b;
+}
+
+.tabela-horarios .status-dia {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-dia-aberto {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.status-dia-fechado {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.status-dia-intervalo {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-dia-dom {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+/* Badge de horário especial */
+.horario-especial-badge {
+    display: inline-block;
+    background: #fef3c7;
+    color: #d97706;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.intervalo-info {
+    display: inline-block;
+    background: #fef3c7;
+    color: #d97706;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .horarios-detalhados {
+        padding: 15px;
+    }
+    
+    .tabela-horarios th,
+    .tabela-horarios td {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .horarios-detalhados {
+        padding: 12px;
+    }
+    
+    .tabela-horarios th,
+    .tabela-horarios td {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    
+    .tabela-horarios .status-dia {
+        font-size: 10px;
+        padding: 1px 8px;
+    }
+}
+
 /* Tablet (entre 769px e 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
     .detalhes-container {
