@@ -580,41 +580,77 @@ function abrirMapaParaSelecionar() {
     alert('No Google Maps, clique com botão direito no local exato e selecione "O que há aqui?" para ver as coordenadas.');
 }
 
+// ==================== MOSTRAR CAMPOS DO FORMULÁRIO ====================
 function mostrarCamposFormulario(tipo) {
     var campos = document.getElementById('camposFormulario');
 
     if (tipo === 'hospital' || tipo === 'centro') {
-        campos.innerHTML = `
-            <div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div>
-            <div class="form-group"><label>Endereço</label><input type="text" id="endereco" placeholder="Opcional (usado se não houver coordenadas)"></div>
-            <div class="form-group"><label>Telefone</label><input type="tel" id="telefone" placeholder="Opcional"></div>
-            <div class="form-group"><label>Horário</label><input type="text" id="horario" placeholder="Ex: 24h ou 08:00-18:00"></div>
-            <div class="form-group"><label>Serviços</label><textarea id="servicos" placeholder="Separados por vírgula"></textarea></div>
-            
-            <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
-                <h4>Localização Exata (Recomendado)</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div class="form-group"><label>Latitude</label><input type="text" id="latitude" placeholder="Ex: -15.1165"></div>
-                    <div class="form-group"><label>Longitude</label><input type="text" id="longitude" placeholder="Ex: 39.2667"></div>
-                </div>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button type="button" class="btn-coordenadas" onclick="buscarCoordenadasPorEndereco()" style="background: #7c3aed; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
-                        Buscar Coordenadas pelo Endereço
-                    </button>
-                    <button type="button" class="btn-mapa" onclick="abrirMapaParaSelecionar()" style="background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
-                        Selecionar no Mapa
-                    </button>
-                </div>
-                <small style="color: #6b7280;">Se informar coordenadas, serão usadas para localização exata no mapa. O endereço será usado apenas como referência textual.</small>
-            </div>
-        `;
+        // ... manter o código existente ...
     } else if (tipo === 'farmacia') {
         campos.innerHTML = `
             <div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div>
             <div class="form-group"><label>Endereço</label><input type="text" id="endereco" placeholder="Opcional (usado se não houver coordenadas)"></div>
             <div class="form-group"><label>Telefone</label><input type="tel" id="telefone" placeholder="Opcional"></div>
-            <div class="form-group"><label>Horário</label><input type="text" id="horario" placeholder="Ex: 24h ou 08:00-18:00"></div>
-            <div class="form-group"><label>Plantão</label><select id="plantao"><option value="false">Não</option><option value="true">Sim</option></select></div>
+            
+            <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
+                <h4>Horário de Funcionamento</h4>
+                <div class="form-group">
+                    <label>Horário Geral (ex: 08:00 - 18:00)</label>
+                    <input type="text" id="horario" placeholder="Ex: 08:00 - 18:00">
+                    <small style="color:#6b7280;">Use 24h para plantão 24 horas</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Plantão 24h?</label>
+                    <select id="plantao">
+                        <option value="false">Não</option>
+                        <option value="true">Sim</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
+                <h4>Intervalo para Almoço</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Início do Intervalo</label>
+                        <input type="time" id="horario_almoco_inicio">
+                    </div>
+                    <div class="form-group">
+                        <label>Fim do Intervalo</label>
+                        <input type="time" id="horario_almoco_fim">
+                    </div>
+                </div>
+                <small style="color:#6b7280;">Deixe em branco se não tiver intervalo</small>
+            </div>
+            
+            <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
+                <h4>Funcionamento ao Domingo</h4>
+                <div class="form-group">
+                    <label>Funciona ao Domingo?</label>
+                    <select id="funciona_domingo">
+                        <option value="false">Não</option>
+                        <option value="true">Sim</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Horário de Domingo</label>
+                    <input type="text" id="horario_domingo" placeholder="Ex: 08:00 - 13:00">
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
+                <h4>Horários por Dia da Semana (opcional)</h4>
+                <small style="color:#6b7280;">Preencha apenas se o horário variar por dia</small>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                    <div class="form-group"><label>Segunda</label><input type="text" id="horario_segunda" placeholder="08:00 - 18:00"></div>
+                    <div class="form-group"><label>Terça</label><input type="text" id="horario_terca" placeholder="08:00 - 18:00"></div>
+                    <div class="form-group"><label>Quarta</label><input type="text" id="horario_quarta" placeholder="08:00 - 18:00"></div>
+                    <div class="form-group"><label>Quinta</label><input type="text" id="horario_quinta" placeholder="08:00 - 18:00"></div>
+                    <div class="form-group"><label>Sexta</label><input type="text" id="horario_sexta" placeholder="08:00 - 18:00"></div>
+                    <div class="form-group"><label>Sábado</label><input type="text" id="horario_sabado" placeholder="08:00 - 18:00"></div>
+                </div>
+            </div>
             
             <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
                 <h4>Localização Exata (Recomendado)</h4>
@@ -622,7 +658,7 @@ function mostrarCamposFormulario(tipo) {
                     <div class="form-group"><label>Latitude</label><input type="text" id="latitude" placeholder="Ex: -15.1165"></div>
                     <div class="form-group"><label>Longitude</label><input type="text" id="longitude" placeholder="Ex: 39.2667"></div>
                 </div>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
                     <button type="button" class="btn-coordenadas" onclick="buscarCoordenadasPorEndereco()" style="background: #7c3aed; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
                         Buscar Coordenadas pelo Endereço
                     </button>
@@ -630,7 +666,7 @@ function mostrarCamposFormulario(tipo) {
                         Selecionar no Mapa
                     </button>
                 </div>
-                <small style="color: #6b7280;">Se informar coordenadas, serão usadas para localização exata no mapa. O endereço será usado apenas como referência textual.</small>
+                <small style="color: #6b7280;">Se informar coordenadas, serão usadas para localização exata no mapa.</small>
             </div>
         `;
     } else if (tipo === 'emergencia') {
