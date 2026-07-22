@@ -1,47 +1,1109 @@
-// darkmode.js - Sistema de Modo Escuro
+/* ============================================
+   DARK MODE - SAÚDE NAMPULA
+   CSS unificado para todas as páginas
+   Versão otimizada baseada nos seus estilos existentes
+   ============================================ */
 
-function getDarkModePreference() {
-    const saved = localStorage.getItem('darkMode');
-    if (saved !== null) {
-        return saved === 'true';
+:root {
+    --dm-bg-primary: #0f0f1a;
+    --dm-bg-secondary: #1a1a2e;
+    --dm-bg-card: #16213e;
+    --dm-bg-hover: #1e293b;
+    --dm-text-primary: #e2e8f0;
+    --dm-text-secondary: #94a3b8;
+    --dm-text-muted: #6b7280;
+    --dm-border: #2d3748;
+    --dm-border-light: #1e293b;
+    --dm-purple: #a855f7;
+    --dm-purple-dark: #7c3aed;
+    --dm-green: #059669;
+    --dm-green-dark: #047857;
+    --dm-red: #ef4444;
+    --dm-blue: #3b82f6;
+    --dm-orange: #f59e0b;
+    --dm-yellow: #fbbf24;
+}
+
+/* ==================== ESTILOS GERAIS ==================== */
+.dark-mode {
+    background-color: var(--dm-bg-primary) !important;
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode body {
+    background-color: var(--dm-bg-primary) !important;
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode main {
+    background-color: var(--dm-bg-primary) !important;
+}
+
+/* ==================== NAVEGAÇÃO ==================== */
+.dark-mode nav {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%) !important;
+    border-bottom: 1px solid var(--dm-border);
+}
+
+.dark-mode .logo h1 {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .nav-links a {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .nav-links a:hover,
+.dark-mode .nav-links a.active {
+    background: rgba(168, 85, 247, 0.2) !important;
+    color: var(--dm-purple) !important;
+}
+
+.dark-mode .menu-hamburguer .barra {
+    background: var(--dm-text-primary) !important;
+}
+
+.dark-mode .menu-hamburguer:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ==================== CARDS (Farmácias, Hospitais, Centros, Publicações) ==================== */
+.dark-mode .farmacia-card,
+.dark-mode .hospital-card,
+.dark-mode .centro-card,
+.dark-mode .info-card,
+.dark-mode .section-card,
+.dark-mode .topic-card,
+.dark-mode .avaliacao-item,
+.dark-mode .avaliacoes-form,
+.dark-mode .emergency-card,
+.dark-mode .feature-box,
+.dark-mode .content-card,
+.dark-mode .detailed-section,
+.dark-mode .map-card,
+.dark-mode .modal-content,
+.dark-mode .login-container,
+.dark-mode .stat-card,
+.dark-mode .management-section,
+.dark-mode .produtos-lista,
+.dark-mode .form-produto,
+.dark-mode .publicacao-card,
+.dark-mode .filter-section,
+.dark-mode .info-banner,
+.dark-mode .detalhes-card,
+.dark-mode .alertas-section,
+.dark-mode .campanha-destaque,
+.dark-mode .novidade-card,
+.dark-mode .dica-card,
+.dark-mode .alimento-card,
+.dark-mode .contact-item,
+.dark-mode .stat-box {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode .farmacia-card:hover,
+.dark-mode .hospital-card:hover,
+.dark-mode .centro-card:hover,
+.dark-mode .publicacao-card:hover {
+    border-color: var(--dm-purple) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ==================== TÍTULOS E TEXTOS ==================== */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode .farmacia-title h3,
+.dark-mode .centro-title h3,
+.dark-mode .hospital-title h3,
+.dark-mode .page-header h2,
+.dark-mode .section-card h2,
+.dark-mode .produtos-header h3,
+.dark-mode .modal-title,
+.dark-mode .publicacao-titulo,
+.dark-mode .carrossel-header h3,
+.dark-mode .campanha-destaque h3,
+.dark-mode .novidade-card h4,
+.dark-mode .dica-card h4,
+.dark-mode .alerta-item h4,
+.dark-mode .alimento-card h4,
+.dark-mode .stat-number,
+.dark-mode .feature-box h4 {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .page-subtitle,
+.dark-mode .info-value,
+.dark-mode .centro-bairro,
+.dark-mode .hospital-type,
+.dark-mode .publicacao-resumo,
+.dark-mode .publicacao-meta,
+.dark-mode .detail-item,
+.dark-mode .farmacia-details span,
+.dark-mode .centro-details span,
+.dark-mode .hospital-details span,
+.dark-mode .campanha-info span,
+.dark-mode .novidade-data,
+.dark-mode .alerta-data,
+.dark-mode .alimento-card p,
+.dark-mode .contact-info p {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .page-header p {
+    color: var(--dm-text-secondary) !important;
+}
+
+/* ==================== BADGES E STATUS ==================== */
+.dark-mode .badge-plantao {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-green) !important;
+    border: 1px solid var(--dm-green);
+}
+
+.dark-mode .centro-bairro,
+.dark-mode .hospital-type {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-green) !important;
+}
+
+.dark-mode .status-badge {
+    background: var(--dm-bg-secondary) !important;
+}
+
+.dark-mode .service-tag,
+.dark-mode .feature-tag,
+.dark-mode .servico-tag {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-secondary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .campanha-badge {
+    background: var(--dm-purple) !important;
+    color: white !important;
+}
+
+.dark-mode .novidade-tag {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-purple) !important;
+}
+
+.dark-mode .alerta-status {
+    color: var(--dm-text-secondary) !important;
+}
+
+/* ==================== SERVIÇOS E LISTAS ==================== */
+.dark-mode .farmacia-services,
+.dark-mode .services-list,
+.dark-mode .features,
+.dark-mode .services,
+.dark-mode .servicos-list {
+    background: var(--dm-bg-secondary) !important;
+}
+
+.dark-mode .farmacia-services p,
+.dark-mode .services-list p,
+.dark-mode .services-label {
+    color: var(--dm-purple) !important;
+}
+
+.dark-mode .farmacia-services li,
+.dark-mode .services-list li,
+.dark-mode .servico-item strong {
+    color: var(--dm-text-secondary) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+.dark-mode .servico-item {
+    background: var(--dm-bg-secondary) !important;
+}
+
+.dark-mode .servico-item:hover {
+    border-color: var(--dm-purple) !important;
+}
+
+/* ==================== BOTÕES ==================== */
+.dark-mode .medicamentos-btn,
+.dark-mode .btn-medicamentos,
+.dark-mode .btn-salvar,
+.dark-mode .btn-add,
+.dark-mode .btn-submit,
+.dark-mode .btn-enviar-avaliacao,
+.dark-mode .btn-cadastrar,
+.dark-mode .btn-campanha,
+.dark-mode .cta-btn,
+.dark-mode .btn-nova-publicacao {
+    background: var(--dm-green) !important;
+    color: white !important;
+}
+
+.dark-mode .medicamentos-btn:hover,
+.dark-mode .btn-medicamentos:hover,
+.dark-mode .btn-salvar:hover,
+.dark-mode .btn-add:hover,
+.dark-mode .btn-submit:hover,
+.dark-mode .btn-enviar-avaliacao:hover,
+.dark-mode .btn-cadastrar:hover,
+.dark-mode .btn-campanha:hover,
+.dark-mode .cta-btn:hover,
+.dark-mode .btn-nova-publicacao:hover {
+    background: var(--dm-green-dark) !important;
+}
+
+.dark-mode .details-btn,
+.dark-mode .info-btn,
+.dark-mode .btn-login,
+.dark-mode .btn-cadastrar,
+.dark-mode .btn-submit,
+.dark-mode .btn-edit,
+.dark-mode .btn-ligar,
+.dark-mode .btn-directions {
+    background: var(--dm-purple) !important;
+    color: white !important;
+}
+
+.dark-mode .details-btn:hover,
+.dark-mode .info-btn:hover,
+.dark-mode .btn-login:hover,
+.dark-mode .btn-cadastrar:hover,
+.dark-mode .btn-submit:hover,
+.dark-mode .btn-edit:hover,
+.dark-mode .btn-ligar:hover,
+.dark-mode .btn-directions:hover {
+    background: var(--dm-purple-dark) !important;
+}
+
+.dark-mode .directions-btn,
+.dark-mode .btn-mapa,
+.dark-mode .map-btn {
+    background: var(--dm-bg-secondary) !important;
+    border: 1px solid var(--dm-blue);
+    color: var(--dm-blue) !important;
+}
+
+.dark-mode .waze-btn {
+    background: var(--dm-bg-secondary) !important;
+    border: 1px solid #33CCFF;
+    color: #33CCFF !important;
+}
+
+.dark-mode .directions-btn:hover,
+.dark-mode .btn-mapa:hover,
+.dark-mode .map-btn:hover {
+    background: var(--dm-blue) !important;
+    color: white !important;
+}
+
+.dark-mode .waze-btn:hover {
+    background: #33CCFF !important;
+    color: white !important;
+}
+
+.dark-mode .btn-back {
+    background: var(--dm-bg-secondary) !important;
+    border: 1px solid var(--dm-green);
+    color: var(--dm-green) !important;
+}
+
+.dark-mode .btn-back:hover {
+    background: var(--dm-green) !important;
+    color: white !important;
+}
+
+.dark-mode .btn-cancelar,
+.dark-mode .btn-delete {
+    background: var(--dm-red) !important;
+    color: white !important;
+}
+
+.dark-mode .btn-cancelar:hover,
+.dark-mode .btn-delete:hover {
+    background: #b91c1c !important;
+}
+
+.dark-mode .btn-logout {
+    background: var(--dm-red) !important;
+    color: white !important;
+}
+
+.dark-mode .btn-logout:hover {
+    background: #b91c1c !important;
+}
+
+.dark-mode .btn-compartilhar {
+    color: white !important;
+}
+
+.dark-mode .btn-compartilhar.btn-copiar {
+    background: #6b7280 !important;
+}
+
+.dark-mode .btn-compartilhar.btn-whatsapp {
+    background: #25D366 !important;
+}
+
+.dark-mode .btn-compartilhar.btn-facebook {
+    background: #1877F2 !important;
+}
+
+.dark-mode .btn-compartilhar.btn-twitter {
+    background: #000000 !important;
+}
+
+.dark-mode .btn-compartilhar.btn-email {
+    background: #ea4335 !important;
+}
+
+/* ==================== FILTROS E FORMULÁRIOS ==================== */
+.dark-mode .filter-section,
+.dark-mode .barra-busca,
+.dark-mode .filtro-publicacoes {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .filter-select,
+.dark-mode .barra-busca input,
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea,
+.dark-mode .form-group input,
+.dark-mode .form-group select,
+.dark-mode .form-group textarea,
+.dark-mode .campo-form input,
+.dark-mode .campo-form select,
+.dark-mode .campo-form textarea,
+.dark-mode #filtroCategoria,
+.dark-mode .filtro-publicacoes select {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .filter-select:focus,
+.dark-mode input:focus,
+.dark-mode textarea:focus,
+.dark-mode select:focus,
+.dark-mode .filtro-publicacoes select:focus {
+    border-color: var(--dm-purple) !important;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2) !important;
+}
+
+.dark-mode .filter-label,
+.dark-mode .form-group label,
+.dark-mode .campo-form label,
+.dark-mode .filtro-publicacoes label {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .barra-busca button {
+    background: var(--dm-purple) !important;
+}
+
+.dark-mode .barra-busca button:hover {
+    background: var(--dm-purple-dark) !important;
+}
+
+.dark-mode .barra-busca input::placeholder {
+    color: var(--dm-text-muted) !important;
+}
+
+/* ==================== TABELAS ==================== */
+.dark-mode table th {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-primary) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+.dark-mode table td {
+    background: var(--dm-bg-card) !important;
+    color: var(--dm-text-secondary) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+.dark-mode table tr:hover td {
+    background: var(--dm-bg-hover) !important;
+}
+
+.dark-mode .tabela-produtos th {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .tabela-produtos td {
+    background: var(--dm-bg-card) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .tabela-produtos tr:hover td {
+    background: var(--dm-bg-hover) !important;
+}
+
+/* ==================== AVALIAÇÕES ==================== */
+.dark-mode .avaliacoes-stats {
+    background: linear-gradient(135deg, var(--dm-purple) 0%, var(--dm-purple-dark) 100%) !important;
+}
+
+.dark-mode .avaliacao-resposta {
+    background: rgba(5, 150, 105, 0.1) !important;
+    border-left-color: var(--dm-green) !important;
+}
+
+.dark-mode .resposta-header {
+    color: var(--dm-green) !important;
+}
+
+.dark-mode .avaliacao-comentario {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .nenhuma-avaliacao {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+/* ==================== MODAL ==================== */
+.dark-mode .modal {
+    background: rgba(0, 0, 0, 0.8) !important;
+}
+
+.dark-mode .modal-header {
+    border-bottom-color: var(--dm-border) !important;
+}
+
+.dark-mode .modal-publicacao-content {
+    background: var(--dm-bg-card) !important;
+}
+
+.dark-mode .modal-publicacao-body {
+    background: var(--dm-bg-card) !important;
+}
+
+.dark-mode .modal-publicacao-body h2 {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .modal-publicacao-body .meta {
+    color: var(--dm-text-secondary) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+.dark-mode .modal-publicacao-body .conteudo-completo {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .modal-fechar {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .modal-fechar:hover {
+    background: var(--dm-bg-hover) !important;
+}
+
+/* ==================== INFO BANNER E ALERTAS ==================== */
+.dark-mode .info-banner {
+    background: linear-gradient(135deg, var(--dm-purple) 0%, var(--dm-purple-dark) 100%) !important;
+}
+
+.dark-mode .alert-banner {
+    background: linear-gradient(135deg, #7f1a1a 0%, #991b1b 100%) !important;
+}
+
+.dark-mode .emergency-alerta {
+    background: linear-gradient(135deg, #7f1a1a 0%, #991b1b 100%) !important;
+    border-color: var(--dm-red) !important;
+}
+
+.dark-mode .emergency-alerta h3 {
+    color: #fca5a5 !important;
+}
+
+.dark-mode .emergency-alerta p {
+    color: #fca5a5 !important;
+}
+
+.dark-mode .emergency-btn {
+    background: var(--dm-red) !important;
+}
+
+.dark-mode .emergency-btn:hover {
+    background: #b91c1c !important;
+}
+
+/* ==================== TIPS E CONTATOS ==================== */
+.dark-mode .tips-section,
+.dark-mode .hospital-contacts {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-orange) !important;
+}
+
+.dark-mode .tip-item,
+.dark-mode .hospital-item {
+    background: var(--dm-bg-secondary) !important;
+    border-left-color: var(--dm-orange) !important;
+}
+
+.dark-mode .tip-item h4,
+.dark-mode .hospital-info h4 {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .tip-item p,
+.dark-mode .hospital-info p {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .hospital-phone {
+    color: var(--dm-purple) !important;
+}
+
+/* ==================== PÁGINA SOBRE ==================== */
+.dark-mode .hero-about {
+    background: linear-gradient(135deg, var(--dm-bg-secondary) 0%, var(--dm-bg-card) 100%) !important;
+}
+
+.dark-mode .vision-section {
+    background: linear-gradient(135deg, #1e3a8a 0%, var(--dm-purple) 100%) !important;
+}
+
+.dark-mode .stat-box {
+    background: linear-gradient(135deg, var(--dm-green) 0%, var(--dm-green-dark) 100%) !important;
+}
+
+.dark-mode .contact-section {
+    background: var(--dm-bg-secondary) !important;
+}
+
+.dark-mode .contact-item {
+    background: var(--dm-bg-card) !important;
+}
+
+.dark-mode .contact-info p {
+    color: var(--dm-purple) !important;
+}
+
+/* ==================== ADMIN PANEL ==================== */
+.dark-mode .admin-header {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+.dark-mode .stat-value {
+    color: var(--dm-purple) !important;
+}
+
+.dark-mode .tab {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .tab.active {
+    color: var(--dm-green) !important;
+    border-bottom-color: var(--dm-green) !important;
+}
+
+.dark-mode .tabs .tab.active {
+    background: var(--dm-purple) !important;
+    color: white !important;
+}
+
+/* ==================== ÍCONES E IMAGENS ==================== */
+.dark-mode .detail-icon img,
+.dark-mode .farmacia-icon img,
+.dark-mode .centro-icon img,
+.dark-mode .hospital-icon img,
+.dark-mode .info-card-icon img,
+.dark-mode .section-icon img,
+.dark-mode .horario-icon img,
+.dark-mode .map-icon img,
+.dark-mode .emergency-icon img,
+.dark-mode .contact-icon img,
+.dark-mode .topic-icon img,
+.dark-mode .feature-icon img,
+.dark-mode .logo-icon img {
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+}
+
+.dark-mode .card-icon img {
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+}
+
+/* ==================== FOOTER ==================== */
+.dark-mode footer {
+    background: #0a0a0f !important;
+    border-top: 1px solid var(--dm-border);
+}
+
+.dark-mode footer p {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .footer-subtitle {
+    color: var(--dm-text-muted) !important;
+}
+
+/* ==================== BOTÃO FLUTUANTE DARK MODE ==================== */
+.dark-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--dm-purple);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    z-index: 9999;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.dark-mode-toggle:hover {
+    transform: scale(1.05);
+    background: var(--dm-purple-dark);
+}
+
+.dark-mode .dark-mode-toggle {
+    background: var(--dm-purple);
+    color: white;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+}
+
+/* ==================== LOADING E EMPTY ==================== */
+.dark-mode .loading,
+.dark-mode .empty-state,
+.dark-mode .nenhuma-avaliacao,
+.dark-mode .empty-message,
+.dark-mode .empty-publicacoes,
+.dark-mode .loader-publicacoes,
+.dark-mode .nenhum-resultado {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .empty-publicacoes h3 {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .loading::after {
+    border-color: var(--dm-border);
+    border-top-color: var(--dm-purple);
+}
+
+.dark-mode .loader-publicacoes .spinner {
+    border-color: var(--dm-border);
+    border-top-color: var(--dm-purple);
+}
+
+/* ==================== PUBLICACOES ==================== */
+.dark-mode .publicacao-categoria {
+    background: var(--dm-bg-secondary) !important;
+}
+
+.dark-mode .categoria-noticia {
+    background: #1e3a5f !important;
+    color: #93c5fd !important;
+}
+
+.dark-mode .categoria-dica {
+    background: #064e3b !important;
+    color: #6ee7b7 !important;
+}
+
+.dark-mode .categoria-alerta {
+    background: #7f1a1a !important;
+    color: #fca5a5 !important;
+}
+
+.dark-mode .categoria-evento {
+    background: #78350f !important;
+    color: #fcd34d !important;
+}
+
+.dark-mode .categoria-campanha {
+    background: #1e1b4b !important;
+    color: #a5b4fc !important;
+}
+
+.dark-mode .categoria-informacao {
+    background: #3b0764 !important;
+    color: #c4b5fd !important;
+}
+
+.dark-mode .publicacao-meta {
+    border-top-color: var(--dm-border) !important;
+}
+
+.dark-mode .publicacao-ler-mais {
+    color: var(--dm-purple) !important;
+}
+
+/* ==================== CARROSSEL ==================== */
+.dark-mode .carrossel-publicacoes {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .carrossel-slide {
+    background: var(--dm-bg-secondary) !important;
+}
+
+.dark-mode .carrossel-slide-conteudo .titulo {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .carrossel-slide-conteudo .resumo {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .carrossel-slide-conteudo .data {
+    color: var(--dm-text-muted) !important;
+}
+
+.dark-mode .carrossel-btn {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .carrossel-btn:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.dark-mode .carrossel-indicador {
+    background: var(--dm-border) !important;
+}
+
+.dark-mode .carrossel-indicador.ativo {
+    background: var(--dm-purple) !important;
+}
+
+.dark-mode .ver-todas {
+    color: var(--dm-purple) !important;
+}
+
+.dark-mode .ver-todas:hover {
+    color: var(--dm-purple-dark) !important;
+}
+
+/* ==================== DETALHES FARMACIA ==================== */
+.dark-mode .detalhes-header {
+    background: linear-gradient(135deg, var(--dm-purple-dark) 0%, var(--dm-purple) 100%) !important;
+}
+
+.dark-mode .endereco-box {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .horario-box {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .horario-valor {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .horario-label {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .stat-item {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .stat-number {
+    color: var(--dm-purple) !important;
+}
+
+.dark-mode .pagamento-item {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+/* ==================== CENTROS DETALHES ==================== */
+.dark-mode .centro-header-section {
+    background: linear-gradient(135deg, var(--dm-green) 0%, var(--dm-green-dark) 100%) !important;
+}
+
+.dark-mode .info-card {
+    background: var(--dm-bg-card) !important;
+}
+
+.dark-mode .info-card-green {
+    border-color: var(--dm-green) !important;
+}
+
+.dark-mode .info-card-blue {
+    border-color: var(--dm-blue) !important;
+}
+
+.dark-mode .info-card-purple {
+    border-color: var(--dm-purple) !important;
+}
+
+.dark-mode .info-label {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .info-value {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .marcacao-box {
+    background: rgba(245, 158, 11, 0.1) !important;
+    border-color: var(--dm-orange) !important;
+    color: var(--dm-orange) !important;
+}
+
+.dark-mode .trazer-card {
+    background: rgba(245, 158, 11, 0.1) !important;
+    border-color: var(--dm-orange) !important;
+}
+
+.dark-mode .checklist strong {
+    color: var(--dm-orange) !important;
+}
+
+.dark-mode .checklist p {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .dicas-card {
+    background: rgba(59, 130, 246, 0.1) !important;
+    border-color: var(--dm-blue) !important;
+}
+
+.dark-mode .dica-item strong {
+    color: var(--dm-blue) !important;
+}
+
+.dark-mode .dica-item p {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .map-placeholder {
+    background: var(--dm-bg-secondary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+/* ==================== HOSPITAL DETALHES ==================== */
+.dark-mode .hospital-header-section {
+    background: linear-gradient(135deg, var(--dm-green) 0%, var(--dm-green-dark) 100%) !important;
+}
+
+.dark-mode .breadcrumb a {
+    color: var(--dm-purple) !important;
+}
+
+.dark-mode .breadcrumb span {
+    color: var(--dm-text-secondary) !important;
+}
+
+/* ==================== INFO PAGE ==================== */
+.dark-mode .page-header {
+    background: linear-gradient(135deg, var(--dm-purple-dark) 0%, var(--dm-purple) 100%) !important;
+}
+
+.dark-mode .warning-box,
+.dark-mode .alert-box {
+    background: rgba(245, 158, 11, 0.1) !important;
+    border-left-color: var(--dm-orange) !important;
+}
+
+.dark-mode .alert-box h5 {
+    color: var(--dm-orange) !important;
+}
+
+.dark-mode .alert-box p {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .success-box {
+    background: rgba(5, 150, 105, 0.1) !important;
+    border-left-color: var(--dm-green) !important;
+}
+
+.dark-mode .success-box h5 {
+    color: var(--dm-green) !important;
+}
+
+.dark-mode .success-box p {
+    color: var(--dm-text-secondary) !important;
+}
+
+/* ==================== LOGIN FARMACIA ==================== */
+.dark-mode .login-container {
+    background: var(--dm-bg-card) !important;
+}
+
+.dark-mode .login-header h2 {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode .login-header p {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .tab {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .tab.ativo {
+    background: var(--dm-purple) !important;
+    color: white !important;
+}
+
+.dark-mode .info-box {
+    background: rgba(168, 85, 247, 0.1) !important;
+    border-left-color: var(--dm-purple) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .info-box strong {
+    color: var(--dm-purple) !important;
+}
+
+.dark-mode .erro-mensagem {
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #fca5a5 !important;
+}
+
+.dark-mode .sucesso-mensagem {
+    background: rgba(5, 150, 105, 0.1) !important;
+    color: #6ee7b7 !important;
+}
+
+/* ==================== ADMIN PANEL - CORREÇÕES ADICIONAIS ==================== */
+.dark-mode .action-buttons .btn-edit {
+    background: var(--dm-blue) !important;
+    color: white !important;
+}
+
+.dark-mode .action-buttons .btn-edit:hover {
+    background: #2563eb !important;
+}
+
+.dark-mode .action-buttons .btn-delete {
+    background: var(--dm-red) !important;
+    color: white !important;
+}
+
+.dark-mode .action-buttons .btn-delete:hover {
+    background: #b91c1c !important;
+}
+
+.dark-mode .action-buttons .btn-toggle {
+    background: var(--dm-orange) !important;
+    color: white !important;
+}
+
+.dark-mode .action-buttons .btn-toggle:hover {
+    background: #d97706 !important;
+}
+
+.dark-mode #modalResposta .modal-content {
+    background: var(--dm-bg-card) !important;
+}
+
+.dark-mode #modalResposta .form-group label {
+    color: var(--dm-text-primary) !important;
+}
+
+.dark-mode #modalResposta #comentarioOriginal {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode #modalResposta textarea {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-primary) !important;
+    border-color: var(--dm-border) !important;
+}
+
+/* ==================== CONTADOR DE VISITANTES ==================== */
+.dark-mode #contador-visitantes {
+    background: linear-gradient(135deg, var(--dm-bg-card) 0%, var(--dm-bg-secondary) 100%) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode #contador-visitantes .label {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode #contador-visitantes .valor {
+    background: linear-gradient(135deg, var(--dm-purple) 0%, var(--dm-purple-dark) 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+.dark-mode #contador-visitantes .status {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .contador-visitantes {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
+}
+
+.dark-mode .contador-label {
+    color: var(--dm-text-secondary) !important;
+}
+
+.dark-mode .contador-status {
+    background: var(--dm-bg-secondary) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+/* ==================== SCROLLBAR ==================== */
+.dark-mode ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+    background: var(--dm-bg-secondary);
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+    background: var(--dm-purple);
+    border-radius: 5px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: var(--dm-purple-dark);
+}
+
+/* ==================== RESPONSIVO ==================== */
+@media (max-width: 768px) {
+    .dark-mode-toggle {
+        padding: 10px 16px;
+        font-size: 12px;
+        bottom: 15px;
+        right: 15px;
     }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
 
-function aplicarDarkMode(ativar) {
-    if (ativar) {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('darkMode', 'true');
-        const btn = document.querySelector('.dark-mode-toggle');
-        if (btn) btn.innerHTML = '☀️ Modo Claro';
-    } else {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('darkMode', 'false');
-        const btn = document.querySelector('.dark-mode-toggle');
-        if (btn) btn.innerHTML = '🌙 Modo Escuro';
+@media (max-width: 480px) {
+    .dark-mode-toggle {
+        padding: 8px 12px;
+        font-size: 11px;
+        bottom: 10px;
+        right: 10px;
     }
-}
-
-function criarBotaoDarkMode() {
-    if (document.querySelector('.dark-mode-toggle')) return;
-    
-    const btn = document.createElement('button');
-    btn.className = 'dark-mode-toggle';
-    
-    const isDark = getDarkModePreference();
-    btn.innerHTML = isDark ? '☀️ Modo Claro' : '🌙 Modo Escuro';
-    
-    btn.onclick = () => {
-        const isActive = document.body.classList.contains('dark-mode');
-        aplicarDarkMode(!isActive);
-    };
-    
-    document.body.appendChild(btn);
-    aplicarDarkMode(isDark);
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', criarBotaoDarkMode);
-} else {
-    criarBotaoDarkMode();
 }
