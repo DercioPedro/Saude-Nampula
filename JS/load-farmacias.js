@@ -714,6 +714,9 @@ async function carregarDetalhesDaFarmacia() {
         var urlDirecoes = await obterUrlDirecoes(farmacia);
         var urlWaze = await obterUrlWaze(farmacia);
         
+        // ==================== GERAR TABELA DE HORÁRIOS ====================
+        var horariosHTML = gerarTabelaHorarios(farmacia);
+        
         var detalhesHTML = `
             <div style="max-width: 900px; margin: 40px auto; padding: 30px; background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                 <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
@@ -765,6 +768,21 @@ async function carregarDetalhesDaFarmacia() {
                                     '<div>Segunda a Domingo: <strong style="color: #059669;">24 horas</strong></div>' :
                                     '<div>Horario: <strong>' + (farmacia.horario || '08:00 - 18:00') + '</strong></div>'
                                 }
+                                ${farmacia.horario_almoco_inicio && farmacia.horario_almoco_fim ? `
+                                    <div style="margin-top: 8px; color: #d97706;">
+                                        <small>Intervalo de almoço: <strong>${farmacia.horario_almoco_inicio} - ${farmacia.horario_almoco_fim}</strong></small>
+                                    </div>
+                                ` : ''}
+                                ${farmacia.funciona_domingo === false ? `
+                                    <div style="margin-top: 8px; color: #dc2626;">
+                                        <small>Não funciona aos domingos</small>
+                                    </div>
+                                ` : ''}
+                                ${farmacia.funciona_domingo === true && farmacia.horario_domingo ? `
+                                    <div style="margin-top: 8px; color: #1e40af;">
+                                        <small>Domingo: <strong>${farmacia.horario_domingo}</strong></small>
+                                    </div>
+                                ` : ''}
                             </div>
                             ${farmacia.plantao ? 
                                 '<p style="margin-top: 10px; color: #059669;">Aberto 24 horas, inclusive feriados</p>' : 
@@ -794,6 +812,9 @@ async function carregarDetalhesDaFarmacia() {
                     </div>
                 </div>
                 
+                <!-- ==================== TABELA DE HORÁRIOS DETALHADOS ==================== -->
+                ${horariosHTML}
+                
                 <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
                     <button onclick="window.location.href='medicamentos.html?farmacia=${nomeFarmacia}&id=${farmacia.id}'" style="background: #059669; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: 600; cursor: pointer;">
                         <img src="/img/comprimidos.png" alt="Medicamentos" style="width: 16px; height: 16px; vertical-align: middle;"> Ver Medicamentos (${produtos.length})
@@ -816,6 +837,113 @@ async function carregarDetalhesDaFarmacia() {
     }
 }
 
+// ==================== GERAR TABELA DE HORÁRIOS ====================
+function gerarTabelaHorarios(farmacia) {
+    // Se for plantão 24h, não mostrar tabela
+    if (farmacia.plantao === true) {
+        return '';
+    }
+    
+    var dias = [
+        { nome: 'Segunda', campo: 'horario_segunda', diaSemana: 1 },
+        { nome: 'Terça', campo: 'horario_terca', diaSemana: 2 },
+        { nome: 'Quarta', campo: 'horario_quarta', diaSemana: 3 },
+        { nome: 'Quinta', campo: 'horario_quinta', diaSemana: 4 },
+        { nome: 'Sexta', campo: 'horario_sexta', diaSemana: 5 },
+        { nome: 'Sábado', campo: 'horario_sabado', diaSemana: 6 },
+        { nome: 'Domingo', campo: 'horario_domingo', diaSemana: 0 }
+    ];
+    
+    var agora = new Date();
+    var horaMoçambique = new Date(agora.toLocaleString('en-US', { timeZone: 'Africa/Maputo' }));
+    var diaAtual = horaMoçambique.getDay();
+    
+    var tabelaHTML = `
+        <div class="horarios-detalhados">
+            <h4><img src="/img/clock.png" alt="Horarios"> Horários por Dia da Semana</h4>
+            <table class="tabela-horarios">
+                <thead>
+                    <tr>
+                        <th>Dia</th>
+                        <th>Horário</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    for (var i = 0; i < dias.length; i++) {
+        var dia = dias[i];
+        var horario = farmacia[dia.campo] || farmacia.horario || 'Fechado';
+        var isDiaAtual = (dia.diaSemana === diaAtual);
+        var rowClass = isDiaAtual ? 'dia-atual' : '';
+        var statusText = '';
+        var statusClass = '';
+        
+        // Verificar se é domingo e a farmácia não funciona domingo
+        if (dia.diaSemana === 0 && farmacia.funciona_domingo === false) {
+            statusText = 'Fechado';
+            statusClass = 'status-dia-fechado';
+        } else if (horario === 'Fechado' || !horario) {
+            statusText = 'Fechado';
+            statusClass = 'status-dia-fechado';
+        } else {
+            // Verificar horário atual para o dia atual
+            if (isDiaAtual) {
+                var statusAtual = verificarStatusFarmacia(farmacia);
+                if (statusAtual.aberto) {
+                    if (statusAtual.texto === 'Intervalo de almoço') {
+                        statusText = 'Intervalo';
+                        statusClass = 'status-dia-intervalo';
+                    } else {
+                        statusText = 'Aberto';
+                        statusClass = 'status-dia-aberto';
+                    }
+                } else {
+                    statusText = 'Fechado';
+                    statusClass = 'status-dia-fechado';
+                }
+            } else {
+                statusText = 'Abre';
+                statusClass = 'status-dia-aberto';
+            }
+        }
+        
+        // Verificar se tem intervalo de almoço
+        var intervaloInfo = '';
+        if (farmacia.horario_almoco_inicio && farmacia.horario_almoco_fim && horario !== 'Fechado') {
+            intervaloInfo = `<span class="intervalo-info">Almoço: ${farmacia.horario_almoco_inicio} - ${farmacia.horario_almoco_fim}</span>`;
+        }
+        
+        // Verificar se é domingo e tem horário especial
+        var domingoBadge = '';
+        if (dia.diaSemana === 0 && farmacia.funciona_domingo === true && farmacia.horario_domingo) {
+            domingoBadge = '<span class="horario-especial-badge">Especial</span>';
+        }
+        
+        tabelaHTML += `
+            <tr class="${rowClass}">
+                <td><strong>${dia.nome}</strong> ${isDiaAtual ? '🔵' : ''}</td>
+                <td>${horario !== 'Fechado' ? horario : '—'} ${intervaloInfo} ${domingoBadge}</td>
+                <td><span class="status-dia ${statusClass}">${statusText}</span></td>
+            </tr>
+        `;
+    }
+    
+    tabelaHTML += `
+                </tbody>
+            </table>
+            <div style="margin-top: 12px; font-size: 12px; color: #6b7280;">
+                <span style="display: inline-block; margin-right: 16px;">🔵 Hoje</span>
+                <span style="display: inline-block; margin-right: 16px;">🟢 Aberto</span>
+                <span style="display: inline-block; margin-right: 16px;">🟡 Intervalo</span>
+                <span style="display: inline-block;">🔴 Fechado</span>
+            </div>
+        </div>
+    `;
+    
+    return tabelaHTML;
+}
 // ==================== INICIALIZAÇÃO ====================
 
 // Exportar funções para uso global
