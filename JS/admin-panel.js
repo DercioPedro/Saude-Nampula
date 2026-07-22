@@ -1,4 +1,4 @@
-// admin-panel.js - Versão completa com coordenadas, telefone opcional e publicações
+// admin-panel.js - Versão completa com coordenadas, telefone opcional, publicações e horários detalhados
 
 let token = null;
 
@@ -49,7 +49,6 @@ function mudarAba(abaNome) {
         conteudos[i].classList.remove('active');
     }
 
-    // Encontrar o botão que foi clicado
     let botaoClicado = null;
     for (let i = 0; i < abas.length; i++) {
         if (abas[i].textContent.trim().toLowerCase() === abaNome.toLowerCase() || 
@@ -585,7 +584,30 @@ function mostrarCamposFormulario(tipo) {
     var campos = document.getElementById('camposFormulario');
 
     if (tipo === 'hospital' || tipo === 'centro') {
-        // ... manter o código existente ...
+        campos.innerHTML = `
+            <div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div>
+            <div class="form-group"><label>Endereço</label><input type="text" id="endereco" placeholder="Opcional (usado se não houver coordenadas)"></div>
+            <div class="form-group"><label>Telefone</label><input type="tel" id="telefone" placeholder="Opcional"></div>
+            <div class="form-group"><label>Horário</label><input type="text" id="horario" placeholder="Ex: 24h ou 08:00-18:00"></div>
+            <div class="form-group"><label>Serviços</label><textarea id="servicos" placeholder="Separados por vírgula"></textarea></div>
+            
+            <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
+                <h4>Localização Exata (Recomendado)</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group"><label>Latitude</label><input type="text" id="latitude" placeholder="Ex: -15.1165"></div>
+                    <div class="form-group"><label>Longitude</label><input type="text" id="longitude" placeholder="Ex: 39.2667"></div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                    <button type="button" class="btn-coordenadas" onclick="buscarCoordenadasPorEndereco()" style="background: #7c3aed; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                        Buscar Coordenadas pelo Endereço
+                    </button>
+                    <button type="button" class="btn-mapa" onclick="abrirMapaParaSelecionar()" style="background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                        Selecionar no Mapa
+                    </button>
+                </div>
+                <small style="color: #6b7280;">Se informar coordenadas, serão usadas para localização exata no mapa. O endereço será usado apenas como referência textual.</small>
+            </div>
+        `;
     } else if (tipo === 'farmacia') {
         campos.innerHTML = `
             <div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div>
@@ -713,6 +735,20 @@ async function editarItem(tipo, id) {
             }
             if (tipo === 'farmacia' && document.getElementById('plantao')) {
                 document.getElementById('plantao').value = item.plantao ? 'true' : 'false';
+                
+                // Novos campos de horário para farmácia
+                if (document.getElementById('horario_almoco_inicio')) {
+                    document.getElementById('horario_almoco_inicio').value = item.horario_almoco_inicio || '';
+                    document.getElementById('horario_almoco_fim').value = item.horario_almoco_fim || '';
+                    document.getElementById('funciona_domingo').value = item.funciona_domingo ? 'true' : 'false';
+                    document.getElementById('horario_domingo').value = item.horario_domingo || '';
+                    document.getElementById('horario_segunda').value = item.horario_segunda || '';
+                    document.getElementById('horario_terca').value = item.horario_terca || '';
+                    document.getElementById('horario_quarta').value = item.horario_quarta || '';
+                    document.getElementById('horario_quinta').value = item.horario_quinta || '';
+                    document.getElementById('horario_sexta').value = item.horario_sexta || '';
+                    document.getElementById('horario_sabado').value = item.horario_sabado || '';
+                }
             }
         } else {
             document.getElementById('telefone').value = item.telefone;
@@ -761,6 +797,19 @@ document.getElementById('formularioItem').addEventListener('submit', async funct
         dadosFormulario.telefone = document.getElementById('telefone').value || '';
         dadosFormulario.horario = document.getElementById('horario').value || '';
         dadosFormulario.plantao = document.getElementById('plantao').value === 'true';
+        
+        // Novos campos de horário para farmácia
+        dadosFormulario.horario_almoco_inicio = document.getElementById('horario_almoco_inicio').value || null;
+        dadosFormulario.horario_almoco_fim = document.getElementById('horario_almoco_fim').value || null;
+        dadosFormulario.funciona_domingo = document.getElementById('funciona_domingo').value === 'true';
+        dadosFormulario.horario_domingo = document.getElementById('horario_domingo').value || null;
+        dadosFormulario.horario_segunda = document.getElementById('horario_segunda').value || null;
+        dadosFormulario.horario_terca = document.getElementById('horario_terca').value || null;
+        dadosFormulario.horario_quarta = document.getElementById('horario_quarta').value || null;
+        dadosFormulario.horario_quinta = document.getElementById('horario_quinta').value || null;
+        dadosFormulario.horario_sexta = document.getElementById('horario_sexta').value || null;
+        dadosFormulario.horario_sabado = document.getElementById('horario_sabado').value || null;
+        
         var latInput = document.getElementById('latitude');
         var lngInput = document.getElementById('longitude');
         if (latInput && latInput.value) {
