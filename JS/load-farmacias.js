@@ -156,7 +156,7 @@ async function abrirWaze(farmaciaId) {
     }
 }
 
-// ==================== FUNÇÃO DE STATUS DA FARMÁCIA ====================
+// ==================== FUNÇÃO DE STATUS DA FARMÁCIA (VERSÃO ATUALIZADA) ====================
 function verificarStatusFarmacia(farmacia) {
     var agora = new Date();
     var horaMoçambique = new Date(agora.toLocaleString('en-US', { timeZone: 'Africa/Maputo' }));
@@ -164,95 +164,173 @@ function verificarStatusFarmacia(farmacia) {
     var minutoAtual = horaMoçambique.getMinutes();
     var minutosAtual = horaAtual * 60 + minutoAtual;
     
-    if (farmacia.plantao === true || farmacia.horario === '24hr') {
+    // Obter dia da semana (0=Domingo, 1=Segunda, ...)
+    var diaSemana = horaMoçambique.getDay();
+    var diasSemana = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+    var nomeDia = diasSemana[diaSemana];
+    var isDomingo = diaSemana === 0;
+    
+    // Verificar se é plantão 24h
+    if (farmacia.plantao === true || farmacia.horario === '24hr' || farmacia.horario === '24h') {
         return {
             aberto: true,
-            texto: 'Aberto agora',
+            texto: 'Aberto 24h',
             cor: '#059669',
             bg: '#d1fae5',
             icon: '<img src="/img/clock.png" alt="Aberto" style="width: 14px; height: 14px;">'
         };
     }
     
-    var horario = farmacia.horario || '08:00 - 18:00';
+    // Verificar se é domingo e a farmácia não funciona domingo
+    if (isDomingo && farmacia.funciona_domingo !== true) {
+        return {
+            aberto: false,
+            texto: 'Fechado aos domingos',
+            cor: '#dc2626',
+            bg: '#fee2e2',
+            icon: '<img src="/img/clock.png" alt="Fechado" style="width: 14px; height: 14px;">'
+        };
+    }
     
+    // Função para converter hora em minutos
     function paraMinutos(horaStr) {
-        if (!horaStr) return 0;
+        if (!horaStr) return null;
         horaStr = horaStr.trim();
         var partes = horaStr.split(':');
-        if (partes.length !== 2) return 0;
+        if (partes.length !== 2) return null;
         var horas = parseInt(partes[0]);
         var minutos = parseInt(partes[1]);
-        if (isNaN(horas) || isNaN(minutos)) return 0;
+        if (isNaN(horas) || isNaN(minutos)) return null;
         return horas * 60 + minutos;
     }
     
-    function extrairHorarios(periodo) {
-        periodo = periodo.trim();
+    // Função para extrair horário de uma string
+    function extrairHorario(horarioStr) {
+        if (!horarioStr) return null;
         var padrao = /(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/;
-        var match = periodo.match(padrao);
+        var match = horarioStr.match(padrao);
         if (match) {
             return { inicio: match[1], fim: match[2] };
         }
         return null;
     }
     
-    var aberto = false;
+    // Obter horário do dia específico ou horário geral
+    var horarioDia = null;
     
-    if (horario.indexOf(',') !== -1) {
-        var periodos = horario.split(',');
-        for (var i = 0; i < periodos.length; i++) {
-            var hrs = extrairHorarios(periodos[i]);
-            if (hrs) {
-                var inicioMin = paraMinutos(hrs.inicio);
-                var fimMin = paraMinutos(hrs.fim);
-                if (minutosAtual >= inicioMin && minutosAtual < fimMin) {
-                    aberto = true;
-                    break;
+    // Verificar se tem horário específico para o dia
+    var campoHorarioDia = 'horario_' + nomeDia;
+    if (farmacia[campoHorarioDia]) {
+        horarioDia = farmacia[campoHorarioDia];
+    }
+    
+    // Se for domingo e tem horário específico de domingo
+    if (isDomingo && farmacia.horario_domingo) {
+        horarioDia = farmacia.horario_domingo;
+    }
+    
+    // Usar horário do dia específico ou horário geral
+    var horario = horarioDia || farmacia.horario || '08:00 - 18:00';
+    
+    // Extrair horários
+    var hrs = extrairHorario(horario);
+    var aberturaMin = null;
+    var fechoMin = null;
+    
+    if (hrs) {
+        aberturaMin = paraMinutos(hrs.inicio);
+        fechoMin = paraMinutos(hrs.fim);
+    }
+    
+    // Verificar intervalo de almoço
+    var almocoInicioMin = null;
+    var almocoFimMin = null;
+    if (farmacia.horario_almoco_inicio && farmacia.horario_almoco_fim) {
+        almocoInicioMin = paraMinutos(farmacia.horario_almoco_inicio);
+        almocoFimMin = paraMinutos(farmacia.horario_almoco_fim);
+    }
+    
+    // Determinar status
+    var estaAberto = false;
+    var textoStatus = 'Fechado';
+    var corStatus = '#dc2626';
+    var bgStatus = '#fee2e2';
+    
+    if (aberturaMin !== null && fechoMin !== null) {
+        // Verificar se está dentro do horário de funcionamento
+        if (minutosAtual >= aberturaMin && minutosAtual < fechoMin) {
+            estaAberto = true;
+            
+            // Verificar se está em horário de almoço
+            if (almocoInicioMin !== null && almocoFimMin !== null) {
+                if (minutosAtual >= almocoInicioMin && minutosAtual < almocoFimMin) {
+                    estaAberto = false;
+                    textoStatus = 'Intervalo de almoço';
+                    corStatus = '#f59e0b';
+                    bgStatus = '#fef3c7';
                 }
             }
-        }
-    } else if (horario.indexOf(' ') !== -1 && (horario.indexOf('-') !== -1 || horario.indexOf('–') !== -1)) {
-        var partes = horario.split(' ');
-        for (var j = 0; j < partes.length; j++) {
-            if (partes[j].indexOf('-') !== -1 || partes[j].indexOf('–') !== -1) {
-                var hrs = extrairHorarios(partes[j]);
-                if (hrs) {
-                    var inicioMin = paraMinutos(hrs.inicio);
-                    var fimMin = paraMinutos(hrs.fim);
-                    if (minutosAtual >= inicioMin && minutosAtual < fimMin) {
-                        aberto = true;
-                        break;
+            
+            if (estaAberto) {
+                textoStatus = 'Aberto agora';
+                corStatus = '#059669';
+                bgStatus = '#d1fae5';
+            }
+        } else {
+            // Verificar se é domingo e está dentro do horário de domingo
+            if (isDomingo && farmacia.horario_domingo) {
+                var hrsDom = extrairHorario(farmacia.horario_domingo);
+                if (hrsDom) {
+                    var aberturaDom = paraMinutos(hrsDom.inicio);
+                    var fechoDom = paraMinutos(hrsDom.fim);
+                    if (aberturaDom !== null && fechoDom !== null) {
+                        if (minutosAtual >= aberturaDom && minutosAtual < fechoDom) {
+                            estaAberto = true;
+                            textoStatus = 'Aberto (domingo)';
+                            corStatus = '#059669';
+                            bgStatus = '#d1fae5';
+                        }
                     }
                 }
             }
         }
-    } else {
-        var hrs = extrairHorarios(horario);
-        if (hrs) {
-            var inicioMin = paraMinutos(hrs.inicio);
-            var fimMin = paraMinutos(hrs.fim);
-            aberto = (minutosAtual >= inicioMin && minutosAtual < fimMin);
+    }
+    
+    // Se está fechado, mostrar próximo dia de abertura
+    if (!estaAberto && !isDomingo) {
+        // Verificar se o horário de hoje existe, se não, a farmácia não abre hoje
+        if (!horarioDia && !farmacia.horario) {
+            textoStatus = 'Fechado hoje';
         }
     }
     
-    if (aberto) {
-        return {
-            aberto: true,
-            texto: 'Aberto agora',
-            cor: '#059669',
-            bg: '#d1fae5',
-            icon: '<img src="/img/clock.png" alt="Aberto" style="width: 14px; height: 14px;">'
-        };
-    } else {
-        return {
-            aberto: false,
-            texto: 'Fechado',
-            cor: '#dc2626',
-            bg: '#fee2e2',
-            icon: '<img src="/img/clock.png" alt="Fechado" style="width: 14px; height: 14px;">'
-        };
+    // Se está fechado e é domingo
+    if (!estaAberto && isDomingo && farmacia.funciona_domingo !== true) {
+        textoStatus = 'Fechado (não abre domingo)';
     }
+    
+    // Se está fechado e tem horário específico para amanhã
+    if (!estaAberto && textoStatus === 'Fechado') {
+        var amanha = (diaSemana + 1) % 7;
+        var nomeAmanha = diasSemana[amanha];
+        var campoAmanha = 'horario_' + nomeAmanha;
+        
+        if (farmacia[campoAmanha]) {
+            textoStatus = 'Fechado (abre ' + nomeAmanha + ')';
+        } else if (amanha === 0 && farmacia.funciona_domingo === true) {
+            textoStatus = 'Fechado (abre domingo)';
+        }
+    }
+    
+    return {
+        aberto: estaAberto,
+        texto: textoStatus,
+        cor: corStatus,
+        bg: bgStatus,
+        icon: estaAberto 
+            ? '<img src="/img/clock.png" alt="Aberto" style="width: 14px; height: 14px;">' 
+            : '<img src="/img/clock.png" alt="Fechado" style="width: 14px; height: 14px;">'
+    };
 }
 
 // ==================== FUNÇÃO PARA CARREGAR FARMÁCIAS ====================
