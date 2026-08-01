@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://saudenampula.com/sitemap.xml
