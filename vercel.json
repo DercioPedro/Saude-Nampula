@@ -37,7 +37,7 @@
     { "source": "/centros-detalhes", "destination": "/centros-detalhes.html" },
     { "source": "/hospital-detalhes", "destination": "/hospital-detalhes.html" },
     { "source": "/JS/(.*)", "destination": "/JS/$1" },
-    { "source": "/styles/(.*)", "angle": "/styles/$1" },
+    { "source": "/styles/(.*)", "destination": "/styles/$1" },
     { "source": "/img/(.*)", "destination": "/img/$1" }
   ]
 }
