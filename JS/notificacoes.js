@@ -1,4 +1,4 @@
-// notificacoes.js - Sistema de notificações automáticas
+// notificacoes.js - Sistema de notificações automáticas para todo o site
 
 (function() {
     'use strict';
@@ -9,9 +9,10 @@
 
     var CONFIG = {
         intervaloVerificacao: 300000, // 5 minutos
-        ultimoStatusKey: 'sn_ultimo_status',
         ultimaPublicacaoKey: 'sn_ultima_publicacao',
-        ultimoPlantaoKey: 'sn_ultimo_plantao'
+        ultimaFarmaciaKey: 'sn_ultima_farmacia',
+        ultimoHospitalKey: 'sn_ultimo_hospital',
+        ultimoCentroKey: 'sn_ultimo_centro'
     };
 
     var API_URL = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : 'https://saude-nampula-backend.onrender.com/api';
@@ -27,17 +28,26 @@
         }
 
         if (Notification.permission === 'granted') {
+            console.log('Notificações já permitidas');
             return true;
         }
 
-        if (Notification.permission !== 'denied') {
-            Notification.requestPermission().then(function(permissao) {
-                if (permissao === 'granted') {
-                    console.log('Notificações permitidas!');
-                    enviarNotificacao('🔔 Ativado!', 'Você receberá notificações de atualizações do Saúde Nampula.');
-                }
-            });
+        if (Notification.permission === 'denied') {
+            console.log('Notificações negadas pelo usuário');
+            return false;
         }
+
+        Notification.requestPermission().then(function(permissao) {
+            if (permissao === 'granted') {
+                console.log('Notificações permitidas!');
+                enviarNotificacao(
+                    '🔔 Notificações ativadas',
+                    'Você receberá atualizações do Saúde Nampula em tempo real.'
+                );
+            } else {
+                console.log('Notificações negadas');
+            }
+        });
 
         return false;
     }
@@ -49,71 +59,26 @@
     function enviarNotificacao(titulo, mensagem, url) {
         if (Notification.permission !== 'granted') return;
 
-        var notificacao = new Notification(titulo, {
-            body: mensagem,
-            icon: '/img/monitor.png',
-            tag: Date.now().toString(),
-            requireInteraction: true,
-            silent: false
-        });
-
-        if (url) {
-            notificacao.onclick = function() {
-                window.open(url, '_blank');
-            };
-        }
-
-        setTimeout(function() {
-            notificacao.close();
-        }, 15000);
-    }
-
-    // ========================================
-    // VERIFICAR MUDANÇAS DE STATUS
-    // ========================================
-
-    async function verificarMudancasStatus() {
         try {
-            var farmacias = await apiRequest('/farmacias');
-            var statusAnterior = obterStorage(CONFIG.ultimoStatusKey) || {};
-            var mudancas = [];
+            var notificacao = new Notification(titulo, {
+                body: mensagem,
+                icon: '/img/monitor.png',
+                tag: Date.now().toString(),
+                requireInteraction: true,
+                silent: false
+            });
 
-            for (var i = 0; i < farmacias.length; i++) {
-                var farmacia = farmacias[i];
-                var statusAtual = verificarStatusFarmacia(farmacia);
-                var statusAntigo = statusAnterior[farmacia.id];
-
-                // Ignorar plantão 24h (já são notificados separadamente)
-                if (farmacia.plantao === true) continue;
-
-                if (statusAntigo && statusAntigo.aberto !== statusAtual.aberto) {
-                    // Houve mudança
-                    var msg = statusAtual.aberto 
-                        ? farmacia.nome + ' está ABERTA agora! 🟢'
-                        : farmacia.nome + ' está FECHADA. 🔴';
-                    
-                    mudancas.push({
-                        titulo: 'Status atualizado',
-                        mensagem: msg,
-                        url: '/detalhes-farmacia?farmacia=' + encodeURIComponent(farmacia.nome) + '&id=' + farmacia.id
-                    });
-                }
+            if (url) {
+                notificacao.onclick = function() {
+                    window.open(url, '_blank');
+                };
             }
 
-            // Salvar status atual
-            var novoStatus = {};
-            for (var j = 0; j < farmacias.length; j++) {
-                novoStatus[farmacias[j].id] = verificarStatusFarmacia(farmacias[j]);
-            }
-            salvarStorage(CONFIG.ultimoStatusKey, novoStatus);
-
-            // Enviar notificações
-            for (var k = 0; k < mudancas.length; k++) {
-                enviarNotificacao(mudancas[k].titulo, mudancas[k].mensagem, mudancas[k].url);
-            }
-
+            setTimeout(function() {
+                notificacao.close();
+            }, 15000);
         } catch (error) {
-            console.error('Erro ao verificar status:', error);
+            console.error('Erro ao enviar notificação:', error);
         }
     }
 
@@ -124,14 +89,20 @@
     async function verificarNovasPublicacoes() {
         try {
             var response = await fetch(API_URL + '/publicacoes');
+            
+            if (!response.ok) {
+                console.warn('Erro ao buscar publicações:', response.status);
+                return;
+            }
+            
             var publicacoes = await response.json();
 
             if (!publicacoes || publicacoes.length === 0) return;
 
-            var ultimaPublicacao = obterStorage(CONFIG.ultimaPublicacaoKey);
-            var ultima = publicacoes[0]; // Mais recente
+            var ultimaPublicacao = localStorage.getItem(CONFIG.ultimaPublicacaoKey);
+            var ultima = publicacoes[0];
 
-            if (!ultimaPublicacao || ultima.id > ultimaPublicacao) {
+            if (!ultimaPublicacao || ultima.id > parseInt(ultimaPublicacao)) {
                 var categoriaIcon = {
                     'Noticia': '📰',
                     'Dica': '💡',
@@ -150,7 +121,7 @@
                     '/dicas?abrir=' + ultima.id
                 );
 
-                salvarStorage(CONFIG.ultimaPublicacaoKey, ultima.id);
+                localStorage.setItem(CONFIG.ultimaPublicacaoKey, ultima.id);
             }
 
         } catch (error) {
@@ -159,88 +130,107 @@
     }
 
     // ========================================
-    // VERIFICAR FARMÁCIAS EM PLANTÃO
+    // VERIFICAR NOVAS FARMÁCIAS
     // ========================================
 
-    async function verificarPlantao() {
+    async function verificarNovasFarmacias() {
         try {
-            var farmacias = await apiRequest('/farmacias');
-            var plantaoAnterior = obterStorage(CONFIG.ultimoPlantaoKey) || [];
+            var response = await fetch(API_URL + '/farmacias');
+            
+            if (!response.ok) {
+                console.warn('Erro ao buscar farmácias:', response.status);
+                return;
+            }
+            
+            var farmacias = await response.json();
+            var ultimaFarmacia = localStorage.getItem(CONFIG.ultimaFarmaciaKey);
+            
+            if (farmacias.length === 0) return;
 
-            var plantaoAtual = farmacias.filter(function(f) {
-                return f.plantao === true;
-            });
+            var ultima = farmacias[farmacias.length - 1]; // Última adicionada
 
-            for (var i = 0; i < plantaoAtual.length; i++) {
-                var farmacia = plantaoAtual[i];
-                var jaNotificado = plantaoAnterior.some(function(f) {
-                    return f.id === farmacia.id;
-                });
+            if (!ultimaFarmacia || ultima.id > parseInt(ultimaFarmacia)) {
+                enviarNotificacao(
+                    '🏥 Nova Farmácia',
+                    ultima.nome + ' foi adicionada à plataforma!',
+                    '/detalhes-farmacia?farmacia=' + encodeURIComponent(ultima.nome) + '&id=' + ultima.id
+                );
 
-                if (!jaNotificado) {
-                    enviarNotificacao(
-                        '🟢 Farmácia em Plantão',
-                        farmacia.nome + ' está aberta 24h!',
-                        '/detalhes-farmacia?farmacia=' + encodeURIComponent(farmacia.nome) + '&id=' + farmacia.id
-                    );
-                }
+                localStorage.setItem(CONFIG.ultimaFarmaciaKey, ultima.id);
             }
 
-            salvarStorage(CONFIG.ultimoPlantaoKey, plantaoAtual);
-
         } catch (error) {
-            console.error('Erro ao verificar plantão:', error);
+            console.error('Erro ao verificar novas farmácias:', error);
         }
     }
 
     // ========================================
-    // VERIFICAR NOVOS ESTABELECIMENTOS
+    // VERIFICAR NOVOS HOSPITAIS
     // ========================================
 
-    async function verificarNovosEstabelecimentos() {
+    async function verificarNovosHospitais() {
         try {
-            var farmacias = await apiRequest('/farmacias');
-            var anteriores = obterStorage('sn_farmacias_anteriores') || [];
+            var response = await fetch(API_URL + '/hospitais');
+            
+            if (!response.ok) {
+                console.warn('Erro ao buscar hospitais:', response.status);
+                return;
+            }
+            
+            var hospitais = await response.json();
+            var ultimoHospital = localStorage.getItem(CONFIG.ultimoHospitalKey);
+            
+            if (hospitais.length === 0) return;
 
-            if (anteriores.length > 0 && farmacias.length > anteriores.length) {
-                var novas = farmacias.filter(function(f) {
-                    return !anteriores.some(function(a) { return a.id === f.id; });
-                });
+            var ultimo = hospitais[hospitais.length - 1];
 
-                for (var i = 0; i < novas.length; i++) {
-                    enviarNotificacao(
-                        '🏥 Nova Farmácia',
-                        'Conheça ' + novas[i].nome + ' - ' + (novas[i].endereco || 'Nampula'),
-                        '/detalhes-farmacia?farmacia=' + encodeURIComponent(novas[i].nome) + '&id=' + novas[i].id
-                    );
-                }
+            if (!ultimoHospital || ultimo.id > parseInt(ultimoHospital)) {
+                enviarNotificacao(
+                    '🏨 Novo Hospital',
+                    ultimo.nome + ' foi adicionado à plataforma!',
+                    '/hospital-detalhes?id=' + ultimo.id
+                );
+
+                localStorage.setItem(CONFIG.ultimoHospitalKey, ultimo.id);
             }
 
-            salvarStorage('sn_farmacias_anteriores', farmacias);
+        } catch (error) {
+            console.error('Erro ao verificar novos hospitais:', error);
+        }
+    }
+
+    // ========================================
+    // VERIFICAR NOVOS CENTROS
+    // ========================================
+
+    async function verificarNovosCentros() {
+        try {
+            var response = await fetch(API_URL + '/centros');
+            
+            if (!response.ok) {
+                console.warn('Erro ao buscar centros:', response.status);
+                return;
+            }
+            
+            var centros = await response.json();
+            var ultimoCentro = localStorage.getItem(CONFIG.ultimoCentroKey);
+            
+            if (centros.length === 0) return;
+
+            var ultimo = centros[centros.length - 1];
+
+            if (!ultimoCentro || ultimo.id > parseInt(ultimoCentro)) {
+                enviarNotificacao(
+                    '🏥 Novo Centro de Saúde',
+                    ultimo.nome + ' foi adicionado à plataforma!',
+                    '/centros-detalhes?id=' + ultimo.id
+                );
+
+                localStorage.setItem(CONFIG.ultimoCentroKey, ultimo.id);
+            }
 
         } catch (error) {
-            console.error('Erro ao verificar novos estabelecimentos:', error);
-        }
-    }
-
-    // ========================================
-    // STORAGE HELPERS
-    // ========================================
-
-    function obterStorage(chave) {
-        try {
-            var dados = localStorage.getItem(chave);
-            return dados ? JSON.parse(dados) : null;
-        } catch {
-            return null;
-        }
-    }
-
-    function salvarStorage(chave, dados) {
-        try {
-            localStorage.setItem(chave, JSON.stringify(dados));
-        } catch (e) {
-            console.warn('Erro ao salvar storage:', e);
+            console.error('Erro ao verificar novos centros:', error);
         }
     }
 
@@ -248,32 +238,37 @@
     // INICIALIZAR
     // ========================================
 
-    function init() {
+    function iniciar() {
         // Pedir permissão
         pedirPermissao();
 
-        // Verificar imediatamente
+        // Verificar imediatamente após 3 segundos
         setTimeout(function() {
-            verificarMudancasStatus();
             verificarNovasPublicacoes();
-            verificarPlantao();
-            verificarNovosEstabelecimentos();
+            verificarNovasFarmacias();
+            verificarNovosHospitais();
+            verificarNovosCentros();
         }, 3000);
 
         // Verificar periodicamente
         setInterval(function() {
-            verificarMudancasStatus();
             verificarNovasPublicacoes();
-            verificarPlantao();
-            verificarNovosEstabelecimentos();
+            verificarNovasFarmacias();
+            verificarNovosHospitais();
+            verificarNovosCentros();
         }, CONFIG.intervaloVerificacao);
     }
 
-    // Aguardar DOM carregar
+    // ========================================
+    // INICIAR
+    // ========================================
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(iniciar, 1000);
+        });
     } else {
-        init();
+        setTimeout(iniciar, 1000);
     }
 
     // ========================================
