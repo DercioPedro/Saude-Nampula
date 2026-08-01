@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://saudenampula.com/sitemap.xml
+# Bloquear áreas administrativas
+Disallow: /admin-login
+Disallow: /admin-panel
+Disallow: /admin-produtos
+Disallow: /login-farmacia
+
+Sitemap: https://www.saudenampula.com/sitemap.xml
