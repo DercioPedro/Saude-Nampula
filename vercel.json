@@ -1,6 +1,4 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": true,
   "rewrites": [
     { "source": "/", "destination": "/home.html" },
     { "source": "/home", "destination": "/home.html" },
@@ -18,11 +16,9 @@
     { "source": "/medicamentos", "destination": "/medicamentos.html" },
     { "source": "/detalhes-farmacia", "destination": "/detalhes-farmacia.html" },
     { "source": "/centros-detalhes", "destination": "/centros-detalhes.html" },
-    { "source": "/hospital-detalhes", "destination": "/hospital-detalhes.html" }
-  ],
-  "routes": [
-    { "src": "/JS/(.*)", "dest": "/JS/$1" },
-    { "src": "/styles/(.*)", "dest": "/styles/$1" },
-    { "src": "/img/(.*)", "dest": "/img/$1" }
+    { "source": "/hospital-detalhes", "destination": "/hospital-detalhes.html" },
+    { "source": "/JS/(.*)", "destination": "/JS/$1" },
+    { "source": "/styles/(.*)", "destination": "/styles/$1" },
+    { "source": "/img/(.*)", "destination": "/img/$1" }
   ]
 }
