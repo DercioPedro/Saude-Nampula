@@ -4,37 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Encontre hospitais, centros de saúde, farmácias, serviços de emergência e informações de saúde na cidade de Nampula, Moçambique.">
-    <meta name="keywords" content="Saúde Nampula,hospitais em Nampula,farmácias em Nampula,centros de saúde,Nampula,Moçambique,emergência médica,unidades sanitárias">
+    <meta name="description" content="Obtenha informações dos centros de saúde, farmácias e hospitais da cidade de Nampula">
+    <meta name="keywords" content="farmacia, hospital, hospitais, centros, centros de saude, saude">
     <meta name="google-site-verification" content="qpajpKLHB7LCkXw4D60chTcFPjL83jSoLpRo-cT2F90">
     <meta name="verify-admitad" content="c061c77a94" />
-    <link rel="canonical" href="https://www.saudenampula.com/">
-    <meta name="robots" content="index,follow,max-image-preview:large">
-    <title>Saúde Nampula | Hospitais, Farmácias e Centros de Saúde em Nampula</title>
+    <script src="https://pl30412009.effectivecpmnetwork.com/e0/32/e9/e032e9553695eb8f33d7773ddeb6b2d8.js"></script>
+    <title>Saúde Nampula - Início</title>
     <meta property="og:site_name" content="Saúde Nampula">
     
     <link rel="stylesheet" href="styles/home.css">
     <link rel="stylesheet" href="styles/darkmode.css">
     <link rel="icon" type="image/png" href="/img/monitor.png">
-    <link rel="apple-touch-icon" href="/img/monitor.png">
-    
-    <script src="JS/loading.js" defer></script>
-    <script src="https://pl30412009.effectivecpmnetwork.com/e0/32/e9/e032e9553695eb8f33d7773ddeb6b2d8.js"></script>
+    <script src="JS/loading.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5710780123165111"
+     crossorigin="anonymous"></script>
     <meta name="google-adsense-account" content="ca-pub-5710780123165111">
 
     <script type="application/ld+json">
     {
-      "@context":"https://schema.org",
-      "@type":"Organization",
-      "name":"Saúde Nampula",
-      "url":"https://www.saudenampula.com",
-      "logo":"https://www.saudenampula.com/img/monitor.png",
-      "description":"Plataforma comunitária que ajuda os cidadãos a localizar hospitais, centros de saúde, farmácias e serviços médicos em Nampula.",
-      "address":{
-          "@type":"PostalAddress",
-          "addressLocality":"Nampula",
-          "addressCountry":"MZ"
-      }
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Saúde Nampula",
+      "alternateName": "Saude Nampula",
+      "url": "https://saudenampula.com"
     }
     </script>
 </head>
@@ -45,20 +37,20 @@
         <div class="nav-container">
             <div class="logo">
                 <div class="logo-icon">
-                    <img src="/img/monitor.png" alt="Saúde Nampula - Logo">
+                    <img src="/img/monitor.png" alt="Saúde Nampula">
                 </div>
                 <h1>Saúde Nampula</h1>
             </div>
 
             <!-- Botão Hambúrguer -->
-            <button class="menu-hamburguer" id="menuHamburguer" aria-label="Abrir menu de navegação">
+            <button class="menu-hamburguer" id="menuHamburguer" aria-label="Abrir menu">
                 <span class="barra"></span>
                 <span class="barra"></span>
                 <span class="barra"></span>
             </button>
 
             <ul class="nav-links" id="navLinks">
-                <li><a href="/" class="active">Início</a></li>
+                <li><a href="#" class="active">Início</a></li>
                 <li><a href="/hospital">Hospitais</a></li>
                 <li><a href="/centros">Centros de Saúde</a></li>
                 <li><a href="/farm">Farmácias</a></li>
@@ -76,72 +68,71 @@
             <h2>Encontre Cuidados de Saúde em Nampula</h2>
             <p>Acesso rápido a hospitais, centros de saúde e farmácias na sua região</p>
 
-            <div class="barra-busca" role="search">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" aria-hidden="true">
+            <div class="barra-busca">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
                     <circle cx="11" cy="11" r="8"></circle>
                     <path d="m21 21-4.35-4.35"></path>
                 </svg>
-                <input type="text" id="input-busca" placeholder="Buscar unidade sanitária, serviço ou bairro..." aria-label="Campo de busca">
-                <button onclick="realizarBusca()" aria-label="Buscar">Buscar</button>
+                <input type="text" id="input-busca" placeholder="Buscar unidade sanitária, serviço ou bairro...">
+                <button onclick="realizarBusca()">Buscar</button>
             </div>
         </section>
 
         <!-- Emergency Alerta -->
-        <div class="emergency-alerta" role="alert">
+        <div class="emergency-alerta">
             <div class="emergency-content">
-                <span class="emergency-icon"><img src="/img/image.png" alt="Ícone de emergência"></span>
+                <span class="emergency-icon"><img src="/img/image.png" alt=""></span>
                 <div>
                     <h3>Emergência Médica?</h3>
                     <p>Contacte imediatamente os serviços de emergência</p>
                 </div>
             </div>
-            <button class="emergency-btn" id="confim" onclick="ligarEmergencia()" aria-label="Ligar para emergência 119">
-                LIGAR AGORA
-            </button>
+            <button class="emergency-btn" id="confim">LIGAR AGORA</button>
         </div>
 
-        <!-- Carrossel de Publicações -->
-        <section class="carrossel-publicacoes" aria-label="Últimas informações de saúde">
-            <div class="carrossel-header">
-                <h3>Últimas Informações de Saúde</h3>
-                <a href="/dicas" class="ver-todas">Ver todas →</a>
-            </div>
-            
-            <div class="carrossel-container" id="carrosselContainer">
-                <button class="carrossel-btn btn-anterior" id="btnAnterior" aria-label="Slide anterior">‹</button>
-                <div class="carrossel-slides" id="carrosselSlides">
-                    <div class="carrossel-loading">Carregando publicações...</div>
-                </div>
-                <button class="carrossel-btn btn-proximo" id="btnProximo" aria-label="Próximo slide">›</button>
-            </div>
-            
-            <div class="carrossel-indicadores" id="carrosselIndicadores" role="tablist">
-                <!-- Indicadores gerados via JavaScript -->
-            </div>
-        </section>
+        <!-- ==================== CARROSSEL DE PUBLICAÇÕES ==================== -->
+<section class="carrossel-publicacoes">
+    <div class="carrossel-header">
+        <h3>Últimas Informações de Saúde</h3>
+        <a href="/dicas" class="ver-todas">Ver todas →</a>
+    </div>
+    
+    <div class="carrossel-container" id="carrosselContainer">
+        <button class="carrossel-btn btn-anterior" id="btnAnterior">‹</button>
+        <div class="carrossel-slides" id="carrosselSlides">
+            <!-- Slides serão carregados via JavaScript -->
+            <div class="carrossel-loading">Carregando publicações...</div>
+        </div>
+        <button class="carrossel-btn btn-proximo" id="btnProximo">›</button>
+    </div>
+    
+    <div class="carrossel-indicadores" id="carrosselIndicadores">
+        <!-- Indicadores serão gerados via JavaScript -->
+    </div>
+</section>
 
-        <!-- Cards de acesso rápido -->
+        <!-- Cards de acesso rapido -->
         <div class="acesso-rapido">
-            <div class="card card-blue" onclick="navegarPara('/hospital')" role="button" tabindex="0">
-                <div class="card-icon"><img src="/img/hospital.png" alt="Ícone de hospital"></div>
+            <div class="card card-blue" onclick="navegarPara('/hospital')">
+                <div class="card-icon"><img src="/img/hospital.png" alt=""></div>
                 <h3>Hospitais</h3>
                 <p class="card-count" style="color: #1e40af;">0</p>
             </div>
 
-            <div class="card card-emerald" onclick="navegarPara('/centros')" role="button" tabindex="0">
-                <div class="card-icon"><img src="/img/centros.png" alt="Ícone de centro de saúde"></div>
+            <div class="card card-emerald" onclick="navegarPara('/centros')">
+                <div class="card-icon"><img src="/img/centros.png" alt=""></div>
                 <h3>Centros de Saúde</h3>
                 <p class="card-count" style="color: #047857;">0</p>
             </div>
 
-            <div class="card card-purple" onclick="navegarPara('/farm')" role="button" tabindex="0">
-                <div class="card-icon"><img src="img/comprimidos.png" alt="Ícone de farmácia"></div>
+            <div class="card card-purple" onclick="navegarPara('/farm')">
+                <div class="card-icon"><img src="img/comprimidos.png" alt=""></div>
                 <h3>Farmácias</h3>
                 <p class="card-count" style="color: #7c3aed;">0</p>
             </div>
 
-            <div class="card card-red" onclick="navegarPara('/emer')" role="button" tabindex="0">
-                <div class="card-icon"><img src="/img/call.png" alt="Ícone de telefone de emergência"></div>
+            <div class="card card-red" onclick="navegarPara('/emer')">
+                <div class="card-icon"><img src="/img/call.png" alt=""></div>
                 <h3>Emergências</h3>
                 <p class="card-count" style="color: #dc2626;">24/7</p>
             </div>
@@ -151,13 +142,13 @@
         <section class="info-section">
             <h3>Informações de Saúde</h3>
             <div class="info-grid">
-                <div class="info-card" onclick="navegarPara('/info')" role="button" tabindex="0">
+                <div class="info-card" onclick="navegarPara('/info')">
                     <p>Prevenção de Malária</p>
                 </div>
-                <div class="info-card" onclick="navegarPara('/info')" role="button" tabindex="0">
+                <div class="info-card" onclick="navegarPara('/info')">
                     <p>Calendário de Vacinação</p>
                 </div>
-                <div class="info-card" onclick="navegarPara('/info')" role="button" tabindex="0">
+                <div class="info-card" onclick="navegarPara('/info')">
                     <p>Primeiros Socorros</p>
                 </div>
             </div>
@@ -169,11 +160,12 @@
     <!-- Footer -->
     <footer>
         <p>&copy; <span id="ano"></span> Saúde Nampula - Plataforma de Saúde Comunitária</p>
-        <p class="footer-subtitle">Melhorando o acesso à saúde em Nampula</p>
+        <p class="footer-subtitle"> Melhorando o acesso à saúde em Nampula</p>
     </footer>
     
     <script src="JS/api-config.js"></script>
-    <script src="JS/home.js"></script>
+    <script src="/JS/home.js"></script>
+    <script src="JS/avaliacao-modal.js"></script>
     <script src="JS/update-home-counters.js"></script>
     <script src="JS/geolocalizacao.js"></script>
     <script src="JS/darkmode.js"></script>
@@ -183,9 +175,7 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            if (typeof inicializarAvaliacoes === 'function') {
-                inicializarAvaliacoes('avaliacoes-container', 'site');
-            }
+            inicializarAvaliacoes('avaliacoes-container', 'site');
         });
     </script>
 </body>
