@@ -1,6 +1,8 @@
 {
+  "trailingSlash": true,
   "cleanUrls": true,
   "redirects": [
+    { "source": "/", "destination": "/home", "permanent": true },
     { "source": "/home.html", "destination": "/home", "permanent": true },
     { "source": "/hospital.html", "destination": "/hospital", "permanent": true },
     { "source": "/centros.html", "destination": "/centros", "permanent": true },
