@@ -1,52 +1,89 @@
-// notificacoes.js - Sistema de notificações automáticas para todo o site
+// notificacoes.js - Sistema de notificações com reset
 
 (function() {
     'use strict';
 
     // ========================================
-    // CONFIGURAÇÃO
+    // FORÇAR RESET DA PERMISSÃO
     // ========================================
 
-    var CONFIG = {
-        intervaloVerificacao: 300000, // 5 minutos
-        ultimaPublicacaoKey: 'sn_ultima_publicacao',
-        ultimaFarmaciaKey: 'sn_ultima_farmacia',
-        ultimoHospitalKey: 'sn_ultimo_hospital',
-        ultimoCentroKey: 'sn_ultimo_centro'
-    };
-
-    var API_URL = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : 'https://saude-nampula-backend.onrender.com/api';
-
-    // ========================================
-    // PERMISSÃO
-    // ========================================
-
-    function obterStatusPermissao() {
-        if (!('Notification' in window)) {
-            return 'nao-suportado';
+    // Remover qualquer permissão gravada para este site
+    function resetarPermissao() {
+        // Limpar localStorage relacionado a notificações
+        var chaves = [
+            'sn_ultima_publicacao',
+            'sn_ultima_farmacia',
+            'sn_ultimo_hospital',
+            'sn_ultimo_centro',
+            'sn_ultimo_status'
+        ];
+        
+        for (var i = 0; i < chaves.length; i++) {
+            localStorage.removeItem(chaves[i]);
         }
-        return Notification.permission;
+        
+        console.log('Permissões resetadas! Recarregue a página.');
     }
 
-    function pedirPermissao() {
+    // ========================================
+    // VERIFICAR SE PODE PEDIR PERMISSÃO
+    // ========================================
+
+    function podePedirPermissao() {
         if (!('Notification' in window)) {
-            console.log('Notificações não suportadas neste navegador');
-            return Promise.resolve('nao-suportado');
+            console.log('Notificações não suportadas');
+            return false;
         }
 
-        if (Notification.permission === 'granted') {
-            console.log('Notificações já permitidas');
-            return Promise.resolve('granted');
-        }
-
+        // Se já foi negado, só pode pedir novamente se o usuário clicar
         if (Notification.permission === 'denied') {
-            console.log('Notificações negadas pelo usuário');
-            return Promise.resolve('denied');
+            console.log('Permissão negada anteriormente. Clique no botão para pedir novamente.');
+            return false;
         }
 
-        // Se não foi nem permitido nem negado, pedir permissão
-        console.log('A pedir permissão para notificações...');
-        return Notification.requestPermission();
+        return true;
+    }
+
+    // ========================================
+    // PEDIR PERMISSÃO COM FALLBACK
+    // ========================================
+
+    function pedirPermissao() {
+        return new Promise(function(resolve) {
+            if (!('Notification' in window)) {
+                resolve('nao-suportado');
+                return;
+            }
+
+            // Se já está concedida
+            if (Notification.permission === 'granted') {
+                console.log('Notificações já permitidas ✅');
+                resolve('granted');
+                return;
+            }
+
+            // Se foi negada, mostrar mensagem e tentar com botão
+            if (Notification.permission === 'denied') {
+                console.log('⚠️ Permissão negada anteriormente.');
+                console.log('💡 Para ativar:');
+                console.log('   Chrome: Clique no cadeado 🔒 → Permissões → Notificações → Permitir');
+                console.log('   Firefox: Clique no cadeado 🔒 → Limpar dados → Recarregue');
+                resolve('denied');
+                return;
+            }
+
+            // Pedir permissão
+            console.log('📢 A pedir permissão para notificações...');
+            Notification.requestPermission().then(function(resultado) {
+                if (resultado === 'granted') {
+                    console.log('✅ Notificações permitidas!');
+                    resolve('granted');
+                } else {
+                    console.log('❌ Notificações negadas.');
+                    resolve('denied');
+                }
+            });
+        });
     }
 
     // ========================================
@@ -54,7 +91,10 @@
     // ========================================
 
     function enviarNotificacao(titulo, mensagem, url) {
-        if (Notification.permission !== 'granted') return;
+        if (Notification.permission !== 'granted') {
+            console.log('⚠️ Não é possível enviar: permissão negada');
+            return;
+        }
 
         try {
             var notificacao = new Notification(titulo, {
@@ -74,8 +114,107 @@
             setTimeout(function() {
                 notificacao.close();
             }, 15000);
+
         } catch (error) {
             console.error('Erro ao enviar notificação:', error);
+        }
+    }
+
+    // ========================================
+    // CRIAR BOTÃO DE ATIVAÇÃO (SEMPRE VISÍVEL SE NEGADO)
+    // ========================================
+
+    function criarBotaoAtivacao() {
+        // Remover botão antigo se existir
+        var btnAntigo = document.getElementById('btnAtivarNotificacoes');
+        if (btnAntigo) btnAntigo.remove();
+
+        var botao = document.createElement('button');
+        botao.id = 'btnAtivarNotificacoes';
+        
+        // Se já foi negado, mostrar mensagem diferente
+        if (Notification.permission === 'denied') {
+            botao.innerHTML = '🔔 Ativar Notificações (configurar no navegador)';
+            botao.style.background = '#dc2626';
+        } else {
+            botao.textContent = '🔔 Ativar Notificações';
+            botao.style.background = '#7c3aed';
+        }
+
+        botao.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 99999;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            animation: pulse-notificacao 2s ease-in-out infinite;
+            max-width: 90%;
+        `;
+
+        botao.onmouseover = function() {
+            this.style.transform = 'scale(1.05)';
+        };
+        botao.onmouseout = function() {
+            this.style.transform = 'scale(1)';
+        };
+
+        botao.onclick = function() {
+            // Se foi negado, mostrar instruções
+            if (Notification.permission === 'denied') {
+                alert(
+                    'Para ativar as notificações:\n\n' +
+                    '1. Clique no cadeado 🔒 ao lado da URL\n' +
+                    '2. Clique em "Permissões do site"\n' +
+                    '3. Encontre "Notificações" e mude para "Permitir"\n' +
+                    '4. Recarregue a página e clique novamente neste botão'
+                );
+                return;
+            }
+
+            // Pedir permissão
+            pedirPermissao().then(function(permissao) {
+                if (permissao === 'granted') {
+                    botao.textContent = '✅ Notificações ativadas!';
+                    botao.style.background = '#059669';
+                    botao.style.animation = 'none';
+                    
+                    // Enviar notificação de boas-vindas
+                    enviarNotificacao(
+                        '🔔 Bem-vindo!',
+                        'Você receberá atualizações do Saúde Nampula em tempo real.'
+                    );
+                    
+                    setTimeout(function() {
+                        botao.style.display = 'none';
+                    }, 3000);
+                } else if (permissao === 'denied') {
+                    botao.innerHTML = '❌ Permissão negada - clique para configurar';
+                    botao.style.background = '#dc2626';
+                }
+            });
+        };
+
+        document.body.appendChild(botao);
+
+        // Adicionar CSS da animação se não existir
+        if (!document.getElementById('style-notificacoes')) {
+            var style = document.createElement('style');
+            style.id = 'style-notificacoes';
+            style.textContent = `
+                @keyframes pulse-notificacao {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                }
+            `;
+            document.head.appendChild(style);
         }
     }
 
@@ -84,19 +223,16 @@
     // ========================================
 
     async function verificarNovasPublicacoes() {
+        if (Notification.permission !== 'granted') return;
+        
         try {
             var response = await fetch(API_URL + '/publicacoes');
-            
-            if (!response.ok) {
-                console.warn('Erro ao buscar publicações:', response.status);
-                return;
-            }
+            if (!response.ok) return;
             
             var publicacoes = await response.json();
-
             if (!publicacoes || publicacoes.length === 0) return;
 
-            var ultimaPublicacao = localStorage.getItem(CONFIG.ultimaPublicacaoKey);
+            var ultimaPublicacao = localStorage.getItem('sn_ultima_publicacao');
             var ultima = publicacoes[0];
 
             if (!ultimaPublicacao || ultima.id > parseInt(ultimaPublicacao)) {
@@ -110,19 +246,16 @@
                 };
 
                 var icone = categoriaIcon[ultima.categoria] || '📌';
-                var titulo = icone + ' ' + ultima.categoria;
-
                 enviarNotificacao(
-                    titulo,
+                    icone + ' ' + ultima.categoria,
                     ultima.titulo,
                     '/dicas?abrir=' + ultima.id
                 );
-
-                localStorage.setItem(CONFIG.ultimaPublicacaoKey, ultima.id);
+                localStorage.setItem('sn_ultima_publicacao', ultima.id);
             }
 
         } catch (error) {
-            console.error('Erro ao verificar publicações:', error);
+            console.error('Erro:', error);
         }
     }
 
@@ -131,179 +264,30 @@
     // ========================================
 
     async function verificarNovasFarmacias() {
+        if (Notification.permission !== 'granted') return;
+        
         try {
             var response = await fetch(API_URL + '/farmacias');
-            
-            if (!response.ok) {
-                console.warn('Erro ao buscar farmácias:', response.status);
-                return;
-            }
+            if (!response.ok) return;
             
             var farmacias = await response.json();
-            var ultimaFarmacia = localStorage.getItem(CONFIG.ultimaFarmaciaKey);
-            
             if (farmacias.length === 0) return;
 
+            var ultimaFarmacia = localStorage.getItem('sn_ultima_farmacia');
             var ultima = farmacias[farmacias.length - 1];
 
             if (!ultimaFarmacia || ultima.id > parseInt(ultimaFarmacia)) {
                 enviarNotificacao(
                     '🏥 Nova Farmácia',
-                    ultima.nome + ' foi adicionada à plataforma!',
+                    ultima.nome + ' foi adicionada!',
                     '/detalhes-farmacia?farmacia=' + encodeURIComponent(ultima.nome) + '&id=' + ultima.id
                 );
-
-                localStorage.setItem(CONFIG.ultimaFarmaciaKey, ultima.id);
+                localStorage.setItem('sn_ultima_farmacia', ultima.id);
             }
 
         } catch (error) {
-            console.error('Erro ao verificar novas farmácias:', error);
+            console.error('Erro:', error);
         }
-    }
-
-    // ========================================
-    // VERIFICAR NOVOS HOSPITAIS
-    // ========================================
-
-    async function verificarNovosHospitais() {
-        try {
-            var response = await fetch(API_URL + '/hospitais');
-            
-            if (!response.ok) {
-                console.warn('Erro ao buscar hospitais:', response.status);
-                return;
-            }
-            
-            var hospitais = await response.json();
-            var ultimoHospital = localStorage.getItem(CONFIG.ultimoHospitalKey);
-            
-            if (hospitais.length === 0) return;
-
-            var ultimo = hospitais[hospitais.length - 1];
-
-            if (!ultimoHospital || ultimo.id > parseInt(ultimoHospital)) {
-                enviarNotificacao(
-                    '🏨 Novo Hospital',
-                    ultimo.nome + ' foi adicionado à plataforma!',
-                    '/hospital-detalhes?id=' + ultimo.id
-                );
-
-                localStorage.setItem(CONFIG.ultimoHospitalKey, ultimo.id);
-            }
-
-        } catch (error) {
-            console.error('Erro ao verificar novos hospitais:', error);
-        }
-    }
-
-    // ========================================
-    // VERIFICAR NOVOS CENTROS
-    // ========================================
-
-    async function verificarNovosCentros() {
-        try {
-            var response = await fetch(API_URL + '/centros');
-            
-            if (!response.ok) {
-                console.warn('Erro ao buscar centros:', response.status);
-                return;
-            }
-            
-            var centros = await response.json();
-            var ultimoCentro = localStorage.getItem(CONFIG.ultimoCentroKey);
-            
-            if (centros.length === 0) return;
-
-            var ultimo = centros[centros.length - 1];
-
-            if (!ultimoCentro || ultimo.id > parseInt(ultimoCentro)) {
-                enviarNotificacao(
-                    '🏥 Novo Centro de Saúde',
-                    ultimo.nome + ' foi adicionado à plataforma!',
-                    '/centros-detalhes?id=' + ultimo.id
-                );
-
-                localStorage.setItem(CONFIG.ultimoCentroKey, ultimo.id);
-            }
-
-        } catch (error) {
-            console.error('Erro ao verificar novos centros:', error);
-        }
-    }
-
-    // ========================================
-    // CRIAR BOTÃO DE ATIVAÇÃO
-    // ========================================
-
-    function criarBotaoAtivacao() {
-        // Verificar se o botão já existe
-        if (document.getElementById('btnAtivarNotificacoes')) return;
-
-        // Verificar se já tem permissão
-        if (Notification.permission === 'granted' || Notification.permission === 'denied') return;
-
-        var botao = document.createElement('button');
-        botao.id = 'btnAtivarNotificacoes';
-        botao.textContent = '🔔 Ativar Notificações';
-        botao.style.cssText = `
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            background: #7c3aed;
-            color: white;
-            border: none;
-            padding: 14px 24px;
-            border-radius: 50px;
-            cursor: pointer;
-            z-index: 9999;
-            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s;
-            animation: pulse-notificacao 2s ease-in-out infinite;
-        `;
-
-        // Estilo do hover
-        botao.onmouseover = function() {
-            this.style.transform = 'scale(1.05)';
-            this.style.boxShadow = '0 6px 24px rgba(124, 58, 237, 0.6)';
-        };
-        botao.onmouseout = function() {
-            this.style.transform = 'scale(1)';
-            this.style.boxShadow = '0 4px 16px rgba(124, 58, 237, 0.4)';
-        };
-
-        botao.onclick = function() {
-            pedirPermissao().then(function(permissao) {
-                if (permissao === 'granted') {
-                    botao.textContent = '✅ Notificações ativadas';
-                    botao.style.background = '#059669';
-                    botao.style.animation = 'none';
-                    setTimeout(function() {
-                        botao.style.display = 'none';
-                    }, 3000);
-                } else {
-                    botao.textContent = '❌ Permissão negada';
-                    botao.style.background = '#dc2626';
-                    setTimeout(function() {
-                        botao.textContent = '🔔 Ativar Notificações';
-                        botao.style.background = '#7c3aed';
-                    }, 3000);
-                }
-            });
-        };
-
-        document.body.appendChild(botao);
-
-        // Adicionar CSS da animação
-        var style = document.createElement('style');
-        style.textContent = `
-            @keyframes pulse-notificacao {
-                0%, 100% { transform: scale(1); }
-                50% { transform: scale(1.05); }
-            }
-        `;
-        document.head.appendChild(style);
     }
 
     // ========================================
@@ -311,61 +295,65 @@
     // ========================================
 
     function iniciar() {
-        // Verificar status da permissão
-        var status = obterStatusPermissao();
+        var permissao = Notification.permission;
 
-        if (status === 'granted') {
-            console.log('Notificações já permitidas. A verificar atualizações...');
-            // Começar a verificar imediatamente
+        if (permissao === 'granted') {
+            console.log('✅ Notificações ativas!');
+            // Iniciar verificações
             setTimeout(function() {
                 verificarNovasPublicacoes();
                 verificarNovasFarmacias();
-                verificarNovosHospitais();
-                verificarNovosCentros();
             }, 3000);
 
             setInterval(function() {
                 verificarNovasPublicacoes();
                 verificarNovasFarmacias();
-                verificarNovosHospitais();
-                verificarNovosCentros();
-            }, CONFIG.intervaloVerificacao);
-        } else if (status === 'denied') {
-            console.log('Notificações negadas pelo usuário.');
-        } else {
-            // Permissão ainda não foi pedida
-            console.log('A aguardar permissão do usuário...');
-            
-            // Criar botão para ativar
-            setTimeout(criarBotaoAtivacao, 2000);
+            }, 300000);
 
-            // Tentar pedir permissão automaticamente após 5 segundos
+        } else if (permissao === 'denied') {
+            console.log('❌ Notificações negadas pelo usuário.');
+            console.log('💡 Clique no botão para instruções de como ativar.');
+            setTimeout(criarBotaoAtivacao, 1000);
+
+        } else {
+            console.log('⏳ A aguardar permissão...');
+            setTimeout(criarBotaoAtivacao, 1500);
+
+            // Tentar pedir automaticamente após 3 segundos
             setTimeout(function() {
-                pedirPermissao().then(function(permissao) {
-                    if (permissao === 'granted') {
-                        // Remover botão se existir
+                pedirPermissao().then(function(resultado) {
+                    if (resultado === 'granted') {
                         var btn = document.getElementById('btnAtivarNotificacoes');
                         if (btn) btn.style.display = 'none';
-                        
-                        // Iniciar verificações
-                        setTimeout(function() {
-                            verificarNovasPublicacoes();
-                            verificarNovasFarmacias();
-                            verificarNovosHospitais();
-                            verificarNovosCentros();
-                        }, 3000);
-
-                        setInterval(function() {
-                            verificarNovasPublicacoes();
-                            verificarNovasFarmacias();
-                            verificarNovosHospitais();
-                            verificarNovosCentros();
-                        }, CONFIG.intervaloVerificacao);
                     }
                 });
-            }, 5000);
+            }, 3000);
         }
     }
+
+    // ========================================
+    // EXPORTAR
+    // ========================================
+
+    window.notificacoes = {
+        enviar: enviarNotificacao,
+        pedirPermissao: pedirPermissao,
+        resetar: function() {
+            // Limpar localStorage
+            var chaves = [
+                'sn_ultima_publicacao',
+                'sn_ultima_farmacia',
+                'sn_ultimo_hospital',
+                'sn_ultimo_centro',
+                'sn_ultimo_status'
+            ];
+            for (var i = 0; i < chaves.length; i++) {
+                localStorage.removeItem(chaves[i]);
+            }
+            console.log('🔄 Dados resetados! Recarregue a página.');
+            location.reload();
+        }
+    };
 
     // ========================================
     // INICIAR
@@ -378,22 +366,5 @@
     } else {
         setTimeout(iniciar, 1000);
     }
-
-    // ========================================
-    // EXPORTAR
-    // ========================================
-
-    window.notificacoes = {
-        enviar: enviarNotificacao,
-        pedirPermissao: pedirPermissao,
-        ativar: function() {
-            pedirPermissao().then(function(permissao) {
-                if (permissao === 'granted') {
-                    var btn = document.getElementById('btnAtivarNotificacoes');
-                    if (btn) btn.style.display = 'none';
-                }
-            });
-        }
-    };
 
 })();
