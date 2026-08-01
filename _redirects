@@ -1,3 +1,24 @@
+# Página principal
+/ /home.html
+
+# Outras páginas
+/home /home.html
+/hospital /hospital.html
+/centros /centros.html
+/farm /farm.html
+/emer /emer.html
+/sobre /sobre.html
+/dicas /dicas.html
+/info /info.html
+/admin-login /admin-login.html
+/admin-panel /admin-panel.html
+/admin-produtos /admin-produtos.html
+/login-farmacia /login-farmacia.html
+/medicamentos /medicamentos.html
+/detalhes-farmacia /detalhes-farmacia.html
+/centros-detalhes /centros-detalhes.html
+/hospital-detalhes /hospital-detalhes.html
+
 # Ficheiros estáticos
 /JS/* /JS/:splat 200!
 /styles/* /styles/:splat 200!
