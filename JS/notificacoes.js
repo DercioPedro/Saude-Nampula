@@ -21,35 +21,32 @@
     // PERMISSÃO
     // ========================================
 
+    function obterStatusPermissao() {
+        if (!('Notification' in window)) {
+            return 'nao-suportado';
+        }
+        return Notification.permission;
+    }
+
     function pedirPermissao() {
         if (!('Notification' in window)) {
             console.log('Notificações não suportadas neste navegador');
-            return false;
+            return Promise.resolve('nao-suportado');
         }
 
         if (Notification.permission === 'granted') {
             console.log('Notificações já permitidas');
-            return true;
+            return Promise.resolve('granted');
         }
 
         if (Notification.permission === 'denied') {
             console.log('Notificações negadas pelo usuário');
-            return false;
+            return Promise.resolve('denied');
         }
 
-        Notification.requestPermission().then(function(permissao) {
-            if (permissao === 'granted') {
-                console.log('Notificações permitidas!');
-                enviarNotificacao(
-                    '🔔 Notificações ativadas',
-                    'Você receberá atualizações do Saúde Nampula em tempo real.'
-                );
-            } else {
-                console.log('Notificações negadas');
-            }
-        });
-
-        return false;
+        // Se não foi nem permitido nem negado, pedir permissão
+        console.log('A pedir permissão para notificações...');
+        return Notification.requestPermission();
     }
 
     // ========================================
@@ -147,7 +144,7 @@
             
             if (farmacias.length === 0) return;
 
-            var ultima = farmacias[farmacias.length - 1]; // Última adicionada
+            var ultima = farmacias[farmacias.length - 1];
 
             if (!ultimaFarmacia || ultima.id > parseInt(ultimaFarmacia)) {
                 enviarNotificacao(
@@ -235,28 +232,139 @@
     }
 
     // ========================================
+    // CRIAR BOTÃO DE ATIVAÇÃO
+    // ========================================
+
+    function criarBotaoAtivacao() {
+        // Verificar se o botão já existe
+        if (document.getElementById('btnAtivarNotificacoes')) return;
+
+        // Verificar se já tem permissão
+        if (Notification.permission === 'granted' || Notification.permission === 'denied') return;
+
+        var botao = document.createElement('button');
+        botao.id = 'btnAtivarNotificacoes';
+        botao.textContent = '🔔 Ativar Notificações';
+        botao.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: #7c3aed;
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            animation: pulse-notificacao 2s ease-in-out infinite;
+        `;
+
+        // Estilo do hover
+        botao.onmouseover = function() {
+            this.style.transform = 'scale(1.05)';
+            this.style.boxShadow = '0 6px 24px rgba(124, 58, 237, 0.6)';
+        };
+        botao.onmouseout = function() {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = '0 4px 16px rgba(124, 58, 237, 0.4)';
+        };
+
+        botao.onclick = function() {
+            pedirPermissao().then(function(permissao) {
+                if (permissao === 'granted') {
+                    botao.textContent = '✅ Notificações ativadas';
+                    botao.style.background = '#059669';
+                    botao.style.animation = 'none';
+                    setTimeout(function() {
+                        botao.style.display = 'none';
+                    }, 3000);
+                } else {
+                    botao.textContent = '❌ Permissão negada';
+                    botao.style.background = '#dc2626';
+                    setTimeout(function() {
+                        botao.textContent = '🔔 Ativar Notificações';
+                        botao.style.background = '#7c3aed';
+                    }, 3000);
+                }
+            });
+        };
+
+        document.body.appendChild(botao);
+
+        // Adicionar CSS da animação
+        var style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse-notificacao {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // ========================================
     // INICIALIZAR
     // ========================================
 
     function iniciar() {
-        // Pedir permissão
-        pedirPermissao();
+        // Verificar status da permissão
+        var status = obterStatusPermissao();
 
-        // Verificar imediatamente após 3 segundos
-        setTimeout(function() {
-            verificarNovasPublicacoes();
-            verificarNovasFarmacias();
-            verificarNovosHospitais();
-            verificarNovosCentros();
-        }, 3000);
+        if (status === 'granted') {
+            console.log('Notificações já permitidas. A verificar atualizações...');
+            // Começar a verificar imediatamente
+            setTimeout(function() {
+                verificarNovasPublicacoes();
+                verificarNovasFarmacias();
+                verificarNovosHospitais();
+                verificarNovosCentros();
+            }, 3000);
 
-        // Verificar periodicamente
-        setInterval(function() {
-            verificarNovasPublicacoes();
-            verificarNovasFarmacias();
-            verificarNovosHospitais();
-            verificarNovosCentros();
-        }, CONFIG.intervaloVerificacao);
+            setInterval(function() {
+                verificarNovasPublicacoes();
+                verificarNovasFarmacias();
+                verificarNovosHospitais();
+                verificarNovosCentros();
+            }, CONFIG.intervaloVerificacao);
+        } else if (status === 'denied') {
+            console.log('Notificações negadas pelo usuário.');
+        } else {
+            // Permissão ainda não foi pedida
+            console.log('A aguardar permissão do usuário...');
+            
+            // Criar botão para ativar
+            setTimeout(criarBotaoAtivacao, 2000);
+
+            // Tentar pedir permissão automaticamente após 5 segundos
+            setTimeout(function() {
+                pedirPermissao().then(function(permissao) {
+                    if (permissao === 'granted') {
+                        // Remover botão se existir
+                        var btn = document.getElementById('btnAtivarNotificacoes');
+                        if (btn) btn.style.display = 'none';
+                        
+                        // Iniciar verificações
+                        setTimeout(function() {
+                            verificarNovasPublicacoes();
+                            verificarNovasFarmacias();
+                            verificarNovosHospitais();
+                            verificarNovosCentros();
+                        }, 3000);
+
+                        setInterval(function() {
+                            verificarNovasPublicacoes();
+                            verificarNovasFarmacias();
+                            verificarNovosHospitais();
+                            verificarNovosCentros();
+                        }, CONFIG.intervaloVerificacao);
+                    }
+                });
+            }, 5000);
+        }
     }
 
     // ========================================
@@ -277,7 +385,15 @@
 
     window.notificacoes = {
         enviar: enviarNotificacao,
-        pedirPermissao: pedirPermissao
+        pedirPermissao: pedirPermissao,
+        ativar: function() {
+            pedirPermissao().then(function(permissao) {
+                if (permissao === 'granted') {
+                    var btn = document.getElementById('btnAtivarNotificacoes');
+                    if (btn) btn.style.display = 'none';
+                }
+            });
+        }
     };
 
 })();
