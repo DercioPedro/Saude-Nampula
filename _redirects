@@ -1,0 +1,4 @@
+# Ficheiros estáticos
+/JS/* /JS/:splat 200!
+/styles/* /styles/:splat 200!
+/img/* /img/:splat 200!
