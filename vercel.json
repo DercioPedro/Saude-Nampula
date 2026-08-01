@@ -1,4 +1,25 @@
 {
+  "trailingSlash": true,
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/", "destination": "/home", "permanent": true },
+    { "source": "/home.html", "destination": "/home", "permanent": true },
+    { "source": "/hospital.html", "destination": "/hospital", "permanent": true },
+    { "source": "/centros.html", "destination": "/centros", "permanent": true },
+    { "source": "/farm.html", "destination": "/farm", "permanent": true },
+    { "source": "/emer.html", "destination": "/emer", "permanent": true },
+    { "source": "/sobre.html", "destination": "/sobre", "permanent": true },
+    { "source": "/dicas.html", "destination": "/dicas", "permanent": true },
+    { "source": "/info.html", "destination": "/info", "permanent": true },
+    { "source": "/admin-login.html", "destination": "/admin-login", "permanent": true },
+    { "source": "/admin-panel.html", "destination": "/admin-panel", "permanent": true },
+    { "source": "/admin-produtos.html", "destination": "/admin-produtos", "permanent": true },
+    { "source": "/login-farmacia.html", "destination": "/login-farmacia", "permanent": true },
+    { "source": "/medicamentos.html", "destination": "/medicamentos", "permanent": true },
+    { "source": "/detalhes-farmacia.html", "destination": "/detalhes-farmacia", "permanent": true },
+    { "source": "/centros-detalhes.html", "destination": "/centros-detalhes", "permanent": true },
+    { "source": "/hospital-detalhes.html", "destination": "/hospital-detalhes", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/", "destination": "/home.html" },
     { "source": "/home", "destination": "/home.html" },
