@@ -2,14 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/home/", "destination": "/home", "permanent": true },
-    { "source": "/hospital/", "destination": "/hospital", "permanent": true },
-    { "source": "/centros/", "destination": "/centros", "permanent": true },
-    { "source": "/farm/", "destination": "/farm", "permanent": true },
-    { "source": "/emer/", "destination": "/emer", "permanent": true },
-    { "source": "/sobre/", "destination": "/sobre", "permanent": true },
-    { "source": "/dicas/", "destination": "/dicas", "permanent": true },
-    { "source": "/info/", "destination": "/info", "permanent": true }
+    { "source": "/", "destination": "/home", "permanent": true }
   ],
   "rewrites": [
     { "source": "/", "destination": "/home.html" },
@@ -28,6 +21,9 @@
     { "source": "/medicamentos", "destination": "/medicamentos.html" },
     { "source": "/detalhes-farmacia", "destination": "/detalhes-farmacia.html" },
     { "source": "/centros-detalhes", "destination": "/centros-detalhes.html" },
-    { "source": "/hospital-detalhes", "destination": "/hospital-detalhes.html" }
+    { "source": "/hospital-detalhes", "destination": "/hospital-detalhes.html" },
+    { "source": "/JS/(.*)", "destination": "/JS/$1" },
+    { "source": "/styles/(.*)", "destination": "/styles/$1" },
+    { "source": "/img/(.*)", "destination": "/img/$1" }
   ]
 }
