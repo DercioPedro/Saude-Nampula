@@ -6,6 +6,8 @@
     var deferredPrompt = null;
     var btn = document.getElementById('btn-instalar-app');
 
+    if (!btn) return;
+
     function verificarInstalado() {
         if (window.matchMedia('(display-mode: standalone)').matches) {
             return true;
@@ -17,40 +19,29 @@
     }
 
     function atualizarBotao(instalado) {
-        if (!btn) return;
-
         var isInstalled = (instalado !== undefined) ? instalado : verificarInstalado();
 
         if (isInstalled) {
             btn.textContent = 'App instalado';
-            btn.style.background = '#059669';
-            btn.style.cursor = 'default';
-            btn.style.pointerEvents = 'none';
-            btn.style.opacity = '0.7';
+            btn.classList.add('instalado');
         } else {
             btn.textContent = 'Instalar App';
-            btn.style.background = '#7c3aed';
-            btn.style.cursor = 'pointer';
-            btn.style.pointerEvents = 'auto';
-            btn.style.opacity = '1';
-
-            btn.onclick = function() {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then(function(choice) {
-                        if (choice.outcome === 'accepted') {
-                            localStorage.setItem('pwa_instalada', 'true');
-                            atualizarBotao(true);
-                        }
-                        deferredPrompt = null;
-                    });
-                } else {
-                    // Se não houver prompt, recarrega para tentar novamente
-                    location.reload();
-                }
-            };
+            btn.classList.remove('instalado');
         }
     }
+
+    btn.onclick = function() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(function(choice) {
+                if (choice.outcome === 'accepted') {
+                    localStorage.setItem('pwa_instalada', 'true');
+                    atualizarBotao(true);
+                }
+                deferredPrompt = null;
+            });
+        }
+    };
 
     window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
@@ -70,12 +61,6 @@
     });
 
     // Inicializar
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            atualizarBotao(verificarInstalado());
-        });
-    } else {
-        atualizarBotao(verificarInstalado());
-    }
+    atualizarBotao(verificarInstalado());
 
 })();
