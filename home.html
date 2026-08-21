@@ -64,33 +64,53 @@
 
 <body>
     <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <div class="logo">
-                <div class="logo-icon">
-                    <img src="/img/monitor.png" alt="Saúde Nampula">
-                </div>
-                <h1>Saúde Nampula</h1>
+<nav>
+    <div class="nav-container">
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="/img/monitor.png" alt="Saúde Nampula">
             </div>
-
-            <!-- Botão Hambúrguer -->
-            <button class="menu-hamburguer" id="menuHamburguer" aria-label="Abrir menu">
-                <span class="barra"></span>
-                <span class="barra"></span>
-                <span class="barra"></span>
-            </button>
-
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#" class="active">Início</a></li>
-                <li><a href="/hospital">Hospitais</a></li>
-                <li><a href="/centros">Centros de Saúde</a></li>
-                <li><a href="/farm">Farmácias</a></li>
-                <li><a href="/emer">Emergências</a></li>
-                <li><a href="/sobre">Sobre</a></li>
-                <li><a href="/dicas">Informações</a></li>
-            </ul>
+            <h1>Saúde Nampula</h1>
         </div>
-    </nav>
+
+        <!-- Botão PWA dentro do nav -->
+        <button id="btn-instalar-app" style="
+            background: #7c3aed;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.15);
+            display: inline-block;
+            margin-left: 10px;
+            white-space: nowrap;
+        ">
+            Instalar App
+        </button>
+
+        <!-- Botão Hambúrguer -->
+        <button class="menu-hamburguer" id="menuHamburguer" aria-label="Abrir menu">
+            <span class="barra"></span>
+            <span class="barra"></span>
+            <span class="barra"></span>
+        </button>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#" class="active">Início</a></li>
+            <li><a href="/hospital">Hospitais</a></li>
+            <li><a href="/centros">Centros de Saúde</a></li>
+            <li><a href="/farm">Farmácias</a></li>
+            <li><a href="/emer">Emergências</a></li>
+            <li><a href="/sobre">Sobre</a></li>
+            <li><a href="/dicas">Informações</a></li>
+        </ul>
+    </div>
+</nav>
 
     <!-- Main Content -->
     <main>
@@ -120,31 +140,6 @@
             </div>
             <button class="emergency-btn" id="confim">LIGAR AGORA</button>
         </div>
-
-<!-- ============ BOTÃO PWA ============ -->
-<button id="btn-instalar-app" style="
-    position: fixed;
-    top: 70px;
-    right: 12px;
-    background: rgba(124, 58, 237, 0.9);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 30px;
-    font-weight: 600;
-    font-size: 12px;
-    cursor: pointer;
-    z-index: 99999;
-    box-shadow: 0 2px 12px rgba(124, 58, 237, 0.3);
-    display: block;
-    font-family: inherit;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.15);
-">
-     Instalar
-</button>
 
         <!-- ==================== CARROSSEL DE PUBLICAÇÕES ==================== -->
 <section class="carrossel-publicacoes">
