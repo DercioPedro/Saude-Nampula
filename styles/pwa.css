@@ -1,33 +1,54 @@
-/* styles/pwa.css - Estilos para a PWA */
+/* styles/pwa.css - Estilos para o botão PWA */
 
 #btn-instalar-app {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    letter-spacing: 0.5px;
-    user-select: none;
+    position: fixed;
+    top: 70px;
+    right: 12px;
+    background: rgba(124, 58, 237, 0.9);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 99999;
+    box-shadow: 0 2px 12px rgba(124, 58, 237, 0.3);
+    font-family: inherit;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    min-width: 70px;
+    text-align: center;
+}
+
+#btn-instalar-app:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.5) !important;
 }
 
 #btn-instalar-app:active {
-    transform: translateX(-50%) scale(0.95) !important;
+    transform: scale(0.95);
 }
 
-/* Toast */
-#toast-pwa {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.5;
+/* Dark Mode */
+.dark-mode #btn-instalar-app {
+    background: rgba(124, 58, 237, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode #btn-instalar-app.instalado {
+    background: rgba(5, 150, 105, 0.8);
 }
 
 /* Responsivo */
 @media (max-width: 480px) {
     #btn-instalar-app {
-        bottom: 70px !important;
-        padding: 10px 20px !important;
-        font-size: 12px !important;
-        border-radius: 40px !important;
-    }
-    
-    #toast-pwa {
-        bottom: 130px !important;
-        font-size: 12px !important;
-        padding: 10px 16px !important;
+        font-size: 10px;
+        padding: 6px 12px;
+        min-width: 60px;
+        top: 62px !important;
+        right: 8px !important;
     }
 }
