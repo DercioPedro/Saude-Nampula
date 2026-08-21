@@ -1428,3 +1428,125 @@ footer p {
         transform: rotate(360deg);
     }
 }
+
+
+/* ========================================
+   BOTÃO PWA
+   ======================================== */
+
+#btn-instalar-app {
+    background: #7c3aed;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: inline-block;
+    white-space: nowrap;
+    margin-left: auto;
+}
+
+#btn-instalar-app:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+    background: #6d28d9;
+}
+
+#btn-instalar-app:active {
+    transform: scale(0.95);
+}
+
+/* Quando já está instalado */
+#btn-instalar-app.instalado {
+    background: #059669;
+    cursor: default;
+    opacity: 0.7;
+}
+
+#btn-instalar-app.instalado:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* ========================================
+   RESPONSIVO
+   ======================================== */
+
+/* Desktop - botão na direita */
+@media (min-width: 769px) {
+    .nav-container {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    #btn-instalar-app {
+        margin-left: auto;
+        order: 10;
+        flex-shrink: 0;
+    }
+
+    .nav-links {
+        display: flex !important;
+        gap: 1.5rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+    }
+}
+
+/* Mobile - botão à direita do logo */
+@media (max-width: 768px) {
+    .nav-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    #btn-instalar-app {
+        font-size: 11px;
+        padding: 5px 12px;
+        margin-left: auto;
+        order: 3;
+        flex-shrink: 0;
+    }
+
+    .logo {
+        order: 1;
+        flex: 1;
+    }
+
+    .menu-hamburguer {
+        order: 4;
+    }
+
+    .nav-links {
+        order: 5;
+        width: 100%;
+        flex-basis: 100%;
+    }
+}
+
+/* Mobile muito pequeno */
+@media (max-width: 480px) {
+    #btn-instalar-app {
+        font-size: 10px;
+        padding: 4px 10px;
+    }
+
+    .logo h1 {
+        font-size: 1rem;
+    }
+
+    .logo-icon img {
+        width: 28px;
+        height: 28px;
+    }
+}
