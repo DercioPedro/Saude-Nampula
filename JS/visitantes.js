@@ -1,14 +1,14 @@
-
+// visitantes.js - Contador REAL de visitantes com Supabase
 
 (function() {
     'use strict';
 
     // ========================================
-    // CONFIGURAÇÃO SUPABASE
+    // CONFIGURAÇÃO SUPABASE (CORRIGIDA)
     // ========================================
 
-    var SUPABASE_URL = 'https://saude-nampula-backend.onrender.com/api'; // Substitui pela tua URL
-    var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3ZXd2eGl6aXZldGxxbmN5YWp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3Nzk2NTIsImV4cCI6MjA5NDM1NTY1Mn0.mX4vbiccmZLFjD9U9SUH4htRdOtgY2Iwrmqt8LNl5wo'; // Substitui pela tua chave anon
+    var SUPABASE_URL = 'https://lwewvxizivetlqncyajx.supabase.co'; // URL do Supabase
+    var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3ZXd2eGl6aXZldGxxbmN5YWp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3Nzk2NTIsImV4cCI6MjA5NDM1NTY1Mn0.mX4vbiccmZLFjD9U9SUH4htRdOtgY2Iwrmqt8LNl5wo'; // Chave anon
 
     // ========================================
     // FUNÇÕES
@@ -28,7 +28,7 @@
     }
 
     // ========================================
-    // REGISTAR VISITA (Supabase)
+    // REGISTAR VISITA
     // ========================================
 
     async function registrarVisita() {
@@ -37,13 +37,12 @@
             var hojeStr = new Date().toDateString();
             var ultimoRegisto = localStorage.getItem('ultimo_registo_visita');
 
-            // Se já registou hoje, não faz nada
             if (ultimoRegisto === hojeStr) {
                 await incrementarVisualizacoes(hoje);
                 return;
             }
 
-            // Buscar registro de hoje no Supabase
+            // Buscar registro de hoje
             var response = await fetch(SUPABASE_URL + '/rest/v1/visitantes_contador?data=eq.' + hoje + '&select=*', {
                 headers: {
                     'apikey': SUPABASE_KEY,
@@ -59,7 +58,6 @@
             var dados = await response.json();
 
             if (dados && dados.length > 0) {
-                // Já existe registro para hoje -> atualizar
                 var registro = dados[0];
                 var novoVisitantes = (registro.visitantes || 0) + 1;
                 var novoVisualizacoes = (registro.visualizacoes || 0) + 1;
@@ -80,7 +78,6 @@
 
                 localStorage.setItem('ultimo_registo_visita', hojeStr);
             } else {
-                // Não existe registro para hoje -> criar
                 await fetch(SUPABASE_URL + '/rest/v1/visitantes_contador', {
                     method: 'POST',
                     headers: {
@@ -374,13 +371,10 @@
     async function init() {
         adicionarEstilos();
 
-        // Registrar visita
         await registrarVisita();
 
-        // Obter total
         var total = await obterTotalVisitantes();
 
-        // Inserir contador
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
                 inserirContador(total);
@@ -389,7 +383,6 @@
             inserirContador(total);
         }
 
-        // Atualizar a cada 30 segundos
         setInterval(async function() {
             var novoTotal = await obterTotalVisitantes();
             var valorElement = document.getElementById('contador-valor');
@@ -399,12 +392,7 @@
         }, 30000);
     }
 
-    // Iniciar
     init();
-
-    // ========================================
-    // EXPORTAR
-    // ========================================
 
     window.contadorVisitantes = {
         obterTotal: obterTotalVisitantes,
