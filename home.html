@@ -22,6 +22,34 @@
      crossorigin="anonymous"></script>
     <meta name="google-adsense-account" content="ca-pub-5710780123165111">
 
+    <!-- ============ PWA ============ -->
+<!-- Link para o manifesto -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- Ícones para PWA -->
+<link rel="apple-touch-icon" href="/img/icon-192.png">
+
+<!-- Tema e cor -->
+<meta name="theme-color" content="#059669">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- Service Worker -->
+<script>
+    // Registrar o Service Worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js')
+                .then(function(registration) {
+                    console.log('Service Worker registado com sucesso:', registration);
+                })
+                .catch(function(error) {
+                    console.log('Erro ao registrar Service Worker:', error);
+                });
+        });
+    }
+</script>
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
