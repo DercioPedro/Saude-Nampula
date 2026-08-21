@@ -1,30 +1,33 @@
-/* styles/instalar-app.css */
+/* styles/pwa.css - Estilos para a PWA */
 
 #btn-instalar-app {
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #059669;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    z-index: 9999;
-    box-shadow: 0 4px 16px rgba(5, 150, 105, 0.4);
-    display: none;
-    animation: pulse-instalar 2s ease-in-out infinite;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    letter-spacing: 0.5px;
+    user-select: none;
 }
 
-#btn-instalar-app:hover {
-    background: #047857;
-    transform: translateX(-50%) scale(1.05);
+#btn-instalar-app:active {
+    transform: translateX(-50%) scale(0.95) !important;
 }
 
-@keyframes pulse-instalar {
-    0%, 100% { box-shadow: 0 4px 16px rgba(5, 150, 105, 0.4); }
-    50% { box-shadow: 0 4px 30px rgba(5, 150, 105, 0.7); }
+/* Toast */
+#toast-pwa {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.5;
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+    #btn-instalar-app {
+        bottom: 70px !important;
+        padding: 10px 20px !important;
+        font-size: 12px !important;
+        border-radius: 40px !important;
+    }
+    
+    #toast-pwa {
+        bottom: 130px !important;
+        font-size: 12px !important;
+        padding: 10px 16px !important;
+    }
 }
