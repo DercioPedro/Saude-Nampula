@@ -1,4 +1,4 @@
-// pwa.js - Gestão do botão PWA (instalação direta)
+// pwa.js - Gestão do botão PWA
 
 (function() {
     'use strict';
@@ -11,11 +11,9 @@
     // ========================================
 
     function verificarAppInstalada() {
-        // Verificar modo standalone (app instalada)
         if (window.matchMedia('(display-mode: standalone)').matches) {
             return true;
         }
-        // Verificar se foi instalada anteriormente
         if (localStorage.getItem('pwa_instalada') === 'true') {
             return true;
         }
@@ -32,69 +30,57 @@
         var isInstalled = (instalado !== undefined) ? instalado : verificarAppInstalada();
 
         if (isInstalled) {
-            btnInstalar.innerHTML = '✅ App';
+            btnInstalar.innerHTML = ' App';
             btnInstalar.style.background = 'rgba(5, 150, 105, 0.9)';
-            btnInstalar.style.cursor = 'default';
             btnInstalar.style.boxShadow = '0 2px 12px rgba(5, 150, 105, 0.3)';
-            btnInstalar.style.backdropFilter = 'blur(8px)';
+            btnInstalar.style.border = '1px solid rgba(255,255,255,0.1)';
+            btnInstalar.style.cursor = 'default';
             btnInstalar.onclick = function() {
-                // Mostrar feedback visual apenas
                 this.style.transform = 'scale(0.95)';
                 setTimeout(function() { 
                     btnInstalar.style.transform = 'scale(1)';
                 }, 200);
             };
         } else {
-            btnInstalar.innerHTML = '📱 Instalar';
+            btnInstalar.innerHTML = ' App';
             btnInstalar.style.background = 'rgba(124, 58, 237, 0.9)';
-            btnInstalar.style.cursor = 'pointer';
             btnInstalar.style.boxShadow = '0 2px 12px rgba(124, 58, 237, 0.3)';
-            btnInstalar.style.backdropFilter = 'blur(8px)';
+            btnInstalar.style.border = '1px solid rgba(255,255,255,0.15)';
+            btnInstalar.style.cursor = 'pointer';
 
             btnInstalar.onclick = function() {
-                // Tenta instalar diretamente
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
                     deferredPrompt.userChoice.then(function(choiceResult) {
                         if (choiceResult.outcome === 'accepted') {
-                            console.log('✅ Utilizador instalou a app');
+                            console.log(' Utilizador instalou a app');
                             localStorage.setItem('pwa_instalada', 'true');
                             atualizarBotao(true);
                         } else {
                             console.log('❌ Utilizador recusou a instalação');
-                            // Feedback visual
+                            btnInstalar.innerHTML = '';
                             btnInstalar.style.background = 'rgba(220, 38, 38, 0.9)';
-                            btnInstalar.innerHTML = '❌ Recusou';
                             setTimeout(function() {
+                                btnInstalar.innerHTML = ' App';
                                 btnInstalar.style.background = 'rgba(124, 58, 237, 0.9)';
-                                btnInstalar.innerHTML = '📱 Instalar';
                             }, 2000);
                         }
                         deferredPrompt = null;
                     });
                 } else {
-                    // Se não houver prompt, tenta instalar via Chrome (Android)
-                    if (navigator.share) {
-                        navigator.share({
-                            title: 'Saúde Nampula',
-                            text: 'Encontre hospitais, farmácias e centros de saúde em Nampula',
-                            url: window.location.href
-                        });
-                    } else {
-                        // Fallback: recarregar a página para tentar novamente
-                        btnInstalar.innerHTML = '🔄 Tentar...';
-                        btnInstalar.style.background = 'rgba(245, 158, 11, 0.9)';
-                        setTimeout(function() {
-                            location.reload();
-                        }, 1000);
-                    }
+                    // Fallback: tentar novamente
+                    btnInstalar.innerHTML = '';
+                    btnInstalar.style.background = 'rgba(245, 158, 11, 0.9)';
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
                 }
             };
         }
     }
 
     // ========================================
-    // ADICIONAR CSS DA ANIMAÇÃO
+    // ESTILOS
     // ========================================
 
     if (!document.getElementById('style-pwa')) {
@@ -108,6 +94,8 @@
                 border-radius: 30px;
                 font-weight: 600;
                 letter-spacing: 0.3px;
+                min-width: 70px;
+                text-align: center;
             }
             #btn-instalar-app:hover {
                 transform: scale(1.05);
@@ -118,10 +106,11 @@
             }
             @media (max-width: 480px) {
                 #btn-instalar-app {
-                    font-size: 11px;
+                    font-size: 10px;
                     padding: 6px 12px;
-                    top: 10px;
-                    right: 10px;
+                    min-width: 60px;
+                    top: 62px !important;
+                    right: 8px !important;
                 }
             }
         `;
@@ -135,19 +124,19 @@
     window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         deferredPrompt = e;
-        console.log('✅ Evento beforeinstallprompt capturado');
+        console.log(' Evento beforeinstallprompt capturado');
         atualizarBotao(false);
     });
 
     window.addEventListener('appinstalled', function() {
-        console.log('✅ App instalada com sucesso!');
+        console.log(' App instalada com sucesso!');
         localStorage.setItem('pwa_instalada', 'true');
         atualizarBotao(true);
     });
 
     window.matchMedia('(display-mode: standalone)').addEventListener('change', function(e) {
         if (e.matches) {
-            console.log('✅ App entrou em modo standalone');
+            console.log(' App entrou em modo standalone');
             atualizarBotao(true);
         }
     });
@@ -158,11 +147,11 @@
 
     function init() {
         if (!btnInstalar) {
-            console.warn('⚠️ Botão PWA não encontrado no HTML');
+            console.warn(' Botão PWA não encontrado no HTML');
             return;
         }
         atualizarBotao(verificarAppInstalada());
-        console.log('✅ PWA inicializado');
+        console.log(' PWA inicializado');
     }
 
     if (document.readyState === 'loading') {
