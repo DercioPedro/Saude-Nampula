@@ -26,54 +26,44 @@
     }
 
     // ========================================
-    // CRIAR BOTÃO DE INSTALAÇÃO
+    // ATUALIZAR BOTÃO
     // ========================================
 
-    function criarBotaoInstalacao() {
-        if (document.getElementById('btn-instalar-app')) return;
+    function atualizarBotao(instalado) {
+        var btn = document.getElementById('btn-instalar-app');
+        if (!btn) return;
 
-        isInstalled = verificarAppInstalada();
+        isInstalled = (instalado !== undefined) ? instalado : verificarAppInstalada();
 
-        btnInstalar = document.createElement('button');
-        btnInstalar.id = 'btn-instalar-app';
-        btnInstalar.innerHTML = isInstalled ? ' App Instalada' : ' Instalar App';
-        btnInstalar.style.cssText = `
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: ${isInstalled ? '#059669' : '#7c3aed'};
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: ${isInstalled ? 'default' : 'pointer'};
-            z-index: 99999;
-            box-shadow: 0 4px 20px ${isInstalled ? 'rgba(5, 150, 105, 0.4)' : 'rgba(124, 58, 237, 0.4)'};
-            transition: all 0.3s ease;
-            ${isInstalled ? '' : 'animation: pulse-instalar 2s ease-in-out infinite;'}
-            opacity: ${isInstalled ? '0.8' : '1'};
-        `;
-
-        // Se já estiver instalada, não fazer nada ao clicar
         if (isInstalled) {
-            btnInstalar.onclick = function() {
-                // Mostrar mensagem informativa
+            btn.innerHTML = ' App Instalada';
+            btn.style.background = '#059669';
+            btn.style.cursor = 'default';
+            btn.style.animation = 'none';
+            btn.style.boxShadow = '0 4px 20px rgba(5, 150, 105, 0.4)';
+            btn.style.opacity = '0.8';
+            btn.onclick = function() {
                 mostrarToast(' App já está instalada no seu dispositivo!');
             };
         } else {
-            btnInstalar.onmouseover = function() {
+            btn.innerHTML = ' Instalar App';
+            btn.style.background = '#7c3aed';
+            btn.style.cursor = 'pointer';
+            btn.style.animation = 'pulse-instalar 2s ease-in-out infinite';
+            btn.style.boxShadow = '0 4px 20px rgba(124, 58, 237, 0.4)';
+            btn.style.opacity = '1';
+            btn.style.display = 'block';
+            
+            btn.onmouseover = function() {
                 this.style.transform = 'translateX(-50%) scale(1.05)';
                 this.style.boxShadow = '0 6px 30px rgba(124, 58, 237, 0.6)';
             };
-            btnInstalar.onmouseout = function() {
+            btn.onmouseout = function() {
                 this.style.transform = 'translateX(-50%) scale(1)';
                 this.style.boxShadow = '0 4px 20px rgba(124, 58, 237, 0.4)';
             };
 
-            btnInstalar.onclick = function() {
+            btn.onclick = function() {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
                     deferredPrompt.userChoice.then(function(choiceResult) {
@@ -87,61 +77,13 @@
                         deferredPrompt = null;
                     });
                 } else {
-                    // Fallback: abrir instruções de instalação
                     mostrarToast(
-                        '📱 Para instalar a app:\n\n' +
-                        'Android: Menu do Chrome → "Instalar aplicação"\n' +
-                        'iOS: Partilhar → "Adicionar ao Ecrã Inicial"\n' +
-                        'Desktop: Clique no ícone "+" na barra de endereço'
+                        ' Para instalar a app:\n' +
+                        'Chrome: Menu → "Instalar aplicação"\n' +
+                        'Safari: Partilhar → "Adicionar ao Ecrã Inicial"'
                     );
                 }
             };
-        }
-
-        document.body.appendChild(btnInstalar);
-
-        // Adicionar CSS da animação
-        if (!document.getElementById('style-pwa')) {
-            var style = document.createElement('style');
-            style.id = 'style-pwa';
-            style.textContent = `
-                @keyframes pulse-instalar {
-                    0%, 100% { box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4); }
-                    50% { box-shadow: 0 4px 40px rgba(124, 58, 237, 0.7); }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        return btnInstalar;
-    }
-
-    // ========================================
-    // ATUALIZAR BOTÃO
-    // ========================================
-
-    function atualizarBotao(instalado) {
-        if (!btnInstalar) return;
-
-        isInstalled = instalado || verificarAppInstalada();
-
-        if (isInstalled) {
-            btnInstalar.innerHTML = ' App Instalada';
-            btnInstalar.style.background = '#059669';
-            btnInstalar.style.cursor = 'default';
-            btnInstalar.style.animation = 'none';
-            btnInstalar.style.boxShadow = '0 4px 20px rgba(5, 150, 105, 0.4)';
-            btnInstalar.style.opacity = '0.8';
-            btnInstalar.onclick = function() {
-                mostrarToast(' App já está instalada no seu dispositivo!');
-            };
-        } else {
-            btnInstalar.innerHTML = ' Instalar App';
-            btnInstalar.style.background = '#7c3aed';
-            btnInstalar.style.cursor = 'pointer';
-            btnInstalar.style.animation = 'pulse-instalar 2s ease-in-out infinite';
-            btnInstalar.style.boxShadow = '0 4px 20px rgba(124, 58, 237, 0.4)';
-            btnInstalar.style.opacity = '1';
         }
     }
 
@@ -170,6 +112,7 @@
                 text-align: center;
                 transition: all 0.3s ease;
                 white-space: pre-line;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             `;
             document.body.appendChild(toast);
         }
@@ -195,11 +138,7 @@
         e.preventDefault();
         deferredPrompt = e;
         console.log(' Evento beforeinstallprompt capturado');
-        
-        // Se o botão já existe, atualizar para modo instalação
-        if (btnInstalar) {
-            atualizarBotao(false);
-        }
+        atualizarBotao(false);
     });
 
     // ========================================
@@ -213,19 +152,38 @@
     });
 
     // ========================================
+    // DETECTAR MUDANÇA DE MODO
+    // ========================================
+
+    window.matchMedia('(display-mode: standalone)').addEventListener('change', function(e) {
+        if (e.matches) {
+            console.log(' App entrou em modo standalone');
+            atualizarBotao(true);
+        }
+    });
+
+    // ========================================
     // INICIALIZAR
     // ========================================
 
     function init() {
-        // Criar botão
-        criarBotaoInstalacao();
-
         // Verificar se já está instalada
-        if (verificarAppInstalada()) {
-            atualizarBotao(true);
-        }
+        var instalada = verificarAppInstalada();
+        atualizarBotao(instalada);
+        console.log(' PWA inicializado. Instalada:', instalada);
+    }
 
-        console.log(' PWA inicializado. Botão:', btnInstalar ? 'criado' : 'erro');
+    // Adicionar CSS da animação
+    if (!document.getElementById('style-pwa')) {
+        var style = document.createElement('style');
+        style.id = 'style-pwa';
+        style.textContent = `
+            @keyframes pulse-instalar {
+                0%, 100% { box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4); }
+                50% { box-shadow: 0 4px 40px rgba(124, 58, 237, 0.7); }
+            }
+        `;
+        document.head.appendChild(style);
     }
 
     // Aguardar DOM carregar
