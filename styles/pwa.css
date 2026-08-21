@@ -1,0 +1,30 @@
+/* styles/instalar-app.css */
+
+#btn-instalar-app {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #059669;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 4px 16px rgba(5, 150, 105, 0.4);
+    display: none;
+    animation: pulse-instalar 2s ease-in-out infinite;
+}
+
+#btn-instalar-app:hover {
+    background: #047857;
+    transform: translateX(-50%) scale(1.05);
+}
+
+@keyframes pulse-instalar {
+    0%, 100% { box-shadow: 0 4px 16px rgba(5, 150, 105, 0.4); }
+    50% { box-shadow: 0 4px 30px rgba(5, 150, 105, 0.7); }
+}
