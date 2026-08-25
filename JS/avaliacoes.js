@@ -28,7 +28,7 @@ class SistemaAvaliacoes {
         this.container.innerHTML = `
             <div class="avaliacoes-container">
                 <div class="avaliacoes-header">
-                    <h3>⭐ Avaliações dos Utilizadores</h3>
+                    <h3> Avaliações dos Utilizadores</h3>
                     <div class="avaliacoes-stats" id="avaliacoes-stats">
                         <div class="stats-card">
                             <div class="stats-nota" id="media-nota">0.0</div>
@@ -39,7 +39,7 @@ class SistemaAvaliacoes {
                 </div>
                 
                 <div class="avaliacoes-form">
-                    <h4>💬 Deixe sua Avaliação</h4>
+                    <h4> Deixe sua Avaliação</h4>
                     <div class="form-group">
                         <label>Seu Nome *</label>
                         <input type="text" id="avaliacao-nome" placeholder="Digite seu nome" required>
@@ -57,12 +57,12 @@ class SistemaAvaliacoes {
                         <textarea id="avaliacao-comentario" rows="4" placeholder="Compartilhe sua experiência..."></textarea>
                     </div>
                     <button class="btn-enviar-avaliacao" onclick="sistemaAvaliacoes.enviarAvaliacao()">
-                        📝 Enviar Avaliação
+                         Enviar Avaliação
                     </button>
                 </div>
                 
                 <div class="avaliacoes-lista" id="avaliacoes-lista">
-                    <div class="loading">🔄 Carregando avaliações...</div>
+                    <div class="loading"> Carregando avaliações...</div>
                 </div>
             </div>
         `;
@@ -162,7 +162,7 @@ class SistemaAvaliacoes {
             return;
         }
         
-        let html = '<h4>📝 Avaliações Recentes</h4>';
+        let html = '<h4> Avaliações Recentes</h4>';
         for (const av of avaliacoes) {
             html += `
                 <div class="avaliacao-item">
@@ -177,7 +177,7 @@ class SistemaAvaliacoes {
                     ${av.resposta ? `
                         <div class="avaliacao-resposta">
                             <div class="resposta-header">
-                                <strong>👨‍💼 Administrador respondeu:</strong>
+                                <strong> Administrador respondeu:</strong>
                                 <span class="resposta-data">${av.data_resposta || ''}</span>
                             </div>
                             <div class="resposta-texto">${this.escapeHtml(av.resposta)}</div>
@@ -238,7 +238,7 @@ class SistemaAvaliacoes {
             const result = await response.json();
             if (!response.ok) throw new Error(result.error);
             
-            alert('✅ Avaliação enviada com sucesso!');
+            alert(' Avaliação enviada com sucesso!');
             
             document.getElementById('avaliacao-nome').value = '';
             document.getElementById('avaliacao-email').value = '';
