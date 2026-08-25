@@ -120,7 +120,7 @@ class SistemaAvaliacoes {
             this.renderizarLista(avaliacoes);
         } catch (error) {
             console.error('Erro:', error);
-            listaDiv.innerHTML = `<div class="error">❌ Erro ao carregar avaliações</div>`;
+            listaDiv.innerHTML = `<div class="error"> Erro ao carregar avaliações</div>`;
         }
     }
     
@@ -158,7 +158,7 @@ class SistemaAvaliacoes {
         const container = document.getElementById('avaliacoes-lista');
         
         if (!avaliacoes || avaliacoes.length === 0) {
-            container.innerHTML = `<div class="nenhuma-avaliacao">✨ Seja o primeiro a avaliar!</div>`;
+            container.innerHTML = `<div class="nenhuma-avaliacao"> Seja o primeiro a avaliar!</div>`;
             return;
         }
         
