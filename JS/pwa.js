@@ -254,18 +254,16 @@
     // EVENTOS
     // ========================================
 
+    // O banner só é mostrado quando o navegador dispara este evento,
+    // ou seja, apenas em navegadores que suportam instalação de PWA
+    // (Chrome, Edge, Opera, Samsung Internet). Noutros navegadores
+    // (Firefox desktop, Safari desktop) este evento nunca ocorre,
+    // por isso o banner simplesmente não aparece.
     window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         deferredPrompt = e;
         mostrarBanner();
     });
-
-    // Forçar banner após 3 segundos se não aparecer
-    setTimeout(function() {
-        if (!document.getElementById('pwa-banner')) {
-            mostrarBanner();
-        }
-    }, 3000);
 
     window.addEventListener('appinstalled', function() {
         localStorage.setItem('pwa_instalada', 'true');
