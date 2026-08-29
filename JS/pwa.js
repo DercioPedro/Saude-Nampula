@@ -71,17 +71,12 @@
             min-width: 200px;
         `;
 
-        var icone = document.createElement('span');
-        icone.textContent = '📱';
-        icone.style.cssText = 'font-size: 24px;';
-
         var texto = document.createElement('div');
         texto.innerHTML = `
             <strong style="display:block; font-size:14px;">Instalar Aplicacao</strong>
             <span style="font-size:12px; opacity:0.8;">Aceda mais rapido ao Saude Nampula</span>
         `;
 
-        conteudo.appendChild(icone);
         conteudo.appendChild(texto);
 
         var botoes = document.createElement('div');
@@ -148,6 +143,10 @@
                     from { transform: translateY(100%); opacity: 0; }
                     to { transform: translateY(0); opacity: 1; }
                 }
+                @keyframes slideUpToast {
+                    from { transform: translate(-50%, 20px); opacity: 0; }
+                    to { transform: translate(-50%, 0); opacity: 1; }
+                }
                 @media (max-width: 480px) {
                     #pwa-banner {
                         flex-direction: column;
@@ -167,24 +166,21 @@
         }
 
         btnInstalar.onclick = function() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(function(choice) {
-                    if (choice.outcome === 'accepted') {
-                        localStorage.setItem('pwa_instalada', 'true');
-                        fecharBanner();
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                // Tentar instalar via navegador
-                if (window.navigator && window.navigator.share) {
-                    window.navigator.share({
-                        title: 'Saude Nampula',
-                        url: window.location.href
-                    });
+            if (!deferredPrompt) return;
+
+            btnInstalar.disabled = true;
+
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(function(choice) {
+                if (choice.outcome === 'accepted') {
+                    localStorage.setItem('pwa_instalada', 'true');
+                    fecharBanner();
+                    mostrarToast('Aplicacao instalada');
+                } else {
+                    btnInstalar.disabled = false;
                 }
-            }
+                deferredPrompt = null;
+            });
         };
 
         btnFechar.onclick = function() {
@@ -212,6 +208,40 @@
     }
 
     // ========================================
+    // MOSTRAR TOAST DE CONFIRMACAO
+    // ========================================
+
+    function mostrarToast(mensagem) {
+        var toast = document.createElement('div');
+        toast.textContent = mensagem;
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            z-index: 100000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: slideUpToast 0.3s ease;
+        `;
+        document.body.appendChild(toast);
+        setTimeout(function() {
+            toast.style.transition = 'opacity 0.3s ease';
+            toast.style.opacity = '0';
+            setTimeout(function() {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 300);
+        }, 2500);
+    }
+
+    // ========================================
     // MOSTRAR BANNER
     // ========================================
 
@@ -236,11 +266,6 @@
             mostrarBanner();
         }
     }, 3000);
-
-    // Verificar se já está instalado
-    if (verificarInstalado()) {
-        // Nada a fazer
-    }
 
     window.addEventListener('appinstalled', function() {
         localStorage.setItem('pwa_instalada', 'true');
