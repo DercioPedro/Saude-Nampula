@@ -34,6 +34,14 @@
     }
 
     // ========================================
+    // VERIFICAR SE É ANDROID
+    // ========================================
+
+    function isAndroid() {
+        return /android/i.test(window.navigator.userAgent);
+    }
+
+    // ========================================
     // CRIAR BANNER
     // ========================================
 
@@ -42,7 +50,10 @@
         if (document.getElementById('pwa-banner')) return;
 
         // Verificar se já está instalado ou se o banner foi fechado
-        if (verificarInstalado()) return;
+        if (verificarInstalado()) {
+            console.log('Banner não mostrado: instalado ou fechado');
+            return;
+        }
 
         banner = document.createElement('div');
         banner.id = 'pwa-banner';
@@ -76,7 +87,7 @@
         `;
 
         var icone = document.createElement('span');
-        icone.textContent = '';
+        icone.textContent = '📱';
         icone.style.cssText = 'font-size: 24px;';
 
         var texto = document.createElement('div');
@@ -97,7 +108,16 @@
         `;
 
         btnInstalar = document.createElement('button');
-        btnInstalar.textContent = isIOS() ? 'Como instalar' : 'Instalar';
+        
+        // Texto do botão conforme plataforma
+        if (isIOS()) {
+            btnInstalar.textContent = 'Como instalar';
+        } else if (isAndroid()) {
+            btnInstalar.textContent = 'Instalar';
+        } else {
+            btnInstalar.textContent = 'Instalar App';
+        }
+        
         btnInstalar.style.cssText = `
             background: #7c3aed;
             color: white;
@@ -173,12 +193,14 @@
             document.head.appendChild(style);
         }
 
+        console.log('✅ Banner PWA criado e visível');
+
         // Eventos dos botões
         btnInstalar.onclick = function() {
             if (isIOS()) {
                 // iOS: mostrar instruções
                 alert(
-                    ' Como instalar no iPhone/iPad:\n\n' +
+                    '📱 Como instalar no iPhone/iPad:\n\n' +
                     '1. Toque no ícone de partilha (quadrado com seta)\n' +
                     '2. Deslize para baixo e escolha "Adicionar ao Ecrã Inicial"\n' +
                     '3. Toque em "Adicionar"\n\n' +
@@ -189,7 +211,7 @@
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then(function(choice) {
                     if (choice.outcome === 'accepted') {
-                        console.log(' Utilizador instalou a app');
+                        console.log('✅ Utilizador instalou a app');
                         localStorage.setItem('pwa_instalada', 'true');
                         fecharBanner();
                     } else {
@@ -202,7 +224,8 @@
                 alert(
                     '📱 Para instalar a app:\n\n' +
                     'Chrome/Edge: Menu → "Instalar aplicação"\n' +
-                    'Safari: Partilhar → "Adicionar ao Ecrã Inicial"'
+                    'Safari: Partilhar → "Adicionar ao Ecrã Inicial"\n' +
+                    'Ou clique no ícone "+" na barra de endereço.'
                 );
             }
         };
@@ -232,12 +255,16 @@
     }
 
     // ========================================
-    // MOSTRAR BANNER
+    // MOSTRAR BANNER (FORÇADO)
     // ========================================
 
     function mostrarBanner() {
         // Não mostrar se já estiver instalado ou se o banner foi fechado
-        if (verificarInstalado()) return;
+        if (verificarInstalado()) {
+            console.log('Banner não mostrado: instalado ou fechado');
+            return;
+        }
+        console.log('🔄 A mostrar banner...');
         criarBanner();
     }
 
@@ -249,23 +276,39 @@
     window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         deferredPrompt = e;
+        console.log('✅ Evento beforeinstallprompt capturado');
         mostrarBanner();
-        console.log(' Evento beforeinstallprompt capturado');
     });
 
-    // iOS: verificar se é iOS e mostrar banner
-    if (isIOS()) {
-        // Aguardar um pouco para mostrar o banner no iOS
-        setTimeout(function() {
-            if (!verificarInstalado()) {
-                mostrarBanner();
-            }
-        }, 2000);
+    // ========================================
+    // FORÇAR BANNER APÓS 3 SEGUNDOS (FALLBACK)
+    // ========================================
+
+    setTimeout(function() {
+        // Verificar se o banner já foi criado
+        if (!document.getElementById('pwa-banner')) {
+            console.log('⏳ Banner não criado automaticamente. Forçando exibição...');
+            mostrarBanner();
+        }
+    }, 3000);
+
+    // ========================================
+    // VERIFICAR SE JÁ ESTÁ INSTALADO AO CARREGAR
+    // ========================================
+
+    if (verificarInstalado()) {
+        console.log('✅ App já instalada ou banner fechado');
+    } else {
+        console.log('⏳ Aguardando para mostrar banner...');
     }
+
+    // ========================================
+    // EVENTOS ADICIONAIS
+    // ========================================
 
     // App instalada
     window.addEventListener('appinstalled', function() {
-        console.log(' App instalada com sucesso!');
+        console.log('✅ App instalada com sucesso!');
         localStorage.setItem('pwa_instalada', 'true');
         fecharBanner();
     });
@@ -279,22 +322,6 @@
     });
 
     // ========================================
-    // INICIALIZAR
-    // ========================================
-
-    // Verificar se já está instalado ao carregar
-    if (!verificarInstalado()) {
-        // Se não estiver instalado, aguardar o evento beforeinstallprompt
-        // ou mostrar para iOS
-        if (!isIOS()) {
-            // Para Android/Chrome, aguardar o evento
-            console.log(' Aguardando evento beforeinstallprompt...');
-        }
-    } else {
-        console.log(' App já instalada ou banner fechado');
-    }
-
-    // ========================================
     // EXPORTAR
     // ========================================
 
@@ -303,5 +330,7 @@
         fecharBanner: fecharBanner,
         verificarInstalado: verificarInstalado
     };
+
+    console.log('✅ PWA inicializado');
 
 })();
