@@ -34,26 +34,12 @@
     }
 
     // ========================================
-    // VERIFICAR SE É ANDROID
-    // ========================================
-
-    function isAndroid() {
-        return /android/i.test(window.navigator.userAgent);
-    }
-
-    // ========================================
     // CRIAR BANNER
     // ========================================
 
     function criarBanner() {
-        // Se já existe, não criar novamente
         if (document.getElementById('pwa-banner')) return;
-
-        // Verificar se já está instalado ou se o banner foi fechado
-        if (verificarInstalado()) {
-            console.log('Banner não mostrado: instalado ou fechado');
-            return;
-        }
+        if (verificarInstalado()) return;
 
         banner = document.createElement('div');
         banner.id = 'pwa-banner';
@@ -76,7 +62,6 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         `;
 
-        // Conteúdo do banner
         var conteudo = document.createElement('div');
         conteudo.style.cssText = `
             display: flex;
@@ -92,14 +77,13 @@
 
         var texto = document.createElement('div');
         texto.innerHTML = `
-            <strong style="display:block; font-size:14px;">Instalar App</strong>
-            <span style="font-size:12px; opacity:0.8;">Aceda mais rápido ao Saúde Nampula</span>
+            <strong style="display:block; font-size:14px;">Instalar Aplicacao</strong>
+            <span style="font-size:12px; opacity:0.8;">Aceda mais rapido ao Saude Nampula</span>
         `;
 
         conteudo.appendChild(icone);
         conteudo.appendChild(texto);
 
-        // Botões
         var botoes = document.createElement('div');
         botoes.style.cssText = `
             display: flex;
@@ -108,16 +92,7 @@
         `;
 
         btnInstalar = document.createElement('button');
-        
-        // Texto do botão conforme plataforma
-        if (isIOS()) {
-            btnInstalar.textContent = 'Como instalar';
-        } else if (isAndroid()) {
-            btnInstalar.textContent = 'Instalar';
-        } else {
-            btnInstalar.textContent = 'Instalar App';
-        }
-        
+        btnInstalar.textContent = 'Instalar';
         btnInstalar.style.cssText = `
             background: #7c3aed;
             color: white;
@@ -139,14 +114,14 @@
         };
 
         btnFechar = document.createElement('button');
-        btnFechar.textContent = '✕';
+        btnFechar.textContent = '×';
         btnFechar.style.cssText = `
             background: transparent;
             color: #9ca3af;
             border: none;
             padding: 8px 12px;
             border-radius: 30px;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             transition: all 0.3s ease;
         `;
@@ -163,10 +138,8 @@
         banner.appendChild(conteudo);
         banner.appendChild(botoes);
 
-        // Adicionar ao body
         document.body.appendChild(banner);
 
-        // Adicionar CSS da animação
         if (!document.getElementById('style-pwa-banner')) {
             var style = document.createElement('style');
             style.id = 'style-pwa-banner';
@@ -193,40 +166,24 @@
             document.head.appendChild(style);
         }
 
-        console.log('✅ Banner PWA criado e visível');
-
-        // Eventos dos botões
         btnInstalar.onclick = function() {
-            if (isIOS()) {
-                // iOS: mostrar instruções
-                alert(
-                    '📱 Como instalar no iPhone/iPad:\n\n' +
-                    '1. Toque no ícone de partilha (quadrado com seta)\n' +
-                    '2. Deslize para baixo e escolha "Adicionar ao Ecrã Inicial"\n' +
-                    '3. Toque em "Adicionar"\n\n' +
-                    'Pronto! O Saúde Nampula estará no seu ecrã inicial.'
-                );
-            } else if (deferredPrompt) {
-                // Android/Chrome: mostrar diálogo nativo
+            if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then(function(choice) {
                     if (choice.outcome === 'accepted') {
-                        console.log('✅ Utilizador instalou a app');
                         localStorage.setItem('pwa_instalada', 'true');
                         fecharBanner();
-                    } else {
-                        console.log('❌ Utilizador recusou a instalação');
                     }
                     deferredPrompt = null;
                 });
             } else {
-                // Fallback: instruções genéricas
-                alert(
-                    '📱 Para instalar a app:\n\n' +
-                    'Chrome/Edge: Menu → "Instalar aplicação"\n' +
-                    'Safari: Partilhar → "Adicionar ao Ecrã Inicial"\n' +
-                    'Ou clique no ícone "+" na barra de endereço.'
-                );
+                // Tentar instalar via navegador
+                if (window.navigator && window.navigator.share) {
+                    window.navigator.share({
+                        title: 'Saude Nampula',
+                        url: window.location.href
+                    });
+                }
             }
         };
 
@@ -255,16 +212,11 @@
     }
 
     // ========================================
-    // MOSTRAR BANNER (FORÇADO)
+    // MOSTRAR BANNER
     // ========================================
 
     function mostrarBanner() {
-        // Não mostrar se já estiver instalado ou se o banner foi fechado
-        if (verificarInstalado()) {
-            console.log('Banner não mostrado: instalado ou fechado');
-            return;
-        }
-        console.log('🔄 A mostrar banner...');
+        if (verificarInstalado()) return;
         criarBanner();
     }
 
@@ -272,48 +224,29 @@
     // EVENTOS
     // ========================================
 
-    // Android/Chrome: evento de instalação
     window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         deferredPrompt = e;
-        console.log('✅ Evento beforeinstallprompt capturado');
         mostrarBanner();
     });
 
-    // ========================================
-    // FORÇAR BANNER APÓS 3 SEGUNDOS (FALLBACK)
-    // ========================================
-
+    // Forçar banner após 3 segundos se não aparecer
     setTimeout(function() {
-        // Verificar se o banner já foi criado
         if (!document.getElementById('pwa-banner')) {
-            console.log('⏳ Banner não criado automaticamente. Forçando exibição...');
             mostrarBanner();
         }
     }, 3000);
 
-    // ========================================
-    // VERIFICAR SE JÁ ESTÁ INSTALADO AO CARREGAR
-    // ========================================
-
+    // Verificar se já está instalado
     if (verificarInstalado()) {
-        console.log('✅ App já instalada ou banner fechado');
-    } else {
-        console.log('⏳ Aguardando para mostrar banner...');
+        // Nada a fazer
     }
 
-    // ========================================
-    // EVENTOS ADICIONAIS
-    // ========================================
-
-    // App instalada
     window.addEventListener('appinstalled', function() {
-        console.log('✅ App instalada com sucesso!');
         localStorage.setItem('pwa_instalada', 'true');
         fecharBanner();
     });
 
-    // Mudança de modo (standalone)
     window.matchMedia('(display-mode: standalone)').addEventListener('change', function(e) {
         if (e.matches) {
             localStorage.setItem('pwa_instalada', 'true');
@@ -330,7 +263,5 @@
         fecharBanner: fecharBanner,
         verificarInstalado: verificarInstalado
     };
-
-    console.log('✅ PWA inicializado');
 
 })();
