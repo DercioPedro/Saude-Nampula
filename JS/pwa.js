@@ -6,7 +6,7 @@
     var deferredPrompt = null;
     var banner = null;
     var btnInstalar = null;
-    var btnFechar = null;
+    var btnFechar = null; 
 
     // ========================================
     // ARMAZENAMENTO SEGURO (localStorage pode
