@@ -9,6 +9,28 @@
     var btnFechar = null;
 
     // ========================================
+    // ARMAZENAMENTO SEGURO (localStorage pode
+    // lançar erro em modo privado / bloqueado)
+    // ========================================
+
+    function getStorage(chave) {
+        try {
+            return window.localStorage.getItem(chave);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function setStorage(chave, valor) {
+        try {
+            window.localStorage.setItem(chave, valor);
+        } catch (e) {
+            // Ignorado: se o storage estiver bloqueado, o banner
+            // pode voltar a aparecer na próxima visita, sem mais impacto.
+        }
+    }
+
+    // ========================================
     // VERIFICAR SE JÁ ESTÁ INSTALADO
     // ========================================
 
@@ -16,21 +38,13 @@
         if (window.matchMedia('(display-mode: standalone)').matches) {
             return true;
         }
-        if (localStorage.getItem('pwa_instalada') === 'true') {
+        if (getStorage('pwa_instalada') === 'true') {
             return true;
         }
-        if (localStorage.getItem('pwa_banner_fechado') === 'true') {
+        if (getStorage('pwa_banner_fechado') === 'true') {
             return true;
         }
         return false;
-    }
-
-    // ========================================
-    // VERIFICAR SE É iOS
-    // ========================================
-
-    function isIOS() {
-        return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
     }
 
     // ========================================
@@ -38,11 +52,14 @@
     // ========================================
 
     function criarBanner() {
+        if (!document.body) return;
         if (document.getElementById('pwa-banner')) return;
         if (verificarInstalado()) return;
 
         banner = document.createElement('div');
         banner.id = 'pwa-banner';
+        banner.setAttribute('role', 'dialog');
+        banner.setAttribute('aria-label', 'Instalar aplicacao');
         banner.style.cssText = `
             position: fixed;
             bottom: 0;
@@ -71,11 +88,17 @@
             min-width: 200px;
         `;
 
+        var titulo = document.createElement('strong');
+        titulo.textContent = 'Instalar Aplicacao';
+        titulo.style.cssText = 'display:block; font-size:14px;';
+
+        var subtitulo = document.createElement('span');
+        subtitulo.textContent = 'Aceda mais rapido ao Saude Nampula';
+        subtitulo.style.cssText = 'display:block; font-size:12px; opacity:0.8;';
+
         var texto = document.createElement('div');
-        texto.innerHTML = `
-            <strong style="display:block; font-size:14px;">Instalar Aplicacao</strong>
-            <span style="font-size:12px; opacity:0.8;">Aceda mais rapido ao Saude Nampula</span>
-        `;
+        texto.appendChild(titulo);
+        texto.appendChild(subtitulo);
 
         conteudo.appendChild(texto);
 
@@ -87,6 +110,7 @@
         `;
 
         btnInstalar = document.createElement('button');
+        btnInstalar.type = 'button';
         btnInstalar.textContent = 'Instalar';
         btnInstalar.style.cssText = `
             background: #7c3aed;
@@ -109,7 +133,9 @@
         };
 
         btnFechar = document.createElement('button');
+        btnFechar.type = 'button';
         btnFechar.textContent = '×';
+        btnFechar.setAttribute('aria-label', 'Fechar');
         btnFechar.style.cssText = `
             background: transparent;
             color: #9ca3af;
@@ -117,6 +143,7 @@
             padding: 8px 12px;
             border-radius: 30px;
             font-size: 18px;
+            line-height: 1;
             cursor: pointer;
             transition: all 0.3s ease;
         `;
@@ -173,18 +200,20 @@
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(function(choice) {
                 if (choice.outcome === 'accepted') {
-                    localStorage.setItem('pwa_instalada', 'true');
+                    setStorage('pwa_instalada', 'true');
                     fecharBanner();
                     mostrarToast('Aplicacao instalada');
                 } else {
                     btnInstalar.disabled = false;
                 }
                 deferredPrompt = null;
+            }).catch(function() {
+                btnInstalar.disabled = false;
             });
         };
 
         btnFechar.onclick = function() {
-            localStorage.setItem('pwa_banner_fechado', 'true');
+            setStorage('pwa_banner_fechado', 'true');
             fecharBanner();
         };
     }
@@ -194,17 +223,19 @@
     // ========================================
 
     function fecharBanner() {
-        if (banner) {
-            banner.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            banner.style.transform = 'translateY(100%)';
-            banner.style.opacity = '0';
-            setTimeout(function() {
-                if (banner && banner.parentNode) {
-                    banner.parentNode.removeChild(banner);
-                    banner = null;
-                }
-            }, 300);
-        }
+        if (!banner) return;
+
+        var bannerAtual = banner;
+        banner = null;
+
+        bannerAtual.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+        bannerAtual.style.transform = 'translateY(100%)';
+        bannerAtual.style.opacity = '0';
+        setTimeout(function() {
+            if (bannerAtual.parentNode) {
+                bannerAtual.parentNode.removeChild(bannerAtual);
+            }
+        }, 300);
     }
 
     // ========================================
@@ -212,8 +243,12 @@
     // ========================================
 
     function mostrarToast(mensagem) {
+        if (!document.body) return;
+
         var toast = document.createElement('div');
         toast.textContent = mensagem;
+        toast.setAttribute('role', 'status');
+        toast.setAttribute('aria-live', 'polite');
         toast.style.cssText = `
             position: fixed;
             bottom: 24px;
@@ -247,7 +282,12 @@
 
     function mostrarBanner() {
         if (verificarInstalado()) return;
-        criarBanner();
+
+        if (document.body) {
+            criarBanner();
+        } else {
+            document.addEventListener('DOMContentLoaded', criarBanner, { once: true });
+        }
     }
 
     // ========================================
@@ -266,16 +306,23 @@
     });
 
     window.addEventListener('appinstalled', function() {
-        localStorage.setItem('pwa_instalada', 'true');
+        setStorage('pwa_instalada', 'true');
         fecharBanner();
     });
 
-    window.matchMedia('(display-mode: standalone)').addEventListener('change', function(e) {
+    var mqStandalone = window.matchMedia('(display-mode: standalone)');
+    var aoMudarModo = function(e) {
         if (e.matches) {
-            localStorage.setItem('pwa_instalada', 'true');
+            setStorage('pwa_instalada', 'true');
             fecharBanner();
         }
-    });
+    };
+    if (typeof mqStandalone.addEventListener === 'function') {
+        mqStandalone.addEventListener('change', aoMudarModo);
+    } else if (typeof mqStandalone.addListener === 'function') {
+        // Compatibilidade com navegadores mais antigos (Safari < 14)
+        mqStandalone.addListener(aoMudarModo);
+    }
 
     // ========================================
     // EXPORTAR
