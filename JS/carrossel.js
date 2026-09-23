@@ -80,7 +80,7 @@
         if (publicacoes.length === 0) {
             container.innerHTML = `
                 <div class="carrossel-vazio">
-                    <span style="font-size: 32px; display: block; margin-bottom: 10px;">📝</span>
+                    <span style="font-size: 32px; display: block; margin-bottom: 10px;"></span>
                     <p>Nenhuma publicação disponível no momento.</p>
                     <p style="font-size: 13px; color: #9ca3af;">Volte em breve para novidades.</p>
                 </div>
