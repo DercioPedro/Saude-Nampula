@@ -44,16 +44,16 @@ function criarCardEmergencia(emergencia, index) {
     };
     
     let iconeData = icones[emergencia.tipo] || { emoji: '📞', img: '/img/call.png' };
-    let iconeHTML = iconeData.img ? `<img src="${iconeData.img}" alt="${emergencia.tipo}" class="emergency-img">` : iconeData.emoji;
+    let iconeHTML = iconeData.img ? `<img src="${escapeAttr(iconeData.img)}" alt="${escapeAttr(emergencia.tipo)}" class="emergency-img">` : iconeData.emoji;
     
     card.className = 'emergency-card emergency-card-' + cor;
     
     card.innerHTML = `
         <div class="emergency-icon">${iconeHTML}</div>
-        <h3>${emergencia.nome}</h3>
-        <div class="emergency-number">${emergencia.telefone}</div>
-        <p class="emergency-description">${emergencia.tipo} - ${emergencia.disponibilidade}</p>
-        <button class="call-now-btn" onclick="ligarEmergencia('${emergencia.telefone}')">
+        <h3>${escapeHtml(emergencia.nome)}</h3>
+        <div class="emergency-number">${escapeHtml(emergencia.telefone)}</div>
+        <p class="emergency-description">${escapeHtml(emergencia.tipo)} - ${escapeHtml(emergencia.disponibilidade)}</p>
+        <button class="call-now-btn" onclick="ligarEmergencia('${escapeJs(emergencia.telefone)}')">
             <img src="/img/call.png" alt="Ligar" class="call-icon"> LIGAR AGORA
         </button>
     `;
@@ -109,10 +109,10 @@ function criarItemContato(nome, telefone, descricao) {
     item.className = 'hospital-item';
     item.innerHTML = `
         <div class="hospital-info">
-            <h4>${nome}</h4>
-            <p>${descricao}</p>
+            <h4>${escapeHtml(nome)}</h4>
+            <p>${escapeHtml(descricao)}</p>
         </div>
-        <div class="hospital-phone">${telefone}</div>
+        <div class="hospital-phone">${escapeHtml(telefone)}</div>
     `;
     return item;
 }

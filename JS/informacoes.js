@@ -62,7 +62,7 @@ function renderizarPublicacoes(lista) {
         var categoriaLabel = getCategoriaLabel(pub.categoria);
 
         var imagemHTML = pub.imagem
-            ? '<img src="' + pub.imagem + '" alt="' + pub.titulo + '" class="publicacao-imagem">'
+            ? '<img src="' + escapeAttr(pub.imagem) + '" alt="' + escapeAttr(pub.titulo) + '" class="publicacao-imagem">'
             : '<div class="publicacao-imagem-placeholder">' + getCategoriaIcon(pub.categoria) + '</div>';
 
         var dataFormatada = new Date(pub.data).toLocaleDateString('pt-PT', {
@@ -242,7 +242,7 @@ function abrirPublicacao(id) {
     var categoriaLabel = getCategoriaLabel(pub.categoria);
 
     var imagemHTML = pub.imagem
-        ? '<img src="' + pub.imagem + '" alt="' + pub.titulo + '" class="modal-publicacao-imagem">'
+        ? '<img src="' + escapeAttr(pub.imagem) + '" alt="' + escapeAttr(pub.titulo) + '" class="modal-publicacao-imagem">'
         : '';
 
     var dataFormatada = new Date(pub.data).toLocaleDateString('pt-PT', {

@@ -4,7 +4,9 @@ let localizacaoAtual = null;
 let distanciaAtiva = false;
 let cacheCoordenadas = {};
 
-const API_URL = 'https://saude-nampula-api.onrender.com/api';
+const API_URL = (typeof API_BASE_URL !== 'undefined')
+    ? API_BASE_URL
+    : 'https://saude-nampula-backend.onrender.com/api';
 
 function obterLocalizacao() {
     return new Promise((resolve, reject) => {
@@ -92,7 +94,7 @@ async function adicionarDistanciasAosCards() {
         let itens = [];
         let tipoCard = '';
         
-        if (path.indexOf('farm.html') !== -1) {
+        if (path.indexOf('farm') !== -1) {
             const farmacias = await apiRequest('/farmacias');
             itens = farmacias.map(function(f) { return { ...f, tipo: 'farmacia' }; });
             tipoCard = 'farmacia-card';

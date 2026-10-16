@@ -111,7 +111,7 @@ async function criarCard(hospital) {
     for (let i = 0; i < servicos.length; i++) {
         let s = servicos[i].trim();
         if (s) {
-            tagsServicos += `<span class="service-tag">${s}</span>`;
+            tagsServicos += `<span class="service-tag">${escapeHtml(s)}</span>`;
         }
     }
     
@@ -146,7 +146,7 @@ async function criarCard(hospital) {
     card.innerHTML = `
         <div class="hospital-header">
             <div class="hospital-title">
-                <h3>${hospital.nome}</h3>
+                <h3>${escapeHtml(hospital.nome)}</h3>
                 <div class="avaliacao-stats" style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
                     ${total > 0 ? `
                         <span style="font-size: 14px;">${estrelasHTML}</span>
@@ -163,15 +163,15 @@ async function criarCard(hospital) {
         <div class="hospital-details">
             <div class="detail-item">
                 <span class="detail-icon"><img src="/img/ponto.png" alt=""></span>
-                <span>${endereco}</span>
+                <span>${escapeHtml(endereco)}</span>
             </div>
             <div class="detail-item">
                 <span class="detail-icon"><img src="/img/call.png" alt=""></span>
-                <span>${telefone}</span>
+                <span>${escapeHtml(telefone)}</span>
             </div>
             <div class="detail-item">
                 <span class="detail-icon"><img src="/img/clock.png" alt=""></span>
-                <span>${horario}</span>
+                <span>${escapeHtml(horario)}</span>
             </div>
         </div>
         ${htmlServicos}
@@ -179,10 +179,10 @@ async function criarCard(hospital) {
             <button class="details-btn" onclick="verDetalhes(${hospital.id})" style="flex: 1;">Ver Detalhes</button>
         </div>
         <div class="directions-container" style="display: flex; gap: 8px; margin-top: 10px;">
-            <button class="directions-btn" onclick="window.open('${urlDirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+            <button class="directions-btn" onclick="abrirUrlExterna('${escapeJs(urlDirecoes)}')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
                 Como Chegar
             </button>
-            <button class="waze-btn" onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+            <button class="waze-btn" onclick="abrirUrlExterna('${escapeJs(urlWaze)}')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
                 Waze
             </button>
         </div>

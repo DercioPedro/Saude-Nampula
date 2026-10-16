@@ -100,7 +100,7 @@
             var categoriaIcon = getCategoriaIcon(pub.categoria);
 
             var imagemHTML = pub.imagem
-                ? '<img src="' + pub.imagem + '" alt="' + pub.titulo + '">'
+                ? '<img src="' + escapeAttr(pub.imagem) + '" alt="' + escapeAttr(pub.titulo) + '">'
                 : '<span>' + categoriaIcon + '</span>';
 
             var dataFormatada = new Date(pub.data).toLocaleDateString('pt-PT', {
@@ -258,8 +258,8 @@
         // Verificar se tem publicação para abrir na página de informações
         var urlParams = new URLSearchParams(window.location.search);
         var abrirId = urlParams.get('abrir');
-        if (abrirId && window.location.pathname.includes('dicas.html')) {
-            // A função será executada na página dicas.html
+        if (abrirId && window.location.pathname.includes('dicas')) {
+            // A função será executada na página dicas
             if (typeof window.abrirPublicacao === 'function') {
                 setTimeout(function() {
                     window.abrirPublicacao(parseInt(abrirId));

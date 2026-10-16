@@ -441,7 +441,7 @@ async function criarCardFarmacia(farmacia) {
     card.innerHTML = `
         <div class="farmacia-header">
             <div class="farmacia-title">
-                <h3>${nome}</h3>
+                <h3>${escapeHtml(nome)}</h3>
                 <div class="avaliacao-stats" style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
                     ${total > 0 ? `
                         <span style="font-size: 14px;">${estrelasHTML}</span>
@@ -463,15 +463,15 @@ async function criarCardFarmacia(farmacia) {
         <div class="farmacia-details">
             <div class="detail-item">
                 <span class="detail-icon"><img src="/img/ponto.png" alt="Localizacao" style="width: 16px; height: 16px;"></span>
-                <span>${endereco}</span>
+                <span>${escapeHtml(endereco)}</span>
             </div>
             <div class="detail-item">
                 <span class="detail-icon"><img src="/img/call.png" alt="Telefone" style="width: 16px; height: 16px;"></span>
-                <span>${telefone}</span>
+                <span>${escapeHtml(telefone)}</span>
             </div>
             <div class="detail-item">
                 <span class="detail-icon"><img src="/img/clock.png" alt="Horario" style="width: 16px; height: 16px;"></span>
-                <span>${horario}</span>
+                <span>${escapeHtml(horario)}</span>
             </div>
         </div>
         <div class="farmacia-services">
@@ -479,10 +479,10 @@ async function criarCardFarmacia(farmacia) {
             <ul>${servicosHTML}</ul>
         </div>
         <div class="button-container" style="display: flex; gap: 8px; margin-bottom: 10px;">
-            <button class="medicamentos-btn" onclick="window.location.href='medicamentos.html?farmacia=${nomeCodificado}&id=${id}'" style="flex: 1;">
+            <button class="medicamentos-btn" onclick="window.location.href='/medicamentos?farmacia=${nomeCodificado}&id=${id}'" style="flex: 1;">
                 <img src="/img/comprimidos.png" alt="Medicamentos" style="width: 16px; height: 16px; vertical-align: middle;"> Medicamentos
             </button>
-            <button class="details-btn" onclick="window.location.href='detalhes-farmacia.html?farmacia=${nomeCodificado}&id=${id}'" style="flex: 1;">
+            <button class="details-btn" onclick="window.location.href='/detalhes-farmacia?farmacia=${nomeCodificado}&id=${id}'" style="flex: 1;">
                 <img src="/img/details.png" alt="Detalhes" style="width: 16px; height: 16px; vertical-align: middle;"> Detalhes
             </button>
         </div>
@@ -584,8 +584,8 @@ async function carregarMedicamentosDaFarmacia() {
         var medicamentosHTML = `
             <div style="max-width: 800px; margin: 40px auto; padding: 30px; background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                 <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px;">
-                    <a href="farm.html" style="text-decoration: none; color: #7c3aed; font-size: 18px;">← Voltar</a>
-                    <h1 style="color: #1f2937; margin: 0;"><img src="/img/comprimidos.png" alt="Medicamentos" style="width: 28px; height: 28px; vertical-align: middle;"> ${nomeDecodificado}</h1>
+                    <a href="/farm" style="text-decoration: none; color: #7c3aed; font-size: 18px;">← Voltar</a>
+                    <h1 style="color: #1f2937; margin: 0;"><img src="/img/comprimidos.png" alt="Medicamentos" style="width: 28px; height: 28px; vertical-align: middle;"> ${escapeHtml(nomeDecodificado)}</h1>
                 </div>
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -613,11 +613,11 @@ async function carregarMedicamentosDaFarmacia() {
                     medicamentosHTML += `
                         <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border-left: 4px solid #059669; display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <span style="font-weight: 500;">${p.nome}</span>
-                                ${p.fabricante ? '<br><small style="color: #6b7280;">' + p.fabricante + '</small>' : ''}
+                                <span style="font-weight: 500;">${escapeHtml(p.nome)}</span>
+                                ${p.fabricante ? '<br><small style="color: #6b7280;">' + escapeHtml(p.fabricante) + '</small>' : ''}
                             </div>
                             <div style="text-align: right;">
-                                <span style="font-weight: bold; color: #059669; display: block;">${p.preco} MZN</span>
+                                <span style="font-weight: bold; color: #059669; display: block;">${escapeHtml(p.preco)} MZN</span>
                                 <span style="background: ${statusBg}; color: ${statusColor}; padding: 4px 12px; border-radius: 20px; font-size: 12px;">${statusText}</span>
                             </div>
                         </div>
@@ -635,11 +635,11 @@ async function carregarMedicamentosDaFarmacia() {
                     medicamentosHTML += `
                         <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border-left: 4px solid #7c3aed; display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <span style="font-weight: 500;">${p.nome}</span>
-                                <br><small style="color: #6b7280;">${p.categoria}</small>
+                                <span style="font-weight: 500;">${escapeHtml(p.nome)}</span>
+                                <br><small style="color: #6b7280;">${escapeHtml(p.categoria)}</small>
                             </div>
                             <div style="text-align: right;">
-                                <span style="font-weight: bold; color: #7c3aed; display: block;">${p.preco} MZN</span>
+                                <span style="font-weight: bold; color: #7c3aed; display: block;">${escapeHtml(p.preco)} MZN</span>
                                 <span style="background: ${statusBg}; color: #047857; padding: 4px 12px; border-radius: 20px; font-size: 12px;">${statusText}</span>
                             </div>
                         </div>
@@ -659,20 +659,20 @@ async function carregarMedicamentosDaFarmacia() {
                 </div>
                 <div style="margin-top: 30px; padding: 20px; background: #faf5ff; border-radius: 8px;">
                     <h3 style="color: #5b21b6; margin-bottom: 10px;"><img src="/img/call.png" alt="Contacto" style="width: 20px; height: 20px;"> Contacto</h3>
-                    <p style="color: #4b5563;">Telefone: ${farmacia.telefone || 'Disponivel na farmacia'}</p>
-                    <p style="color: #4b5563;">Endereco: ${farmacia.endereco || 'Disponivel na farmacia'}</p>
-                    <p style="color: #4b5563;">Horario: ${farmacia.horario || (farmacia.plantao ? '24 horas' : '08:00 - 18:00')}</p>
+                    <p style="color: #4b5563;">Telefone: ${escapeHtml(farmacia.telefone || 'Disponivel na farmacia')}</p>
+                    <p style="color: #4b5563;">Endereco: ${escapeHtml(farmacia.endereco || 'Disponivel na farmacia')}</p>
+                    <p style="color: #4b5563;">Horario: ${escapeHtml(farmacia.horario || (farmacia.plantao ? '24 horas' : '08:00 - 18:00'))}</p>
                 </div>
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button onclick="window.open('${urlDirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <button onclick="abrirUrlExterna('${escapeJs(urlDirecoes)}')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
                         Como Chegar (Google Maps)
                     </button>
-                    <button onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <button onclick="abrirUrlExterna('${escapeJs(urlWaze)}')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
                         Abrir no Waze
                     </button>
                 </div>
                 <div style="margin-top: 20px; text-align: center;">
-                    <a href="farm.html" style="color: #7c3aed; text-decoration: none;">← Voltar para lista de farmacias</a>
+                    <a href="/farm" style="color: #7c3aed; text-decoration: none;">← Voltar para lista de farmacias</a>
                 </div>
             </div>
         `;
@@ -720,8 +720,8 @@ async function carregarDetalhesDaFarmacia() {
         var detalhesHTML = `
             <div style="max-width: 900px; margin: 40px auto; padding: 30px; background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                 <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-                    <a href="farm.html" style="text-decoration: none; color: #7c3aed; font-size: 18px;">← Voltar</a>
-                    <h1 style="color: #1f2937; margin: 0; flex: 1;"><img src="/img/comprimidos.png" alt="Farmacia" style="width: 28px; height: 28px; vertical-align: middle;"> ${nomeDecodificado}</h1>
+                    <a href="/farm" style="text-decoration: none; color: #7c3aed; font-size: 18px;">← Voltar</a>
+                    <h1 style="color: #1f2937; margin: 0; flex: 1;"><img src="/img/comprimidos.png" alt="Farmacia" style="width: 28px; height: 28px; vertical-align: middle;"> ${escapeHtml(nomeDecodificado)}</h1>
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <span style="background: ${farmacia.plantao ? '#dbeafe' : '#d1fae5'}; color: ${farmacia.plantao ? '#1e40af' : '#047857'}; padding: 8px 16px; border-radius: 20px; font-weight: 600;">
                             ${farmacia.plantao ? '24 Horas' : 'Horario Comercial'}
@@ -739,12 +739,12 @@ async function carregarDetalhesDaFarmacia() {
                             <div style="margin-bottom: 15px;">
                                 <p><strong>Endereco:</strong></p>
                                 <p style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb;">
-                                    ${enderecoCompleto}<br>
+                                    ${escapeHtml(enderecoCompleto)}<br>
                                     <small style="color: #6b7280;">Nampula, Mocambique</small>
                                 </p>
                             </div>
                             <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                                <a href="tel:${farmacia.telefone}" style="flex: 1; background: #7c3aed; color: white; text-decoration: none; padding: 12px; border-radius: 8px; text-align: center; font-weight: 600;">
+                                <a href="tel:${escapeAttr(farmacia.telefone)}" style="flex: 1; background: #7c3aed; color: white; text-decoration: none; padding: 12px; border-radius: 8px; text-align: center; font-weight: 600;">
                                     <img src="/img/call.png" alt="Ligar" style="width: 16px; height: 16px; vertical-align: middle;"> Ligar Agora
                                 </a>
                                 <a href="https://wa.me/258${(farmacia.telefone || '').replace(/[^0-9]/g, '')}" style="flex: 1; background: #25D366; color: white; text-decoration: none; padding: 12px; border-radius: 8px; text-align: center; font-weight: 600;">
@@ -752,10 +752,10 @@ async function carregarDetalhesDaFarmacia() {
                                 </a>
                             </div>
                             <div style="display: flex; gap: 10px;">
-                                <button onclick="window.open('${urlDirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+                                <button onclick="abrirUrlExterna('${escapeJs(urlDirecoes)}')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
                                     Como Chegar
                                 </button>
-                                <button onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+                                <button onclick="abrirUrlExterna('${escapeJs(urlWaze)}')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
                                     Waze
                                 </button>
                             </div>
@@ -766,11 +766,11 @@ async function carregarDetalhesDaFarmacia() {
                             <div style="background: white; padding: 15px; border-radius: 8px;">
                                 ${farmacia.plantao ? 
                                     '<div>Segunda a Domingo: <strong style="color: #059669;">24 horas</strong></div>' :
-                                    '<div>Horario: <strong>' + (farmacia.horario || '08:00 - 18:00') + '</strong></div>'
+                                    '<div>Horario: <strong>' + escapeHtml(farmacia.horario || '08:00 - 18:00') + '</strong></div>'
                                 }
                                 ${farmacia.horario_almoco_inicio && farmacia.horario_almoco_fim ? `
                                     <div style="margin-top: 8px; color: #d97706;">
-                                        <small>Intervalo de almoço: <strong>${farmacia.horario_almoco_inicio} - ${farmacia.horario_almoco_fim}</strong></small>
+                                        <small>Intervalo de almoço: <strong>${escapeHtml(farmacia.horario_almoco_inicio)} - ${escapeHtml(farmacia.horario_almoco_fim)}</strong></small>
                                     </div>
                                 ` : ''}
                                 ${farmacia.funciona_domingo === false ? `
@@ -780,7 +780,7 @@ async function carregarDetalhesDaFarmacia() {
                                 ` : ''}
                                 ${farmacia.funciona_domingo === true && farmacia.horario_domingo ? `
                                     <div style="margin-top: 8px; color: #1e40af;">
-                                        <small>Domingo: <strong>${farmacia.horario_domingo}</strong></small>
+                                        <small>Domingo: <strong>${escapeHtml(farmacia.horario_domingo)}</strong></small>
                                     </div>
                                 ` : ''}
                             </div>
@@ -816,10 +816,10 @@ async function carregarDetalhesDaFarmacia() {
                 ${horariosHTML}
                 
                 <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
-                    <button onclick="window.location.href='medicamentos.html?farmacia=${nomeFarmacia}&id=${farmacia.id}'" style="background: #059669; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                    <button onclick="window.location.href='/medicamentos?farmacia=${nomeFarmacia}&id=${farmacia.id}'" style="background: #059669; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: 600; cursor: pointer;">
                         <img src="/img/comprimidos.png" alt="Medicamentos" style="width: 16px; height: 16px; vertical-align: middle;"> Ver Medicamentos (${produtos.length})
                     </button>
-                    <button onclick="window.location.href='farm.html'" style="background: white; color: #7c3aed; border: 2px solid #7c3aed; padding: 15px 30px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                    <button onclick="window.location.href='/farm'" style="background: white; color: #7c3aed; border: 2px solid #7c3aed; padding: 15px 30px; border-radius: 8px; font-weight: 600; cursor: pointer;">
                         ← Voltar para Lista
                     </button>
                 </div>
@@ -912,7 +912,7 @@ function gerarTabelaHorarios(farmacia) {
         // Verificar se tem intervalo de almoço
         var intervaloInfo = '';
         if (farmacia.horario_almoco_inicio && farmacia.horario_almoco_fim && horario !== 'Fechado') {
-            intervaloInfo = `<span class="intervalo-info">Almoço: ${farmacia.horario_almoco_inicio} - ${farmacia.horario_almoco_fim}</span>`;
+            intervaloInfo = `<span class="intervalo-info">Almoço: ${escapeHtml(farmacia.horario_almoco_inicio)} - ${escapeHtml(farmacia.horario_almoco_fim)}</span>`;
         }
         
         // Verificar se é domingo e tem horário especial
@@ -923,8 +923,8 @@ function gerarTabelaHorarios(farmacia) {
         
         tabelaHTML += `
             <tr class="${rowClass}">
-                <td><strong>${dia.nome}</strong> ${isDiaAtual ? '🔵' : ''}</td>
-                <td>${horario !== 'Fechado' ? horario : '—'} ${intervaloInfo} ${domingoBadge}</td>
+                <td><strong>${escapeHtml(dia.nome)}</strong> ${isDiaAtual ? '🔵' : ''}</td>
+                <td>${horario !== 'Fechado' ? escapeHtml(horario) : '—'} ${intervaloInfo} ${domingoBadge}</td>
                 <td><span class="status-dia ${statusClass}">${statusText}</span></td>
             </tr>
         `;

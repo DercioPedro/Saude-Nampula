@@ -10,7 +10,7 @@ async function carregarDetalhes() {
     
     if (!id) {
         alert('Hospital não encontrado!');
-        window.location.href = 'hospital.html';
+        window.location.href = '/hospital';
         return;
     }
     

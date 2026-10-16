@@ -5,7 +5,7 @@
     let sessao = getFarmaciaSession();
     
     if (!sessao) {
-        window.location.href = 'login-farmacia.html';
+        window.location.href = '/login-farmacia';
         return;
     }
     
@@ -15,7 +15,7 @@
     
     if (tempoSessao > tempoLimite) {
         clearFarmaciaSession();
-        window.location.href = 'login-farmacia.html';
+        window.location.href = '/login-farmacia';
         return;
     }
     
@@ -57,8 +57,8 @@ function mostrarInfoFarmacia() {
     
     header.innerHTML = `
         <div>
-            <h3> ${farmaciaAtual.nome}</h3>
-            <p> ${farmaciaAtual.endereco || 'Endereço não informado'} | 📞 ${farmaciaAtual.telefone || 'Telefone não informado'}</p>
+            <h3> ${escapeHtml(farmaciaAtual.nome)}</h3>
+            <p> ${escapeHtml(farmaciaAtual.endereco || 'Endereço não informado')} | 📞 ${escapeHtml(farmaciaAtual.telefone || 'Telefone não informado')}</p>
         </div>
         <div style="display: flex; gap: 10px;">
             <span style="background: ${plantaoCor}; color: ${plantaoCorTexto}; padding: 8px 16px; border-radius: 20px; font-weight: 600;">
@@ -124,10 +124,10 @@ function renderizarTabelaProdutos(produtosLista) {
         
         tabela += `
             <tr>
-                <td><strong>${p.nome}</strong><br><small>${p.fabricante || ''}</small></td>
-                <td>${p.categoria}</td>
-                <td><strong>${p.preco} MZN</strong></td>
-                <td>${p.quantidade} unid.</td>
+                <td><strong>${escapeHtml(p.nome)}</strong><br><small>${escapeHtml(p.fabricante || '')}</small></td>
+                <td>${escapeHtml(p.categoria)}</td>
+                <td><strong>${escapeHtml(p.preco)} MZN</strong></td>
+                <td>${escapeHtml(p.quantidade)} unid.</td>
                 <td><span class="status-stock ${statusClass}">${statusText}</span></td>
                 <td class="acoes-produto">
                     <button class="btn-editar" onclick="editarProduto(${p.id})"> Editar</button>
@@ -263,7 +263,7 @@ async function excluirProduto(id) {
 // ==================== FUNÇÕES AUXILIARES ====================
 function fazerLogout() {
     clearFarmaciaSession();
-    window.location.href = 'login-farmacia.html';
+    window.location.href = '/login-farmacia';
 }
 
 function mostrarToast(mensagem, tipo = 'sucesso') {

@@ -33,10 +33,10 @@ function atualizarSelectFarmacias(selectId) {
         
         if (selectId === 'novaFarmaciaSelect') {
             if (!temCredencial) {
-                options += `<option value="${farmacias[i].id}">${farmacias[i].nome}</option>`;
+                options += `<option value="${parseInt(farmacias[i].id)}">${escapeHtml(farmacias[i].nome)}</option>`;
             }
         } else {
-            options += `<option value="${farmacias[i].id}">${farmacias[i].nome}</option>`;
+            options += `<option value="${parseInt(farmacias[i].id)}">${escapeHtml(farmacias[i].nome)}</option>`;
         }
     }
     select.innerHTML = options;
@@ -109,8 +109,8 @@ function mostrarModalPrimeiroAcesso() {
     farmaciaSelecionadaPrimeiroAcesso = farmaciaId;
     
     document.getElementById('infoFarmaciaEscolhida').innerHTML = `
-        <strong>${farmacia.nome}</strong><br>
-        <small style="font-weight: normal;">${farmacia.endereco || ''}</small>
+        <strong>${escapeHtml(farmacia.nome)}</strong><br>
+        <small style="font-weight: normal;">${escapeHtml(farmacia.endereco || '')}</small>
     `;
     
     document.getElementById('modalPrimeiroAcesso').style.display = 'block';

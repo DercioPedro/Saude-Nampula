@@ -22,7 +22,7 @@ function sair() {
         localStorage.removeItem('api_token');
         localStorage.removeItem('adminLoggedIn');
         localStorage.removeItem('adminUsername');
-        window.location.href = 'admin-login.html';
+        window.location.href = '/admin-login';
     }
 }
 
@@ -97,11 +97,11 @@ async function carregarHospitais() {
             const localizacao = h.latitude && h.longitude ? h.latitude + ', ' + h.longitude : (h.endereco || '-');
             html += `
                 <tr>
-                    <td><strong>${h.nome}</strong></td>
-                    <td>${h.endereco || '-'}</td>
-                    <td>${h.telefone || '-'}</td>
-                    <td>${h.horario || '-'}</td>
-                    <td>${localizacao}</td>
+                    <td><strong>${escapeHtml(h.nome)}</strong></td>
+                    <td>${escapeHtml(h.endereco || '-')}</td>
+                    <td>${escapeHtml(h.telefone || '-')}</td>
+                    <td>${escapeHtml(h.horario || '-')}</td>
+                    <td>${escapeHtml(localizacao)}</td>
                     <td>
                         <div class="action-buttons">
                             <button class="btn-edit" onclick="editarItem('hospital', ${h.id})">Editar</button>
@@ -132,11 +132,11 @@ async function carregarCentros() {
             const localizacao = c.latitude && c.longitude ? c.latitude + ', ' + c.longitude : (c.endereco || '-');
             html += `
                 <tr>
-                    <td><strong>${c.nome}</strong></td>
-                    <td>${c.endereco || '-'}</td>
-                    <td>${c.telefone || '-'}</td>
-                    <td>${c.horario || '-'}</td>
-                    <td>${localizacao}</td>
+                    <td><strong>${escapeHtml(c.nome)}</strong></td>
+                    <td>${escapeHtml(c.endereco || '-')}</td>
+                    <td>${escapeHtml(c.telefone || '-')}</td>
+                    <td>${escapeHtml(c.horario || '-')}</td>
+                    <td>${escapeHtml(localizacao)}</td>
                     <td>
                         <div class="action-buttons">
                             <button class="btn-edit" onclick="editarItem('centro', ${c.id})">Editar</button>
@@ -167,11 +167,11 @@ async function carregarFarmacias() {
             const localizacao = f.latitude && f.longitude ? f.latitude + ', ' + f.longitude : (f.endereco || '-');
             html += `
                 <tr>
-                    <td><strong>${f.nome}</strong></td>
-                    <td>${f.endereco || '-'}</td>
-                    <td>${f.telefone || '-'}</td>
-                    <td>${f.horario || '-'}</td>
-                    <td>${localizacao}</td>
+                    <td><strong>${escapeHtml(f.nome)}</strong></td>
+                    <td>${escapeHtml(f.endereco || '-')}</td>
+                    <td>${escapeHtml(f.telefone || '-')}</td>
+                    <td>${escapeHtml(f.horario || '-')}</td>
+                    <td>${escapeHtml(localizacao)}</td>
                     <td>
                         <div class="action-buttons">
                             <button class="btn-edit" onclick="editarItem('farmacia', ${f.id})">Editar</button>
@@ -201,10 +201,10 @@ async function carregarEmergencias() {
         for (let e of emergencias) {
             html += `
                 <tr>
-                    <td><strong>${e.nome}</strong></td>
-                    <td>${e.tipo}</td>
-                    <td>${e.telefone || '-'}</td>
-                    <td>${e.disponibilidade || '-'}</td>
+                    <td><strong>${escapeHtml(e.nome)}</strong></td>
+                    <td>${escapeHtml(e.tipo)}</td>
+                    <td>${escapeHtml(e.telefone || '-')}</td>
+                    <td>${escapeHtml(e.disponibilidade || '-')}</td>
                     <td>
                         <div class="action-buttons">
                             <button class="btn-edit" onclick="editarItem('emergencia', ${e.id})">Editar</button>

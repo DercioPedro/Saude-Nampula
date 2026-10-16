@@ -8,6 +8,44 @@ const API_BASE_URL = isProduction
     ? 'https://saude-nampula-backend.onrender.com/api'
     : 'http://localhost:5000/api';
 
+// ==================== SEGURANÇA: ESCAPE DE SAÍDA ====================
+// Escapar texto para inserção segura em conteúdo HTML (evita XSS armazenado)
+function escapeHtml(texto) {
+    if (texto === null || texto === undefined) return '';
+    return String(texto)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/`/g, '&#96;');
+}
+
+// Escapar texto para uso dentro de atributos HTML (src, alt, href, etc.)
+function escapeAttr(texto) {
+    return escapeHtml(texto).replace(/\n/g, ' ').replace(/\r/g, ' ');
+}
+
+// Escapar texto para uso dentro de string JavaScript em atributos inline (onclick="...")
+function escapeJs(texto) {
+    if (texto === null || texto === undefined) return '';
+    return String(texto)
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r')
+        .replace(/</g, '\\x3c')
+        .replace(/>/g, '\\x3e')
+        .replace(/&/g, '\\x26');
+}
+
+// Abrir um URL externo de forma segura (sem opener)
+function abrirUrlExterna(url) {
+    if (!url || url === '#') return;
+    window.open(url, '_blank', 'noopener,noreferrer');
+}
+
 // Função para fazer requisições à API
 async function apiRequest(endpoint, method = 'GET', data = null, token = null) {
     const headers = {

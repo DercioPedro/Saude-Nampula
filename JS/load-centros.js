@@ -112,7 +112,7 @@ async function criarCardCentro(centro) {
     
     let listaServicos = '';
     for (let i = 0; i < servicos.length; i++) {
-        listaServicos += `<li>${servicos[i]}</li>`;
+        listaServicos += `<li>${escapeHtml(servicos[i])}</li>`;
     }
     
     let nomeBairro = pegarNomeBairro(centro.endereco);
@@ -138,7 +138,7 @@ async function criarCardCentro(centro) {
         <div class="centro-header">
             <span class="centro-icon"><img src="/img/centros.png" alt=""></span>
             <div class="centro-title">
-                <h3>${centro.nome}</h3>
+                <h3>${escapeHtml(centro.nome)}</h3>
                 <div class="avaliacao-stats" style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
                     ${total > 0 ? `
                         <span style="font-size: 14px;">${estrelasHTML}</span>
@@ -148,21 +148,21 @@ async function criarCardCentro(centro) {
                         <span style="font-size: 13px; color: #6b7280;">Ainda sem avaliações</span>
                     `}
                 </div>
-                <span class="centro-bairro">${nomeBairro}</span>
+                <span class="centro-bairro">${escapeHtml(nomeBairro)}</span>
             </div>
         </div>
         <div class="centro-details">
             <div class="detail-item">
                 <span class="detail-icon"><img src="/img/ponto.png" alt=""></span>
-                <span>${centro.endereco || 'Endereço não informado'}</span>
+                <span>${escapeHtml(centro.endereco || 'Endereço não informado')}</span>
             </div>
             <div class="detail-item">
                 <span class="detail-icon"><img src="/img/call.png" alt=""></span>
-                <span>${telefone}</span>
+                <span>${escapeHtml(telefone)}</span>
             </div>
             <div class="detail-item">
                 <span class="detail-icon"><img src="/img/clock.png" alt=""></span>
-                <span>${horario}</span>
+                <span>${escapeHtml(horario)}</span>
             </div>
         </div>
         <div class="services-list">
@@ -173,10 +173,10 @@ async function criarCardCentro(centro) {
             <button class="info-btn" onclick="verDetalhes(${centro.id})" style="flex: 1;">Mais Informações</button>
         </div>
         <div class="directions-container" style="display: flex; gap: 8px;">
-            <button class="directions-btn" onclick="window.open('${urlDirecoes}', '_blank')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+            <button class="directions-btn" onclick="abrirUrlExterna('${escapeJs(urlDirecoes)}')" style="flex: 1; background: #4285F4; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
                 Como Chegar
             </button>
-            <button class="waze-btn" onclick="window.open('${urlWaze}', '_blank')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+            <button class="waze-btn" onclick="abrirUrlExterna('${escapeJs(urlWaze)}')" style="flex: 1; background: #33CCFF; color: white; border: none; padding: 8px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
                 Waze
             </button>
         </div>

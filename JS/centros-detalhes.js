@@ -119,7 +119,7 @@ async function carregarDetalhes() {
                     
                     let item = document.createElement('div');
                     item.className = 'servico-item';
-                    item.innerHTML = `<div class="servico-item-icon">${icone}</div><strong>${servico}</strong>`;
+                    item.innerHTML = `<div class="servico-item-icon">${icone}</div><strong>${escapeHtml(servico)}</strong>`;
                     servicosGrid.appendChild(item);
                 }
             }
