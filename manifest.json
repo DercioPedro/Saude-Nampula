@@ -3,6 +3,8 @@
   "short_name": "Saúde Nampula",
   "description": "Encontre hospitais, farmácias e centros de saúde em Nampula",
   "start_url": "/",
+  "scope": "/",
+  "id": "/",
   "display": "standalone",
   "background_color": "#059669",
   "theme_color": "#059669",
@@ -55,18 +57,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/img/screenshot-1.png",
-      "sizes": "1080x1920",
-      "type": "image/png"
-    },
-    {
-      "src": "/img/screenshot-2.png",
-      "sizes": "1080x1920",
-      "type": "image/png"
     }
   ]
 }

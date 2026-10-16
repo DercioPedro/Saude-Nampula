@@ -1,6 +1,11 @@
 User-agent: *
 Allow: /
 
+# Recursos necessários para renderização
+Allow: /JS/
+Allow: /styles/
+Allow: /img/
+
 # Bloquear áreas administrativas
 Disallow: /admin-login
 Disallow: /admin-panel
