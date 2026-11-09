@@ -1,12 +1,13 @@
 User-agent: *
 Allow: /
 
-# Recursos necessários para renderização
 Allow: /JS/
 Allow: /styles/
 Allow: /img/
+Allow: /manifest.json
+Allow: /sitemap.xml
+Allow: /ads.txt
 
-# Bloquear áreas administrativas
 Disallow: /admin-login
 Disallow: /admin-panel
 Disallow: /admin-produtos

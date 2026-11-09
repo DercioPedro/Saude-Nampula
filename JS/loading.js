@@ -416,8 +416,15 @@ class LoadingManager {
 // Instância global
 const loadingManager = new LoadingManager();
 
-// Inicializar
+function isSearchCrawler() {
+    var ua = (navigator.userAgent || '').toLowerCase();
+    return /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandex|facebookexternalhit|twitterbot|linkedinbot|embedly|applebot|semrushbot|ahrefsbot|mj12bot|dotbot/.test(ua);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    if (isSearchCrawler()) {
+        return;
+    }
     loadingManager.showLoading(1200, 2500);
     loadingManager.updateTips();
 });

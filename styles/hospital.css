@@ -91,6 +91,13 @@
      color: #1f2937;
  }
 
+ .page-intro {
+     margin: -1rem 0 2rem;
+     color: #4b5563;
+     line-height: 1.6;
+     max-width: 720px;
+ }
+
  .map-btn {
      background: #059669;
      color: white;

@@ -1,45 +1,40 @@
-
-
-// Função de Busca
 function realizarBusca() {
     const inputBusca = document.getElementById('input-busca');
     const termoBusca = inputBusca ? inputBusca.value.toLowerCase().trim() : '';
-    
+
     if (!termoBusca) {
         alert('Por favor, digite algo para buscar');
         return;
     }
-    
-    // Buscar em diferentes categorias
+
     if (termoBusca.includes('hospital')) {
         window.location.href = '/hospital';
-    } else if (termoBusca.includes('centro') || termoBusca.includes('saúde')) {
+    } else if (termoBusca.includes('centro') || termoBusca.includes('saúde') || termoBusca.includes('saude')) {
         window.location.href = '/centros';
     } else if (termoBusca.includes('farmácia') || termoBusca.includes('farmacia')) {
         window.location.href = '/farm';
     } else if (termoBusca.includes('emergência') || termoBusca.includes('emergencia')) {
         window.location.href = '/emer';
     } else {
-        // Buscar por bairro
-        const bairros = ['mucatine', 'muhala', 'namicopo', 'centro', 'marrere', 'napipine'];
-        const bairroEncontrado = bairros.find(b => termoBusca.includes(b));
-        
+        const bairros = ['mucatine', 'muhala', 'namicopo', 'centro', 'marrere', 'napipine', 'muatala', 'moma', 'natikiri'];
+        const bairroEncontrado = bairros.find(function (b) {
+            return termoBusca.includes(b);
+        });
+
         if (bairroEncontrado) {
-            window.location.href = `/centros? bairro=${bairroEncontrado}`;
+            window.location.href = '/centros?bairro=' + encodeURIComponent(bairroEncontrado);
         } else {
             alert('Não encontramos resultados para: ' + termoBusca);
         }
     }
 }
 
-// Permitir busca com Enter
 function buscarComEnter(event) {
     if (event.key === 'Enter') {
         realizarBusca();
     }
 }
 
-// Botão de Emergência
 function ligarEmergencia() {
     const confirmar = confirm('Deseja ligar para o número de emergência 119?');
     if (confirmar) {
@@ -47,135 +42,22 @@ function ligarEmergencia() {
     }
 }
 
-
-try {
-    // Obtém o ano atual
-    const anoAtual = new Date().getFullYear();
-
-    // Insere no elemento com id="ano"
-    document.getElementById("ano").textContent = anoAtual;
-} catch (error) {
-    console.error("Erro ao definir o ano no footer:", error);
-}
-
-// Navegação para cards clicáveis
 function navegarPara(pagina) {
     window.location.href = pagina;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // Animação de entrada para cards
-// function animarCards() {
-//     const observer = new IntersectionObserver((entries) => {
-//         entries.forEach(entry => {
-//             if (entry.isIntersecting) {
-//                 entry.target.style.opacity = '0';
-//                 entry.target.style.transform = 'translateY(20px)';
-                
-//                 setTimeout(() => {
-//                     entry.target.style.transition = 'all 0.5s ease';
-//                     entry.target.style.opacity = '1';
-//                     entry.target.style.transform = 'translateY(0)';
-//                 }, 100);
-                
-//                 observer.unobserve(entry.target);
-//             }
-//         });
-//     });
-    
-//     document.querySelectorAll('.card, .info-card').forEach(card => {
-//         observer.observe(card);
-//     });
-// }
-
-// // Executar quando o DOM estiver pronto
-// document.addEventListener('DOMContentLoaded', function() {
-//     console.log('Página Inicial - Carregada');
-    
-//     // Animar cards
-//     animarCards();
-    
-//     // Adicionar evento ao input de busca
-//     const inputBusca = document.getElementById('input-busca');
-//     if (inputBusca) {
-//         inputBusca.addEventListener('keypress', buscarComEnter);
-//     }
-// });
+try {
+    const anoEl = document.getElementById('ano');
+    if (anoEl) {
+        anoEl.textContent = new Date().getFullYear();
+    }
+} catch (error) {
+    console.error('Erro ao definir o ano no footer:', error);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const inputBusca = document.getElementById('input-busca');
+    if (inputBusca) {
+        inputBusca.addEventListener('keypress', buscarComEnter);
+    }
+});

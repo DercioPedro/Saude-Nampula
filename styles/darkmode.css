@@ -1331,3 +1331,17 @@
         right: 10px;
     }
 }
+
+.dark-mode .footer-nav a {
+    color: var(--dm-text-secondary);
+}
+
+.dark-mode .footer-nav a:hover {
+    color: var(--dm-text-primary);
+}
+
+.dark-mode a.card,
+.dark-mode a.info-card,
+.dark-mode a.feature-box {
+    color: inherit;
+}

@@ -1,6 +1,6 @@
 // sw.js - Service Worker para o Saúde Nampula
 
-const CACHE_NAME = 'saude-nampula-v2';
+const CACHE_NAME = 'saude-nampula-v3';
 const urlsToCache = [
   '/',
   '/hospital',
@@ -58,6 +58,10 @@ self.addEventListener('fetch', function (event) {
 
   var url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+
+  if (url.pathname === '/robots.txt' || url.pathname === '/sitemap.xml' || url.pathname === '/ads.txt') {
+    return;
+  }
 
   // Navegação (HTML): network-first para garantir conteúdo atualizado e indexável
   if (request.mode === 'navigate') {

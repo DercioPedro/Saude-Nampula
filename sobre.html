@@ -1,24 +1,38 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-MZ">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sobre o Saúde Nampula: plataforma comunitária que reúne hospitais, centros de saúde, farmácias e contactos de emergência na cidade de Nampula.">
-    <title>Saúde Nampula - Sobre</title>
+    <meta name="description" content="Sobre o Saúde Nampula: plataforma comunitária que reúne hospitais, centros de saúde, farmácias e contactos de emergência na cidade de Nampula, Moçambique.">
+    <meta name="robots" content="index, follow">
+    <title>Sobre o Saúde Nampula | Plataforma de Saúde em Nampula</title>
     <link rel="canonical" href="https://www.saudenampula.com/sobre">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Saúde Nampula">
-    <meta property="og:title" content="Sobre o Saúde Nampula">
+    <meta property="og:title" content="Sobre o Saúde Nampula | Plataforma de Saúde em Nampula">
     <meta property="og:description" content="Plataforma comunitária com hospitais, centros de saúde, farmácias e contactos de emergência em Nampula.">
     <meta property="og:url" content="https://www.saudenampula.com/sobre">
     <meta property="og:locale" content="pt_MZ">
+    <meta property="og:image" content="https://www.saudenampula.com/img/monitor.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Sobre o Saúde Nampula">
+    <meta name="twitter:description" content="Plataforma comunitária com hospitais, centros de saúde, farmácias e contactos de emergência em Nampula.">
     <link rel="stylesheet" href="styles/sobre.css">
     <link rel="stylesheet" href="styles/darkmode.css">
     <link rel="icon" type="image/png" href="/img/monitor.png">
     <script src="JS/loading.js"></script>
     <script src="https://pl30412009.effectivecpmnetwork.com/e0/32/e9/e032e9553695eb8f33d7773ddeb6b2d8.js"></script>
     <script src="https://pl30412058.effectivecpmnetwork.com/08/92/c1/0892c1d3ceb2687de8a72b8af2128cff.js"></script>
-
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "name": "Sobre o Saúde Nampula",
+      "description": "Plataforma comunitária com hospitais, centros de saúde, farmácias e contactos de emergência em Nampula.",
+      "url": "https://www.saudenampula.com/sobre",
+      "isPartOf": { "@type": "WebSite", "name": "Saúde Nampula", "url": "https://www.saudenampula.com/" }
+    }
+    </script>
 </head>
 <body>
     <!-- Navigation -->
@@ -28,7 +42,7 @@
                 <div class="logo-icon">
                     <img src="/img/monitor.png" alt="Saúde Nampula">
                 </div>
-                <h1>Saúde Nampula</h1>
+                    <h1><a href="/" style="color:inherit;text-decoration:none">Saúde Nampula</a></h1>
             </div>
 
 
@@ -86,29 +100,29 @@
 
         <!-- Features -->
         <div class="features-grid">
-            <div class="feature-box feature-emerald" onclick="window.location.href='/centros'">
-                <div class="feature-icon"><img src="/img/buss.png" alt=""></div>
+            <a class="feature-box feature-emerald" href="/centros">
+                <div class="feature-icon"><img src="/img/buss.png" alt="Busca rápida de unidades de saúde"></div>
                 <h4>Busca Rápida</h4>
                 <p>Encontre rapidamente a unidade sanitária mais próxima de você</p>
-            </div>
+            </a>
 
-            <div class="feature-box feature-blue " onclick="document.getElementById('contacto').scrollIntoView({behavior: 'smooth'})">
-                <div class="feature-icon"><img src="img/ponto.png" alt=""></div>
+            <a class="feature-box feature-blue" href="#contacto">
+                <div class="feature-icon"><img src="img/ponto.png" alt="Localização das unidades de saúde"></div>
                 <h4>Localização</h4>
                 <p>Endereços exactos e contactos sempre actualizados</p>
-            </div>
+            </a>
 
-            <div class="feature-box feature-purple" onclick="window.location.href='/emer'">
-                <div class="feature-icon"><img src="img/image.png" alt=""></div>
+            <a class="feature-box feature-purple" href="/emer">
+                <div class="feature-icon"><img src="img/image.png" alt="Contactos de emergência"></div>
                 <h4>Emergências</h4>
                 <p>Acesso imediato a números de emergência médica</p>
-            </div>
+            </a>
 
-            <div class="feature-box feature-yellow" onclick="window.location.href='/info'">
-                <div class="feature-icon"><img src="/img/book.png" alt=""></div>
+            <a class="feature-box feature-yellow" href="/info">
+                <div class="feature-icon"><img src="/img/book.png" alt="Informação de saúde"></div>
                 <h4>Informação</h4>
                 <p>Dicas de saúde, prevenção e primeiros socorros</p>
-            </div>
+            </a>
         </div>
 
         <!-- Vision -->
@@ -164,10 +178,10 @@
 
         <!-- Contact -->
         <div class="contact-section" id="contacto">
-            <h4><img src="/img/call.png" alt=""> Entre em Contacto</h4>
+            <h4><img src="/img/call.png" alt="Contacto"> Entre em Contacto</h4>
             <div class="contact-grid">
                 <div class="contact-item">
-                    <span class="contact-icon"><img src="/img/email.png" alt=""></span>
+                    <span class="contact-icon"><img src="/img/email.png" alt="Email"></span>
                     <div class="contact-info">
                         <h5>Email</h5>
                         <p>derciop66@gmail.com</p>
@@ -175,7 +189,7 @@
                 </div>
 
                 <div class="contact-item">
-                    <span class="contact-icon"><img src="/img/call.png" alt=""></span>
+                    <span class="contact-icon"><img src="/img/call.png" alt="WhatsApp"></span>
                     <div class="contact-info">
                         <h5>WhatsApp</h5>
                         <p>+258 85 681 698</p>
@@ -183,7 +197,7 @@
                 </div>
 
                 <div class="contact-item">
-                    <span class="contact-icon"><img src="/img/ponto.png" alt=""></span>
+                    <span class="contact-icon"><img src="/img/ponto.png" alt="Localização"></span>
                     <div class="contact-info">
                         <h5>Localização</h5>
                         <p>Nampula, Moçambique</p>

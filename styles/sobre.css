@@ -171,6 +171,12 @@
         margin: 2rem 0;
     }
 
+    a.feature-box {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
     .feature-box {
         padding: 1.75rem;
         border-radius: 12px;
