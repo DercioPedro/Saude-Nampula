@@ -1,8 +1,8 @@
-// admin-panel.js - Versão completa com coordenadas, telefone opcional, publicações e horários detalhados
+// admin-panel.js - Versão Completa e Corrigida
 
 let token = null;
 
-// Verificar autenticação
+// Verificar autenticação ao carregar a página
 function checkAuth() {
     token = getAuthToken();
     if (!token) {
@@ -17,12 +17,25 @@ async function carregarInfoUsuario() {
     document.getElementById('nomeUsuario').textContent = usuario;
 }
 
+// ==================== LOGOUT CORRIGIDO ====================
 function sair() {
     if (confirm('Tem certeza que deseja sair?')) {
+        // 1. Limpar todas as variáveis de login
         localStorage.removeItem('api_token');
         localStorage.removeItem('adminLoggedIn');
         localStorage.removeItem('adminUsername');
-        window.location.href = '/admin-login';
+        
+        // 2. Desregistar Service Worker (Para não ficar preso no cache)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+        
+        // 3. Redirecionar e forçar recarregamento limpo
+        window.location.replace('/admin-login');
     }
 }
 
@@ -40,14 +53,10 @@ async function atualizarContadores() {
 
 function mudarAba(abaNome) {
     let abas = document.querySelectorAll('.tab');
-    for (let i = 0; i < abas.length; i++) {
-        abas[i].classList.remove('active');
-    }
-
+    for (let i = 0; i < abas.length; i++) abas[i].classList.remove('active');
+    
     let conteudos = document.querySelectorAll('.tab-content');
-    for (let i = 0; i < conteudos.length; i++) {
-        conteudos[i].classList.remove('active');
-    }
+    for (let i = 0; i < conteudos.length; i++) conteudos[i].classList.remove('active');
 
     let botaoClicado = null;
     for (let i = 0; i < abas.length; i++) {
@@ -58,19 +67,11 @@ function mudarAba(abaNome) {
         }
     }
     
-    if (botaoClicado) {
-        botaoClicado.classList.add('active');
-    }
-
+    if (botaoClicado) botaoClicado.classList.add('active');
     document.getElementById('aba-' + abaNome).classList.add('active');
     
-    if (abaNome === 'avaliacoes') {
-        carregarAvaliacoesAdmin();
-    }
-    
-    if (abaNome === 'publicacoes') {
-        carregarPublicacoesAdmin();
-    }
+    if (abaNome === 'avaliacoes') carregarAvaliacoesAdmin();
+    if (abaNome === 'publicacoes') carregarPublicacoesAdmin();
 }
 
 async function carregarTabelas() {
@@ -121,12 +122,10 @@ async function carregarCentros() {
     try {
         const centros = await apiRequest('/centros');
         let corpo = document.getElementById('corpoCentros');
-
         if (centros.length === 0) {
             corpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum centro cadastrado</td></tr>';
             return;
         }
-
         let html = '';
         for (let c of centros) {
             const localizacao = c.latitude && c.longitude ? c.latitude + ', ' + c.longitude : (c.endereco || '-');
@@ -156,12 +155,10 @@ async function carregarFarmacias() {
     try {
         const farmacias = await apiRequest('/farmacias');
         let corpo = document.getElementById('corpoFarmacias');
-
         if (farmacias.length === 0) {
             corpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhuma farmácia cadastrada</td></tr>';
             return;
         }
-
         let html = '';
         for (let f of farmacias) {
             const localizacao = f.latitude && f.longitude ? f.latitude + ', ' + f.longitude : (f.endereco || '-');
@@ -191,12 +188,10 @@ async function carregarEmergencias() {
     try {
         const emergencias = await apiRequest('/emergencias');
         let corpo = document.getElementById('corpoEmergencias');
-
         if (emergencias.length === 0) {
             corpo.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum contato cadastrado</td></tr>';
             return;
         }
-
         let html = '';
         for (let e of emergencias) {
             html += `
@@ -221,24 +216,17 @@ async function carregarEmergencias() {
 }
 
 // ==================== AVALIAÇÕES ====================
-
 let avaliacaoAtualId = null;
 
 async function carregarAvaliacoesAdmin() {
     try {
         const tipo = document.getElementById('filtroTipoAvaliacao')?.value || '';
         let url = '/avaliacoes/todas';
-        if (tipo) {
-            url += '?tipo=' + tipo;
-        }
+        if (tipo) url += '?tipo=' + tipo;
 
         const result = await apiRequest(url, 'GET', null, token);
         const corpo = document.getElementById('corpoAvaliacoes');
-
-        if (!corpo) {
-            console.error('Elemento corpoAvaliacoes não encontrado');
-            return;
-        }
+        if (!corpo) return;
 
         if (!result || result.length === 0) {
             corpo.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhuma avaliação encontrada</td></tr>';
@@ -248,22 +236,15 @@ async function carregarAvaliacoesAdmin() {
         let html = '';
         for (const av of result) {
             var estrelas = '';
-            for (var i = 0; i < av.nota; i++) {
-                estrelas += '★';
-            }
-            for (var j = av.nota; j < 5; j++) {
-                estrelas += '☆';
-            }
+            for (var i = 0; i < av.nota; i++) estrelas += '★';
+            for (var j = av.nota; j < 5; j++) estrelas += '☆';
             
             var comentarioResumido = av.comentario.length > 100 ? av.comentario.substring(0, 100) + '...' : av.comentario;
             
             html += `
                 <tr>
                     <td>${av.data || ''}</td>
-                    <td>
-                        <strong>${escapeHtml(av.nome)}</strong>
-                        ${av.email ? '<br><small style="color:#6b7280;">' + escapeHtml(av.email) + '</small>' : ''}
-                     </td>
+                    <td><strong>${escapeHtml(av.nome)}</strong>${av.email ? '<br><small style="color:#6b7280;">' + escapeHtml(av.email) + '</small>' : ''}</td>
                     <td><span style="color:#fbbf24;">${estrelas}</span> (${av.nota})</td>
                     <td style="max-width:300px;">${escapeHtml(comentarioResumido)}</td>
                     <td>${av.resposta ? '<span style="color:#059669;">Respondido</span>' : '<span style="color:#6b7280;">Pendente</span>'}</td>
@@ -280,21 +261,13 @@ async function carregarAvaliacoesAdmin() {
     } catch (error) {
         console.error('Erro ao carregar avaliações:', error);
         const corpo = document.getElementById('corpoAvaliacoes');
-        if (corpo) {
-            corpo.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#dc2626;">Erro ao carregar: ' + error.message + '</td></tr>';
-        }
+        if (corpo) corpo.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#dc2626;">Erro ao carregar: ' + error.message + '</td></tr>';
     }
 }
 
 function escapeHtml(texto) {
     if (!texto) return '';
-    return texto
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;')
-        .replace(/\n/g, '<br>');
+    return texto.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\n/g, '<br>');
 }
 
 function abrirModalResposta(id) {
@@ -302,9 +275,7 @@ function abrirModalResposta(id) {
     var button = event.target;
     var row = button.closest('tr');
     var comentarioCell = row.cells[3];
-    var comentario = comentarioCell.textContent;
-    
-    document.getElementById('comentarioOriginal').textContent = comentario;
+    document.getElementById('comentarioOriginal').textContent = comentarioCell.textContent;
     document.getElementById('respostaTexto').value = '';
     document.getElementById('modalResposta').style.display = 'flex';
 }
@@ -316,11 +287,7 @@ function fecharModalResposta() {
 
 async function enviarResposta() {
     var resposta = document.getElementById('respostaTexto').value.trim();
-
-    if (!resposta) {
-        alert('Digite uma resposta!');
-        return;
-    }
+    if (!resposta) return alert('Digite uma resposta!');
 
     try {
         await apiRequest('/avaliacoes/' + avaliacaoAtualId + '/responder', 'POST', { resposta: resposta }, token);
@@ -332,11 +299,13 @@ async function enviarResposta() {
     }
 }
 
+// ==================== DELETAR AVALIAÇÃO (CORRIGIDO) ====================
 async function deletarAvaliacao(id) {
     if (!confirm('Tem certeza que deseja excluir esta avaliação?')) return;
 
     try {
-        await apiRequest('/avaliacoes/' + id, 'DELETE', null, token);
+        const tokenAtual = getAuthToken();
+        await apiRequest('/avaliacoes/' + id, 'DELETE', null, tokenAtual);
         alert('Avaliação excluída com sucesso!');
         await carregarAvaliacoesAdmin();
     } catch (error) {
@@ -345,20 +314,16 @@ async function deletarAvaliacao(id) {
 }
 
 // ==================== PUBLICAÇÕES ====================
-
 var publicacaoEditandoId = null;
 
 async function carregarPublicacoesAdmin() {
     try {
         var categoria = document.getElementById('filtroCategoriaPublicacao')?.value || '';
         var url = '/publicacoes';
-        if (categoria) {
-            url += '?categoria=' + categoria;
-        }
+        if (categoria) url += '?categoria=' + categoria;
 
         var publicacoes = await apiRequest(url);
         var corpo = document.getElementById('corpoPublicacoes');
-
         if (!corpo) return;
 
         if (!publicacoes || publicacoes.length === 0) {
@@ -369,12 +334,7 @@ async function carregarPublicacoesAdmin() {
         var html = '';
         for (var i = 0; i < publicacoes.length; i++) {
             var pub = publicacoes[i];
-            var dataFormatada = new Date(pub.data).toLocaleDateString('pt-PT', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric'
-            });
-
+            var dataFormatada = new Date(pub.data).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' });
             var statusHTML = pub.ativo !== false
                 ? '<span style="color: #059669; background: #d1fae5; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Ativo</span>'
                 : '<span style="color: #6b7280; background: #f3f4f6; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Inativo</span>';
@@ -388,9 +348,7 @@ async function carregarPublicacoesAdmin() {
                     <td>
                         <div class="action-buttons">
                             <button class="btn-edit" onclick="editarPublicacao(${pub.id})">Editar</button>
-                            <button class="btn-toggle" onclick="togglePublicacao(${pub.id})" style="background: #fef3c7; color: #d97706; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">
-                                ${pub.ativo !== false ? 'Desativar' : 'Ativar'}
-                            </button>
+                            <button class="btn-toggle" onclick="togglePublicacao(${pub.id})" style="background: #fef3c7; color: #d97706; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">${pub.ativo !== false ? 'Desativar' : 'Ativar'}</button>
                             <button class="btn-delete" onclick="deletarPublicacao(${pub.id})">Excluir</button>
                         </div>
                     </td>
@@ -398,13 +356,10 @@ async function carregarPublicacoesAdmin() {
             `;
         }
         corpo.innerHTML = html;
-
     } catch (error) {
         console.error('Erro ao carregar publicações:', error);
         var corpo = document.getElementById('corpoPublicacoes');
-        if (corpo) {
-            corpo.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #dc2626;">Erro ao carregar: ' + error.message + '</td></tr>';
-        }
+        if (corpo) corpo.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #dc2626;">Erro ao carregar: ' + error.message + '</td></tr>';
     }
 }
 
@@ -429,7 +384,6 @@ function fecharModalPublicacao() {
 async function editarPublicacao(id) {
     try {
         var pub = await apiRequest('/publicacoes/' + id);
-
         publicacaoEditandoId = id;
         document.getElementById('tituloModalPublicacao').textContent = 'Editar Publicação';
         document.getElementById('publicacaoId').value = pub.id;
@@ -439,7 +393,6 @@ async function editarPublicacao(id) {
         document.getElementById('publicacaoConteudo').value = pub.conteudo || '';
         document.getElementById('publicacaoImagem').value = pub.imagem || '';
         document.getElementById('publicacaoAutor').value = pub.autor || '';
-
         document.getElementById('modalPublicacao').classList.add('active');
     } catch (error) {
         alert('Erro ao carregar publicação: ' + error.message);
@@ -448,28 +401,17 @@ async function editarPublicacao(id) {
 
 async function salvarPublicacao(event) {
     event.preventDefault();
-
     var id = document.getElementById('publicacaoId').value;
-    var titulo = document.getElementById('publicacaoTitulo').value.trim();
-    var categoria = document.getElementById('publicacaoCategoria').value;
-    var resumo = document.getElementById('publicacaoResumo').value.trim();
-    var conteudo = document.getElementById('publicacaoConteudo').value.trim();
-    var imagem = document.getElementById('publicacaoImagem').value.trim();
-    var autor = document.getElementById('publicacaoAutor').value.trim() || 'Saúde Nampula';
-
-    if (!titulo || !resumo || !conteudo) {
-        alert('Preencha todos os campos obrigatórios (*)');
-        return;
-    }
-
     var dados = {
-        titulo: titulo,
-        categoria: categoria,
-        resumo: resumo,
-        conteudo: conteudo,
-        imagem: imagem,
-        autor: autor
+        titulo: document.getElementById('publicacaoTitulo').value.trim(),
+        categoria: document.getElementById('publicacaoCategoria').value,
+        resumo: document.getElementById('publicacaoResumo').value.trim(),
+        conteudo: document.getElementById('publicacaoConteudo').value.trim(),
+        imagem: document.getElementById('publicacaoImagem').value.trim(),
+        autor: document.getElementById('publicacaoAutor').value.trim() || 'Saúde Nampula'
     };
+
+    if (!dados.titulo || !dados.resumo || !dados.conteudo) return alert('Preencha todos os campos obrigatórios (*)');
 
     try {
         if (id) {
@@ -479,10 +421,8 @@ async function salvarPublicacao(event) {
             await apiRequest('/publicacoes', 'POST', dados, token);
             alert('Publicação criada com sucesso!');
         }
-
         fecharModalPublicacao();
         await carregarPublicacoesAdmin();
-
     } catch (error) {
         alert('Erro ao salvar: ' + error.message);
     }
@@ -491,19 +431,19 @@ async function salvarPublicacao(event) {
 async function togglePublicacao(id) {
     try {
         var pub = await apiRequest('/publicacoes/' + id);
-        var novoStatus = pub.ativo === false ? true : false;
-        await apiRequest('/publicacoes/' + id, 'PUT', { ativo: novoStatus }, token);
+        await apiRequest('/publicacoes/' + id, 'PUT', { ativo: pub.ativo === false ? true : false }, token);
         await carregarPublicacoesAdmin();
     } catch (error) {
         alert('Erro ao alterar status: ' + error.message);
     }
 }
 
+// ==================== DELETAR PUBLICAÇÃO (CORRIGIDO) ====================
 async function deletarPublicacao(id) {
     if (!confirm('Tem certeza que deseja excluir esta publicação permanentemente?')) return;
-
     try {
-        await apiRequest('/publicacoes/' + id, 'DELETE', null, token);
+        const tokenAtual = getAuthToken();
+        await apiRequest('/publicacoes/' + id, 'DELETE', null, tokenAtual);
         alert('Publicação excluída com sucesso!');
         await carregarPublicacoesAdmin();
     } catch (error) {
@@ -511,22 +451,14 @@ async function deletarPublicacao(id) {
     }
 }
 
-// ==================== CRUD GERAL ====================
-
+// ==================== CRUD GERAL (HOSPITAIS, ETC) ====================
 let tipoAtual = '';
 let idAtual = null;
 
 function abrirModalAdicionar(tipo) {
     tipoAtual = tipo;
     idAtual = null;
-
-    var titulos = {
-        'hospital': 'Adicionar Hospital',
-        'centro': 'Adicionar Centro de Saúde',
-        'farmacia': 'Adicionar Farmácia',
-        'emergencia': 'Adicionar Contato de Emergência'
-    };
-
+    var titulos = { 'hospital': 'Adicionar Hospital', 'centro': 'Adicionar Centro de Saúde', 'farmacia': 'Adicionar Farmácia', 'emergencia': 'Adicionar Contato de Emergência' };
     document.getElementById('tituloModal').textContent = titulos[tipo];
     mostrarCamposFormulario(tipo);
     document.getElementById('modal').classList.add('active');
@@ -534,167 +466,68 @@ function abrirModalAdicionar(tipo) {
 
 function buscarCoordenadasPorEndereco() {
     var endereco = document.getElementById('endereco').value;
-    if (!endereco) {
-        alert('Digite um endereço primeiro para buscar as coordenadas!');
-        return;
-    }
-
-    var enderecoCompleto = encodeURIComponent(endereco + ', Nampula, Moçambique');
-    var url = 'https://nominatim.openstreetmap.org/search?q=' + enderecoCompleto + '&format=json&limit=1';
-
+    if (!endereco) return alert('Digite um endereço primeiro para buscar as coordenadas!');
+    var url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(endereco + ', Nampula, Moçambique') + '&format=json&limit=1';
     document.getElementById('latitude').value = 'Buscando...';
     document.getElementById('longitude').value = 'Buscando...';
-
-    fetch(url)
-        .then(function(response) { return response.json(); })
-        .then(function(data) {
-            if (data && data.length > 0) {
-                document.getElementById('latitude').value = data[0].lat;
-                document.getElementById('longitude').value = data[0].lon;
-                alert('Coordenadas encontradas!');
-            } else {
-                document.getElementById('latitude').value = '';
-                document.getElementById('longitude').value = '';
-                alert('Endereço não encontrado. Verifique o endereço ou insira as coordenadas manualmente.');
-            }
-        })
-        .catch(function(error) {
-            console.error('Erro ao buscar coordenadas:', error);
+    fetch(url).then(r => r.json()).then(data => {
+        if (data && data.length > 0) {
+            document.getElementById('latitude').value = data[0].lat;
+            document.getElementById('longitude').value = data[0].lon;
+            alert('Coordenadas encontradas!');
+        } else {
             document.getElementById('latitude').value = '';
             document.getElementById('longitude').value = '';
-            alert('Erro ao buscar coordenadas. Insira manualmente.');
-        });
+            alert('Endereço não encontrado.');
+        }
+    }).catch(() => alert('Erro ao buscar coordenadas.'));
 }
 
 function abrirMapaParaSelecionar() {
     var endereco = document.getElementById('endereco').value;
-    if (!endereco) {
-        alert('Digite um endereço primeiro para selecionar no mapa!');
-        return;
-    }
-
-    var enderecoCompleto = encodeURIComponent(endereco + ', Nampula, Moçambique');
-    var url = 'https://www.google.com/maps/search/?api=1&query=' + enderecoCompleto;
-    window.open(url, '_blank');
-    alert('No Google Maps, clique com botão direito no local exato e selecione "O que há aqui?" para ver as coordenadas.');
+    if (!endereco) return alert('Digite um endereço primeiro para selecionar no mapa!');
+    window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(endereco + ', Nampula, Moçambique'), '_blank');
 }
 
-// ==================== MOSTRAR CAMPOS DO FORMULÁRIO ====================
 function mostrarCamposFormulario(tipo) {
     var campos = document.getElementById('camposFormulario');
-
     if (tipo === 'hospital' || tipo === 'centro') {
         campos.innerHTML = `
             <div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div>
-            <div class="form-group"><label>Endereço</label><input type="text" id="endereco" placeholder="Opcional (usado se não houver coordenadas)"></div>
-            <div class="form-group"><label>Telefone</label><input type="tel" id="telefone" placeholder="Opcional"></div>
-            <div class="form-group"><label>Horário</label><input type="text" id="horario" placeholder="Ex: 24h ou 08:00-18:00"></div>
-            <div class="form-group"><label>Serviços</label><textarea id="servicos" placeholder="Separados por vírgula"></textarea></div>
-            
+            <div class="form-group"><label>Endereço</label><input type="text" id="endereco"></div>
+            <div class="form-group"><label>Telefone</label><input type="tel" id="telefone"></div>
+            <div class="form-group"><label>Horário</label><input type="text" id="horario"></div>
+            <div class="form-group"><label>Serviços</label><textarea id="servicos"></textarea></div>
             <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
-                <h4>Localização Exata (Recomendado)</h4>
+                <h4>Localização Exata</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div class="form-group"><label>Latitude</label><input type="text" id="latitude" placeholder="Ex: -15.1165"></div>
-                    <div class="form-group"><label>Longitude</label><input type="text" id="longitude" placeholder="Ex: 39.2667"></div>
+                    <div class="form-group"><label>Latitude</label><input type="text" id="latitude"></div>
+                    <div class="form-group"><label>Longitude</label><input type="text" id="longitude"></div>
                 </div>
-                <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-                    <button type="button" class="btn-coordenadas" onclick="buscarCoordenadasPorEndereco()" style="background: #7c3aed; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
-                        Buscar Coordenadas pelo Endereço
-                    </button>
-                    <button type="button" class="btn-mapa" onclick="abrirMapaParaSelecionar()" style="background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
-                        Selecionar no Mapa
-                    </button>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button type="button" onclick="buscarCoordenadasPorEndereco()" style="background: #7c3aed; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Buscar Coordenadas</button>
                 </div>
-                <small style="color: #6b7280;">Se informar coordenadas, serão usadas para localização exata no mapa. O endereço será usado apenas como referência textual.</small>
             </div>
         `;
     } else if (tipo === 'farmacia') {
         campos.innerHTML = `
             <div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div>
-            <div class="form-group"><label>Endereço</label><input type="text" id="endereco" placeholder="Opcional (usado se não houver coordenadas)"></div>
-            <div class="form-group"><label>Telefone</label><input type="tel" id="telefone" placeholder="Opcional"></div>
-            
+            <div class="form-group"><label>Endereço</label><input type="text" id="endereco"></div>
+            <div class="form-group"><label>Telefone</label><input type="tel" id="telefone"></div>
+            <div class="form-group"><label>Horário Geral</label><input type="text" id="horario"></div>
+            <div class="form-group"><label>Plantão 24h?</label><select id="plantao"><option value="false">Não</option><option value="true">Sim</option></select></div>
             <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
-                <h4>Horário de Funcionamento</h4>
-                <div class="form-group">
-                    <label>Horário Geral (ex: 08:00 - 18:00)</label>
-                    <input type="text" id="horario" placeholder="Ex: 08:00 - 18:00">
-                    <small style="color:#6b7280;">Use 24h para plantão 24 horas</small>
-                </div>
-                
-                <div class="form-group">
-                    <label>Plantão 24h?</label>
-                    <select id="plantao">
-                        <option value="false">Não</option>
-                        <option value="true">Sim</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
-                <h4>Intervalo para Almoço</h4>
+                <h4>Localização Exata</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div class="form-group">
-                        <label>Início do Intervalo</label>
-                        <input type="time" id="horario_almoco_inicio">
-                    </div>
-                    <div class="form-group">
-                        <label>Fim do Intervalo</label>
-                        <input type="time" id="horario_almoco_fim">
-                    </div>
+                    <div class="form-group"><label>Latitude</label><input type="text" id="latitude"></div>
+                    <div class="form-group"><label>Longitude</label><input type="text" id="longitude"></div>
                 </div>
-                <small style="color:#6b7280;">Deixe em branco se não tiver intervalo</small>
-            </div>
-            
-            <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
-                <h4>Funcionamento ao Domingo</h4>
-                <div class="form-group">
-                    <label>Funciona ao Domingo?</label>
-                    <select id="funciona_domingo">
-                        <option value="false">Não</option>
-                        <option value="true">Sim</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Horário de Domingo</label>
-                    <input type="text" id="horario_domingo" placeholder="Ex: 08:00 - 13:00">
-                </div>
-            </div>
-            
-            <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
-                <h4>Horários por Dia da Semana (opcional)</h4>
-                <small style="color:#6b7280;">Preencha apenas se o horário variar por dia</small>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                    <div class="form-group"><label>Segunda</label><input type="text" id="horario_segunda" placeholder="08:00 - 18:00"></div>
-                    <div class="form-group"><label>Terça</label><input type="text" id="horario_terca" placeholder="08:00 - 18:00"></div>
-                    <div class="form-group"><label>Quarta</label><input type="text" id="horario_quarta" placeholder="08:00 - 18:00"></div>
-                    <div class="form-group"><label>Quinta</label><input type="text" id="horario_quinta" placeholder="08:00 - 18:00"></div>
-                    <div class="form-group"><label>Sexta</label><input type="text" id="horario_sexta" placeholder="08:00 - 18:00"></div>
-                    <div class="form-group"><label>Sábado</label><input type="text" id="horario_sabado" placeholder="08:00 - 18:00"></div>
-                </div>
-            </div>
-            
-            <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
-                <h4>Localização Exata (Recomendado)</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div class="form-group"><label>Latitude</label><input type="text" id="latitude" placeholder="Ex: -15.1165"></div>
-                    <div class="form-group"><label>Longitude</label><input type="text" id="longitude" placeholder="Ex: 39.2667"></div>
-                </div>
-                <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-                    <button type="button" class="btn-coordenadas" onclick="buscarCoordenadasPorEndereco()" style="background: #7c3aed; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
-                        Buscar Coordenadas pelo Endereço
-                    </button>
-                    <button type="button" class="btn-mapa" onclick="abrirMapaParaSelecionar()" style="background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
-                        Selecionar no Mapa
-                    </button>
-                </div>
-                <small style="color: #6b7280;">Se informar coordenadas, serão usadas para localização exata no mapa.</small>
             </div>
         `;
     } else if (tipo === 'emergencia') {
         campos.innerHTML = `
             <div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div>
-            <div class="form-group"><label>Tipo *</label><select id="tipo" required><option value="">Selecione...</option><option value="Ambulância">Ambulância</option><option value="Bombeiros">Bombeiros</option><option value="Polícia">Polícia</option><option value="Resgate">Resgate</option></select></div>
+            <div class="form-group"><label>Tipo *</label><select id="tipo" required><option value="">Selecione...</option><option value="Ambulância">Ambulância</option><option value="Bombeiros">Bombeiros</option><option value="Polícia">Polícia</option></select></div>
             <div class="form-group"><label>Telefone *</label><input type="tel" id="telefone" required></div>
             <div class="form-group"><label>Disponibilidade</label><input type="text" id="disponibilidade" value="24/7"></div>
         `;
@@ -704,118 +537,57 @@ function mostrarCamposFormulario(tipo) {
 async function editarItem(tipo, id) {
     tipoAtual = tipo;
     idAtual = id;
-
     var endpoint = tipo === 'hospital' ? '/hospitais' : tipo === 'centro' ? '/centros' : tipo === 'farmacia' ? '/farmacias' : '/emergencias';
-
     try {
         var item = await apiRequest(endpoint + '/' + id);
-
-        var titulos = {
-            'hospital': 'Editar Hospital',
-            'centro': 'Editar Centro de Saúde',
-            'farmacia': 'Editar Farmácia',
-            'emergencia': 'Editar Contato de Emergência'
-        };
-
+        var titulos = { 'hospital': 'Editar Hospital', 'centro': 'Editar Centro de Saúde', 'farmacia': 'Editar Farmácia', 'emergencia': 'Editar Contato de Emergência' };
         document.getElementById('tituloModal').textContent = titulos[tipo];
         mostrarCamposFormulario(tipo);
-
         document.getElementById('nome').value = item.nome;
         
         if (tipo !== 'emergencia') {
             if (document.getElementById('endereco')) document.getElementById('endereco').value = item.endereco || '';
             if (document.getElementById('telefone')) document.getElementById('telefone').value = item.telefone || '';
             if (document.getElementById('horario')) document.getElementById('horario').value = item.horario || '';
-            if (document.getElementById('latitude')) {
-                document.getElementById('latitude').value = item.latitude || '';
-                document.getElementById('longitude').value = item.longitude || '';
-            }
-            if (tipo === 'hospital' || tipo === 'centro') {
-                if (document.getElementById('servicos')) document.getElementById('servicos').value = item.servicos || '';
-            }
-            if (tipo === 'farmacia' && document.getElementById('plantao')) {
-                document.getElementById('plantao').value = item.plantao ? 'true' : 'false';
-                
-                // Novos campos de horário para farmácia
-                if (document.getElementById('horario_almoco_inicio')) {
-                    document.getElementById('horario_almoco_inicio').value = item.horario_almoco_inicio || '';
-                    document.getElementById('horario_almoco_fim').value = item.horario_almoco_fim || '';
-                    document.getElementById('funciona_domingo').value = item.funciona_domingo ? 'true' : 'false';
-                    document.getElementById('horario_domingo').value = item.horario_domingo || '';
-                    document.getElementById('horario_segunda').value = item.horario_segunda || '';
-                    document.getElementById('horario_terca').value = item.horario_terca || '';
-                    document.getElementById('horario_quarta').value = item.horario_quarta || '';
-                    document.getElementById('horario_quinta').value = item.horario_quinta || '';
-                    document.getElementById('horario_sexta').value = item.horario_sexta || '';
-                    document.getElementById('horario_sabado').value = item.horario_sabado || '';
-                }
-            }
+            if (document.getElementById('latitude')) { document.getElementById('latitude').value = item.latitude || ''; document.getElementById('longitude').value = item.longitude || ''; }
+            if ((tipo === 'hospital' || tipo === 'centro') && document.getElementById('servicos')) document.getElementById('servicos').value = item.servicos || '';
+            if (tipo === 'farmacia' && document.getElementById('plantao')) document.getElementById('plantao').value = item.plantao ? 'true' : 'false';
         } else {
             document.getElementById('telefone').value = item.telefone;
             if (document.getElementById('tipo')) document.getElementById('tipo').value = item.tipo;
             if (document.getElementById('disponibilidade')) document.getElementById('disponibilidade').value = item.disponibilidade;
         }
-
         document.getElementById('modal').classList.add('active');
     } catch (error) {
-        console.error('Erro ao carregar item:', error);
-        alert('Erro ao carregar dados do item');
+        alert('Erro ao carregar item');
     }
 }
 
 function fecharModal() {
     document.getElementById('modal').classList.remove('active');
     document.getElementById('formularioItem').reset();
-    tipoAtual = '';
-    idAtual = null;
+    tipoAtual = ''; idAtual = null;
 }
-
-// ==================== EVENTOS DO FORMULÁRIO ====================
 
 document.getElementById('formularioItem').addEventListener('submit', async function (e) {
     e.preventDefault();
-
     var endpoint = tipoAtual === 'hospital' ? '/hospitais' : tipoAtual === 'centro' ? '/centros' : tipoAtual === 'farmacia' ? '/farmacias' : '/emergencias';
-
-    var dadosFormulario = {
-        nome: document.getElementById('nome').value
-    };
+    var dadosFormulario = { nome: document.getElementById('nome').value };
 
     if (tipoAtual === 'hospital' || tipoAtual === 'centro') {
         dadosFormulario.endereco = document.getElementById('endereco').value || '';
         dadosFormulario.telefone = document.getElementById('telefone').value || '';
         dadosFormulario.horario = document.getElementById('horario').value || '';
         dadosFormulario.servicos = document.getElementById('servicos') ? document.getElementById('servicos').value : '';
-        var latInput = document.getElementById('latitude');
-        var lngInput = document.getElementById('longitude');
-        if (latInput && latInput.value) {
-            dadosFormulario.latitude = parseFloat(latInput.value);
-            dadosFormulario.longitude = parseFloat(lngInput.value);
-        }
+        var lat = document.getElementById('latitude'), lng = document.getElementById('longitude');
+        if (lat && lat.value) { dadosFormulario.latitude = parseFloat(lat.value); dadosFormulario.longitude = parseFloat(lng.value); }
     } else if (tipoAtual === 'farmacia') {
         dadosFormulario.endereco = document.getElementById('endereco').value || '';
         dadosFormulario.telefone = document.getElementById('telefone').value || '';
         dadosFormulario.horario = document.getElementById('horario').value || '';
         dadosFormulario.plantao = document.getElementById('plantao').value === 'true';
-        
-        // Novos campos de horário para farmácia
-        dadosFormulario.horario_almoco_inicio = document.getElementById('horario_almoco_inicio').value || null;
-        dadosFormulario.horario_almoco_fim = document.getElementById('horario_almoco_fim').value || null;
-        dadosFormulario.funciona_domingo = document.getElementById('funciona_domingo').value === 'true';
-        dadosFormulario.horario_domingo = document.getElementById('horario_domingo').value || null;
-        dadosFormulario.horario_segunda = document.getElementById('horario_segunda').value || null;
-        dadosFormulario.horario_terca = document.getElementById('horario_terca').value || null;
-        dadosFormulario.horario_quarta = document.getElementById('horario_quarta').value || null;
-        dadosFormulario.horario_quinta = document.getElementById('horario_quinta').value || null;
-        dadosFormulario.horario_sexta = document.getElementById('horario_sexta').value || null;
-        dadosFormulario.horario_sabado = document.getElementById('horario_sabado').value || null;
-        
-        var latInput = document.getElementById('latitude');
-        var lngInput = document.getElementById('longitude');
-        if (latInput && latInput.value) {
-            dadosFormulario.latitude = parseFloat(latInput.value);
-            dadosFormulario.longitude = parseFloat(lngInput.value);
-        }
+        var lat = document.getElementById('latitude'), lng = document.getElementById('longitude');
+        if (lat && lat.value) { dadosFormulario.latitude = parseFloat(lat.value); dadosFormulario.longitude = parseFloat(lng.value); }
     } else if (tipoAtual === 'emergencia') {
         dadosFormulario.tipo = document.getElementById('tipo').value;
         dadosFormulario.telefone = document.getElementById('telefone').value;
@@ -830,56 +602,39 @@ document.getElementById('formularioItem').addEventListener('submit', async funct
             await apiRequest(endpoint, 'POST', dadosFormulario, token);
             alert('Item adicionado com sucesso!');
         }
-
         fecharModal();
         await carregarTabelas();
         await atualizarContadores();
     } catch (error) {
-        console.error('Erro ao salvar:', error);
         alert('Erro ao salvar: ' + error.message);
     }
 });
 
+// ==================== DELETAR ITEM (CORRIGIDO) ====================
 async function deletarItem(tipo, id) {
     if (!confirm('Tem certeza que deseja excluir este item?')) return;
-
     var endpoint = tipo === 'hospital' ? '/hospitais' : tipo === 'centro' ? '/centros' : tipo === 'farmacia' ? '/farmacias' : '/emergencias';
-
     try {
-        await apiRequest(endpoint + '/' + id, 'DELETE', null, token);
+        const tokenAtual = getAuthToken();
+        await apiRequest(endpoint + '/' + id, 'DELETE', null, tokenAtual);
         alert('Item excluído com sucesso!');
         await carregarTabelas();
         await atualizarContadores();
     } catch (error) {
-        console.error('Erro ao excluir:', error);
-        alert('Erro ao excluir item');
+        alert('Erro ao excluir item: ' + error.message);
     }
 }
 
-// ==================== EVENTOS DE MODAL ====================
-
-document.getElementById('modal').addEventListener('click', function (e) {
-    if (e.target === this) fecharModal();
-});
-
-document.addEventListener('click', function(e) {
-    var modal = document.getElementById('modalPublicacao');
-    if (modal && e.target === modal) {
-        fecharModalPublicacao();
-    }
-});
-
-// ==================== EVENTO DO FORMULÁRIO DE PUBLICAÇÃO ====================
+// ==================== EVENTOS E INICIALIZAÇÃO ====================
+document.getElementById('modal').addEventListener('click', function (e) { if (e.target === this) fecharModal(); });
+document.addEventListener('click', function(e) { var modal = document.getElementById('modalPublicacao'); if (modal && e.target === modal) fecharModalPublicacao(); });
 
 document.addEventListener('DOMContentLoaded', function() {
     var formPublicacao = document.getElementById('formularioPublicacao');
-    if (formPublicacao) {
-        formPublicacao.addEventListener('submit', salvarPublicacao);
-    }
+    if (formPublicacao) formPublicacao.addEventListener('submit', salvarPublicacao);
 });
 
-// ==================== TORNAR FUNÇÕES GLOBAIS ====================
-
+// Tornar funções globais para os botões HTML
 window.buscarCoordenadasPorEndereco = buscarCoordenadasPorEndereco;
 window.abrirMapaParaSelecionar = abrirMapaParaSelecionar;
 window.abrirModalResposta = abrirModalResposta;
@@ -895,12 +650,10 @@ window.togglePublicacao = togglePublicacao;
 window.deletarPublicacao = deletarPublicacao;
 window.mudarAba = mudarAba;
 
-// ==================== INICIALIZAÇÃO ====================
+// Iniciar painel
 if (checkAuth()) {
     carregarInfoUsuario();
     atualizarContadores();
     carregarTabelas();
-    setTimeout(function() {
-        carregarAvaliacoesAdmin();
-    }, 500);
+    setTimeout(() => carregarAvaliacoesAdmin(), 500);
 }
