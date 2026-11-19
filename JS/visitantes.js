@@ -7,8 +7,8 @@
     // CONFIGURAÇÃO SUPABASE (CORRIGIDA)
     // ========================================
 
-    var SUPABASE_URL = 'https://lwewvxizivetlqncyajx.supabase.co'; // URL do Supabase
-    var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3ZXd2eGl6aXZldGxxbmN5YWp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3Nzk2NTIsImV4cCI6MjA5NDM1NTY1Mn0.mX4vbiccmZLFjD9U9SUH4htRdOtgY2Iwrmqt8LNl5wo'; // Chave anon
+    var SUPABASE_URL = 'https://wvazjfnyyhkjjyovkfbd.supabase.co'; // URL do Supabase
+    var SUPABASE_KEY = 'sb_secret_xbCBkn7Z3t-hE3rQMvNdBw_23Sy_m9U'; // Chave anon
 
     // ========================================
     // FUNÇÕES
