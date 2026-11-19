@@ -1,17 +1,16 @@
-// visitantes.js - Contador REAL de visitantes com Supabase
+// visitantes.js - Contador de visitantes integrado com o backend (Render)
 
 (function() {
     'use strict';
 
     // ========================================
-    // CONFIGURAÇÃO SUPABASE (CORRIGIDA)
+    // CONFIGURAÇÃO DO BACKEND
     // ========================================
-
-    var SUPABASE_URL = 'https://wvazjfnyyhkjjyovkfbd.supabase.co'; // URL do Supabase
-    var SUPABASE_KEY = 'sb_secret_xbCBkn7Z3t-hE3rQMvNdBw_23Sy_m9U'; // Chave anon
+    // O frontend agora chama o seu backend no Render, e não o Supabase diretamente.
+    var API_URL = 'https://saude-nampula-backend.onrender.com/api';
 
     // ========================================
-    // FUNÇÕES
+    // FUNÇÕES AUXILIARES
     // ========================================
 
     function formatarNumero(numero) {
@@ -28,7 +27,7 @@
     }
 
     // ========================================
-    // REGISTAR VISITA
+    // REGISTAR VISITA (VIA BACKEND)
     // ========================================
 
     async function registrarVisita() {
@@ -42,97 +41,50 @@
                 return;
             }
 
-            // Buscar registro de hoje
-            var response = await fetch(SUPABASE_URL + '/rest/v1/visitantes_contador?data=eq.' + hoje + '&select=*', {
+            // Chama o backend para registar a visita
+            var response = await fetch(API_URL + '/visitantes/registrar', {
+                method: 'POST',
                 headers: {
-                    'apikey': SUPABASE_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_KEY
-                }
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    data: hoje,
+                    pagina: window.location.pathname,
+                    visitante_id: obterIdVisitante()
+                })
             });
 
             if (!response.ok) {
-                console.error('Erro ao buscar registro:', response.status);
+                console.error('Erro ao registar visita no backend:', response.status);
                 return;
             }
 
-            var dados = await response.json();
-
-            if (dados && dados.length > 0) {
-                var registro = dados[0];
-                var novoVisitantes = (registro.visitantes || 0) + 1;
-                var novoVisualizacoes = (registro.visualizacoes || 0) + 1;
-
-                await fetch(SUPABASE_URL + '/rest/v1/visitantes_contador?id=eq.' + registro.id, {
-                    method: 'PATCH',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': 'Bearer ' + SUPABASE_KEY,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({
-                        visitantes: novoVisitantes,
-                        visualizacoes: novoVisualizacoes
-                    })
-                });
-
-                localStorage.setItem('ultimo_registo_visita', hojeStr);
-            } else {
-                await fetch(SUPABASE_URL + '/rest/v1/visitantes_contador', {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': 'Bearer ' + SUPABASE_KEY,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({
-                        data: hoje,
-                        visitantes: 1,
-                        visualizacoes: 1
-                    })
-                });
-
-                localStorage.setItem('ultimo_registo_visita', hojeStr);
-            }
+            localStorage.setItem('ultimo_registo_visita', hojeStr);
 
         } catch (error) {
-            console.error('Erro ao registrar visita:', error);
+            console.error('Erro ao registar visita:', error);
         }
     }
 
     // ========================================
-    // INCREMENTAR VISUALIZAÇÕES
+    // INCREMENTAR VISUALIZAÇÕES (VIA BACKEND)
     // ========================================
 
     async function incrementarVisualizacoes(hoje) {
         try {
-            var response = await fetch(SUPABASE_URL + '/rest/v1/visitantes_contador?data=eq.' + hoje + '&select=*', {
+            var response = await fetch(API_URL + '/visitantes/visualizacao', {
+                method: 'POST',
                 headers: {
-                    'apikey': SUPABASE_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_KEY
-                }
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    data: hoje,
+                    pagina: window.location.pathname
+                })
             });
 
-            if (!response.ok) return;
-
-            var dados = await response.json();
-            if (dados && dados.length > 0) {
-                var registro = dados[0];
-                var novoVisualizacoes = (registro.visualizacoes || 0) + 1;
-
-                await fetch(SUPABASE_URL + '/rest/v1/visitantes_contador?id=eq.' + registro.id, {
-                    method: 'PATCH',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': 'Bearer ' + SUPABASE_KEY,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({
-                        visualizacoes: novoVisualizacoes
-                    })
-                });
+            if (!response.ok) {
+                console.error('Erro ao incrementar visualizações:', response.status);
             }
         } catch (error) {
             console.error('Erro ao incrementar visualizações:', error);
@@ -140,17 +92,12 @@
     }
 
     // ========================================
-    // OBTER TOTAL DE VISITANTES
+    // OBTER TOTAL DE VISITANTES (VIA BACKEND)
     // ========================================
 
     async function obterTotalVisitantes() {
         try {
-            var response = await fetch(SUPABASE_URL + '/rest/v1/visitantes_contador?select=visitantes', {
-                headers: {
-                    'apikey': SUPABASE_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_KEY
-                }
-            });
+            var response = await fetch(API_URL + '/visitantes/total');
 
             if (!response.ok) {
                 console.error('Erro ao buscar total:', response.status);
@@ -158,15 +105,7 @@
             }
 
             var dados = await response.json();
-            var total = 0;
-
-            if (dados && dados.length > 0) {
-                for (var i = 0; i < dados.length; i++) {
-                    total += dados[i].visitantes || 0;
-                }
-            }
-
-            return total;
+            return dados.total || 0;
 
         } catch (error) {
             console.error('Erro ao obter total:', error);
@@ -175,7 +114,7 @@
     }
 
     // ========================================
-    // CRIAR ELEMENTOS DO CONTADOR
+    // CRIAR ELEMENTOS DO CONTADOR (MANTIDO)
     // ========================================
 
     function criarContador(total) {
@@ -216,7 +155,7 @@
     }
 
     // ========================================
-    // INSERIR CONTADOR
+    // INSERIR CONTADOR (MANTIDO)
     // ========================================
 
     function inserirContador(total) {
@@ -240,7 +179,7 @@
     }
 
     // ========================================
-    // ESTILOS
+    // ESTILOS (MANTIDO)
     // ========================================
 
     function adicionarEstilos() {
@@ -383,6 +322,7 @@
             inserirContador(total);
         }
 
+        // Atualiza o contador a cada 30 segundos
         setInterval(async function() {
             var novoTotal = await obterTotalVisitantes();
             var valorElement = document.getElementById('contador-valor');
