@@ -45,7 +45,7 @@ class LoadingManager {
                 
                 <div class="loading-tip-wrapper">
                     <div class="loading-tip">
-                        <span class="tip-emoji">💡</span>
+                        <span class="tip-emoji"></span>
                         <span class="tip-message">Sempre leve a prescrição médica</span>
                     </div>
                 </div>
@@ -387,16 +387,16 @@ class LoadingManager {
     
     updateTips() {
         const tips = [
-            { emoji: '💊', text: 'Sempre leve a prescrição médica' },
-            { emoji: '💉', text: 'Mantenha suas vacinas em dia' },
-            { emoji: '🚑', text: 'Emergência? Ligue 119' },
-            { emoji: '💧', text: 'Beba água regularmente' },
-            { emoji: '🏃', text: 'Pratique exercícios físicos' },
-            { emoji: '😴', text: 'Durma pelo menos 8 horas' },
-            { emoji: '⚠️', text: 'Evite a automedicação' },
-            { emoji: '🩺', text: 'Faça check-ups regulares' },
-            { emoji: '🧼', text: 'Lave as mãos frequentemente' },
-            { emoji: '🍎', text: 'Mantenha alimentação saudável' }
+            { emoji: '', text: 'Sempre leve a prescrição médica' },
+            { emoji: '', text: 'Mantenha suas vacinas em dia' },
+            { emoji: '', text: 'Emergência? Ligue 119' },
+            { emoji: '', text: 'Beba água regularmente' },
+            { emoji: '', text: 'Pratique exercícios físicos' },
+            { emoji: '', text: 'Durma pelo menos 8 horas' },
+            { emoji: '', text: 'Evite a automedicação' },
+            { emoji: '', text: 'Faça check-ups regulares' },
+            { emoji: '', text: 'Lave as mãos frequentemente' },
+            { emoji: '', text: 'Mantenha alimentação saudável' }
         ];
         
         const tipEmoji = document.querySelector('.tip-emoji');
