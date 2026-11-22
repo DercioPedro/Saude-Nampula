@@ -8,6 +8,11 @@
     <title>Painel Administrativo - Saúde Nampula</title>
     <link rel="stylesheet" href="/styles/admin-panel.css">
     <link rel="icon" type="image/png" href="/img/monitor.png">
+    <style>
+        /* Scroll no modal para o formulário longo da farmácia */
+        #modal .modal-content { max-height: 90vh; overflow-y: auto; }
+        #modal .form-group input, #modal .form-group select, #modal .form-group textarea { width: 100%; box-sizing: border-box; }
+    </style>
 </head>
 
 <body>
@@ -97,6 +102,7 @@
                                 <th>Endereço</th>
                                 <th>Telefone</th>
                                 <th>Horário</th>
+                                <th>Localização</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -118,6 +124,7 @@
                                 <th>Endereço</th>
                                 <th>Telefone</th>
                                 <th>Horário</th>
+                                <th>Localização</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -139,6 +146,7 @@
                                 <th>Endereço</th>
                                 <th>Telefone</th>
                                 <th>Horário</th>
+                                <th>Domingo</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -171,7 +179,7 @@
             <!-- Tab Content: Avaliações -->
             <div id="aba-avaliacoes" class="tab-content">
                 <h3>Gerenciar Avaliações</h3>
-                
+
                 <div class="filtros-avaliacoes" style="margin-bottom: 20px;">
                     <select id="filtroTipoAvaliacao" onchange="carregarAvaliacoesAdmin()">
                         <option value="">Todos os tipos</option>
@@ -181,7 +189,7 @@
                         <option value="centro">Centros de Saúde</option>
                     </select>
                 </div>
-                
+
                 <div class="table-container">
                     <table id="tabelaAvaliacoes">
                         <thead>
@@ -190,7 +198,7 @@
                         <tbody id="corpoAvaliacoes"></tbody>
                     </table>
                 </div>
-                
+
                 <!-- Modal de resposta -->
                 <div id="modalResposta" class="modal" style="display:none;">
                     <div class="modal-content">
@@ -222,7 +230,7 @@
                         <span>+</span> Nova Publicação
                     </button>
                 </div>
-                
+
                 <div class="filtros-publicacoes" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
                     <select id="filtroCategoriaPublicacao" onchange="carregarPublicacoesAdmin()" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #e5e7eb;">
                         <option value="">Todas as categorias</option>
@@ -234,7 +242,7 @@
                         <option value="Informacao">Informações</option>
                     </select>
                 </div>
-                
+
                 <div class="table-container">
                     <table id="tabelaPublicacoes">
                         <thead>
@@ -264,12 +272,12 @@
             </div>
             <form id="formularioPublicacao">
                 <input type="hidden" id="publicacaoId" value="">
-                
+
                 <div class="form-group">
                     <label>Título *</label>
                     <input type="text" id="publicacaoTitulo" placeholder="Digite o título da publicação" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label>Categoria *</label>
                     <select id="publicacaoCategoria" required>
@@ -281,29 +289,29 @@
                         <option value="Informacao">Informação</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label>Resumo *</label>
                     <textarea id="publicacaoResumo" rows="3" placeholder="Resumo curto da publicação (aparece no card)" required></textarea>
                 </div>
-                
+
                 <div class="form-group">
                     <label>Conteúdo Completo *</label>
                     <textarea id="publicacaoConteudo" rows="8" placeholder="Conteúdo completo da publicação (suporta HTML)" required></textarea>
                     <small style="color: #6b7280;">Pode usar HTML: p, ul, li, strong, etc.</small>
                 </div>
-                
+
                 <div class="form-group">
                     <label>URL da Imagem (opcional)</label>
                     <input type="url" id="publicacaoImagem" placeholder="https://exemplo.com/imagem.jpg">
                     <small style="color: #6b7280;">Deixe vazio para usar um ícone padrão</small>
                 </div>
-                
+
                 <div class="form-group">
                     <label>Autor (opcional)</label>
                     <input type="text" id="publicacaoAutor" placeholder="Nome do autor">
                 </div>
-                
+
                 <div class="form-actions">
                     <button type="button" class="btn-cancel" onclick="fecharModalPublicacao()">Cancelar</button>
                     <button type="submit" class="btn-submit">Salvar Publicação</button>
@@ -312,7 +320,7 @@
         </div>
     </div>
 
-    <!-- Modal Geral -->
+    <!-- Modal Geral (os campos são gerados por JS em #camposFormulario) -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
