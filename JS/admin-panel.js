@@ -1,8 +1,8 @@
-// admin-panel.js - Versão Completa e Corrigida
+// admin-panel.js - Versão com horários de domingo, almoço e por dia para farmácias
 
 let token = null;
 
-// Verificar autenticação ao carregar a página
+// ==================== AUTENTICAÇÃO ====================
 function checkAuth() {
     token = getAuthToken();
     if (!token) {
@@ -17,24 +17,17 @@ async function carregarInfoUsuario() {
     document.getElementById('nomeUsuario').textContent = usuario;
 }
 
-// ==================== LOGOUT CORRIGIDO ====================
 function sair() {
     if (confirm('Tem certeza que deseja sair?')) {
-        // 1. Limpar todas as variáveis de login
         localStorage.removeItem('api_token');
         localStorage.removeItem('adminLoggedIn');
         localStorage.removeItem('adminUsername');
-        
-        // 2. Desregistar Service Worker (Para não ficar preso no cache)
+
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                for(let registration of registrations) {
-                    registration.unregister();
-                }
+            navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                for (let registration of registrations) registration.unregister();
             });
         }
-        
-        // 3. Redirecionar e forçar recarregamento limpo
         window.location.replace('/admin-login');
     }
 }
@@ -54,26 +47,31 @@ async function atualizarContadores() {
 function mudarAba(abaNome) {
     let abas = document.querySelectorAll('.tab');
     for (let i = 0; i < abas.length; i++) abas[i].classList.remove('active');
-    
+
     let conteudos = document.querySelectorAll('.tab-content');
     for (let i = 0; i < conteudos.length; i++) conteudos[i].classList.remove('active');
 
     let botaoClicado = null;
     for (let i = 0; i < abas.length; i++) {
-        if (abas[i].textContent.trim().toLowerCase() === abaNome.toLowerCase() || 
-            abas[i].getAttribute('onclick')?.includes(abaNome)) {
+        if (abas[i].getAttribute('onclick')?.includes("'" + abaNome + "'")) {
             botaoClicado = abas[i];
             break;
         }
     }
-    
+
     if (botaoClicado) botaoClicado.classList.add('active');
     document.getElementById('aba-' + abaNome).classList.add('active');
-    
+
     if (abaNome === 'avaliacoes') carregarAvaliacoesAdmin();
     if (abaNome === 'publicacoes') carregarPublicacoesAdmin();
 }
 
+function escapeHtml(texto) {
+    if (!texto) return '';
+    return texto.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\n/g, '<br>');
+}
+
+// ==================== TABELAS (HOSPITAIS, CENTROS, FARMÁCIAS, EMERGÊNCIAS) ====================
 async function carregarTabelas() {
     await Promise.all([
         carregarHospitais(),
@@ -83,100 +81,84 @@ async function carregarTabelas() {
     ]);
 }
 
-async function carregarHospitais() {
-    try {
-        const hospitais = await apiRequest('/hospitais');
-        let corpo = document.getElementById('corpoHospitais');
+function botoesAcao(tipo, id) {
+    return `
+        <td>
+            <div class="action-buttons">
+                <button class="btn-edit" onclick="editarItem('${tipo}', ${id})">Editar</button>
+                <button class="btn-delete" onclick="deletarItem('${tipo}', ${id})">Excluir</button>
+            </div>
+        </td>`;
+}
 
-        if (hospitais.length === 0) {
-            corpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum hospital cadastrado</td></tr>';
+function localizacaoTexto(i) {
+    return i.latitude && i.longitude ? i.latitude + ', ' + i.longitude : (i.endereco || '-');
+}
+
+async function carregarListaLocais(endpoint, corpoId, tipo, msgVazia) {
+    try {
+        const itens = await apiRequest(endpoint);
+        const corpo = document.getElementById(corpoId);
+        if (!corpo) return;
+
+        if (!itens || itens.length === 0) {
+            corpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">' + msgVazia + '</td></tr>';
             return;
         }
 
         let html = '';
-        for (let h of hospitais) {
-            const localizacao = h.latitude && h.longitude ? h.latitude + ', ' + h.longitude : (h.endereco || '-');
+        for (let i of itens) {
             html += `
                 <tr>
-                    <td><strong>${escapeHtml(h.nome)}</strong></td>
-                    <td>${escapeHtml(h.endereco || '-')}</td>
-                    <td>${escapeHtml(h.telefone || '-')}</td>
-                    <td>${escapeHtml(h.horario || '-')}</td>
-                    <td>${escapeHtml(localizacao)}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-edit" onclick="editarItem('hospital', ${h.id})">Editar</button>
-                            <button class="btn-delete" onclick="deletarItem('hospital', ${h.id})">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
+                    <td><strong>${escapeHtml(i.nome)}</strong></td>
+                    <td>${escapeHtml(i.endereco || '-')}</td>
+                    <td>${escapeHtml(i.telefone || '-')}</td>
+                    <td>${escapeHtml(i.horario || '-')}</td>
+                    <td>${escapeHtml(localizacaoTexto(i))}</td>
+                    ${botoesAcao(tipo, i.id)}
+                </tr>`;
         }
         corpo.innerHTML = html;
     } catch (error) {
-        console.error('Erro ao carregar hospitais:', error);
+        console.error('Erro ao carregar ' + endpoint + ':', error);
     }
 }
 
-async function carregarCentros() {
-    try {
-        const centros = await apiRequest('/centros');
-        let corpo = document.getElementById('corpoCentros');
-        if (centros.length === 0) {
-            corpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum centro cadastrado</td></tr>';
-            return;
-        }
-        let html = '';
-        for (let c of centros) {
-            const localizacao = c.latitude && c.longitude ? c.latitude + ', ' + c.longitude : (c.endereco || '-');
-            html += `
-                <tr>
-                    <td><strong>${escapeHtml(c.nome)}</strong></td>
-                    <td>${escapeHtml(c.endereco || '-')}</td>
-                    <td>${escapeHtml(c.telefone || '-')}</td>
-                    <td>${escapeHtml(c.horario || '-')}</td>
-                    <td>${escapeHtml(localizacao)}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-edit" onclick="editarItem('centro', ${c.id})">Editar</button>
-                            <button class="btn-delete" onclick="deletarItem('centro', ${c.id})">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        }
-        corpo.innerHTML = html;
-    } catch (error) {
-        console.error('Erro ao carregar centros:', error);
+function carregarHospitais() { return carregarListaLocais('/hospitais', 'corpoHospitais', 'hospital', 'Nenhum hospital cadastrado'); }
+function carregarCentros() { return carregarListaLocais('/centros', 'corpoCentros', 'centro', 'Nenhum centro cadastrado'); }
+
+// Texto da coluna "Domingo" na tabela de farmácias
+function textoDomingo(f) {
+    if (f.plantao === true) return '<span style="color:#059669;">24h</span>';
+    if (f.funciona_domingo === true) {
+        return '<span style="color:#059669;">' + escapeHtml(f.horario_domingo || f.horario || 'Abre') + '</span>';
     }
+    if (f.funciona_domingo === false) return '<span style="color:#dc2626;">Fechado</span>';
+    return '<span style="color:#6b7280;">Não definido</span>';
 }
 
 async function carregarFarmacias() {
     try {
         const farmacias = await apiRequest('/farmacias');
-        let corpo = document.getElementById('corpoFarmacias');
-        if (farmacias.length === 0) {
+        const corpo = document.getElementById('corpoFarmacias');
+        if (!corpo) return;
+
+        if (!farmacias || farmacias.length === 0) {
             corpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhuma farmácia cadastrada</td></tr>';
             return;
         }
+
         let html = '';
         for (let f of farmacias) {
-            const localizacao = f.latitude && f.longitude ? f.latitude + ', ' + f.longitude : (f.endereco || '-');
             html += `
                 <tr>
-                    <td><strong>${escapeHtml(f.nome)}</strong></td>
+                    <td><strong>${escapeHtml(f.nome)}</strong>${f.plantao ? ' <small style="color:#1e40af;">(Plantão 24h)</small>' : ''}</td>
                     <td>${escapeHtml(f.endereco || '-')}</td>
                     <td>${escapeHtml(f.telefone || '-')}</td>
                     <td>${escapeHtml(f.horario || '-')}</td>
-                    <td>${escapeHtml(localizacao)}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-edit" onclick="editarItem('farmacia', ${f.id})">Editar</button>
-                            <button class="btn-delete" onclick="deletarItem('farmacia', ${f.id})">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
+                    <td>${textoDomingo(f)}</td>
+                    ${botoesAcao('farmacia', f.id)}
+                </tr>`;
         }
         corpo.innerHTML = html;
     } catch (error) {
@@ -188,7 +170,7 @@ async function carregarEmergencias() {
     try {
         const emergencias = await apiRequest('/emergencias');
         let corpo = document.getElementById('corpoEmergencias');
-        if (emergencias.length === 0) {
+        if (!emergencias || emergencias.length === 0) {
             corpo.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum contato cadastrado</td></tr>';
             return;
         }
@@ -200,14 +182,8 @@ async function carregarEmergencias() {
                     <td>${escapeHtml(e.tipo)}</td>
                     <td>${escapeHtml(e.telefone || '-')}</td>
                     <td>${escapeHtml(e.disponibilidade || '-')}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-edit" onclick="editarItem('emergencia', ${e.id})">Editar</button>
-                            <button class="btn-delete" onclick="deletarItem('emergencia', ${e.id})">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
+                    ${botoesAcao('emergencia', e.id)}
+                </tr>`;
         }
         corpo.innerHTML = html;
     } catch (error) {
@@ -238,9 +214,9 @@ async function carregarAvaliacoesAdmin() {
             var estrelas = '';
             for (var i = 0; i < av.nota; i++) estrelas += '★';
             for (var j = av.nota; j < 5; j++) estrelas += '☆';
-            
+
             var comentarioResumido = av.comentario.length > 100 ? av.comentario.substring(0, 100) + '...' : av.comentario;
-            
+
             html += `
                 <tr>
                     <td>${av.data || ''}</td>
@@ -253,9 +229,8 @@ async function carregarAvaliacoesAdmin() {
                             <button class="btn-edit" onclick="abrirModalResposta(${av.id})">Responder</button>
                             <button class="btn-delete" onclick="deletarAvaliacao(${av.id})">Excluir</button>
                         </div>
-                     </td>
-                </tr>
-            `;
+                    </td>
+                </tr>`;
         }
         corpo.innerHTML = html;
     } catch (error) {
@@ -263,11 +238,6 @@ async function carregarAvaliacoesAdmin() {
         const corpo = document.getElementById('corpoAvaliacoes');
         if (corpo) corpo.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#dc2626;">Erro ao carregar: ' + error.message + '</td></tr>';
     }
-}
-
-function escapeHtml(texto) {
-    if (!texto) return '';
-    return texto.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\n/g, '<br>');
 }
 
 function abrirModalResposta(id) {
@@ -299,7 +269,6 @@ async function enviarResposta() {
     }
 }
 
-// ==================== DELETAR AVALIAÇÃO (CORRIGIDO) ====================
 async function deletarAvaliacao(id) {
     if (!confirm('Tem certeza que deseja excluir esta avaliação?')) return;
 
@@ -352,8 +321,7 @@ async function carregarPublicacoesAdmin() {
                             <button class="btn-delete" onclick="deletarPublicacao(${pub.id})">Excluir</button>
                         </div>
                     </td>
-                </tr>
-            `;
+                </tr>`;
         }
         corpo.innerHTML = html;
     } catch (error) {
@@ -438,7 +406,6 @@ async function togglePublicacao(id) {
     }
 }
 
-// ==================== DELETAR PUBLICAÇÃO (CORRIGIDO) ====================
 async function deletarPublicacao(id) {
     if (!confirm('Tem certeza que deseja excluir esta publicação permanentemente?')) return;
     try {
@@ -454,6 +421,13 @@ async function deletarPublicacao(id) {
 // ==================== CRUD GERAL (HOSPITAIS, ETC) ====================
 let tipoAtual = '';
 let idAtual = null;
+
+const ENDPOINTS = { hospital: '/hospitais', centro: '/centros', farmacia: '/farmacias', emergencia: '/emergencias' };
+
+// Campos de horário específicos de farmácia
+const DIAS_SEMANA = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+const CAMPOS_HORARIO_FARMACIA = ['horario_domingo', 'horario_almoco_inicio', 'horario_almoco_fim']
+    .concat(DIAS_SEMANA.map(function (d) { return 'horario_' + d; }));
 
 function abrirModalAdicionar(tipo) {
     tipoAtual = tipo;
@@ -489,6 +463,20 @@ function abrirMapaParaSelecionar() {
     window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(endereco + ', Nampula, Moçambique'), '_blank');
 }
 
+// Mostra/esconde o campo de horário de domingo
+function toggleHorarioDomingo() {
+    var sel = document.getElementById('funciona_domingo');
+    var grupo = document.getElementById('grupoHorarioDomingo');
+    if (sel && grupo) grupo.style.display = sel.value === 'true' ? 'block' : 'none';
+}
+
+// Esconde os campos de horário quando é plantão 24h
+function togglePlantao() {
+    var sel = document.getElementById('plantao');
+    var bloco = document.getElementById('blocoHorariosFarmacia');
+    if (sel && bloco) bloco.style.display = sel.value === 'true' ? 'none' : 'block';
+}
+
 function mostrarCamposFormulario(tipo) {
     var campos = document.getElementById('camposFormulario');
     if (tipo === 'hospital' || tipo === 'centro') {
@@ -514,13 +502,59 @@ function mostrarCamposFormulario(tipo) {
             <div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div>
             <div class="form-group"><label>Endereço</label><input type="text" id="endereco"></div>
             <div class="form-group"><label>Telefone</label><input type="tel" id="telefone"></div>
-            <div class="form-group"><label>Horário Geral</label><input type="text" id="horario"></div>
-            <div class="form-group"><label>Plantão 24h?</label><select id="plantao"><option value="false">Não</option><option value="true">Sim</option></select></div>
+            <div class="form-group"><label>Plantão 24h?</label>
+                <select id="plantao" onchange="togglePlantao()"><option value="false">Não</option><option value="true">Sim</option></select>
+            </div>
+
+            <div id="blocoHorariosFarmacia">
+                <div class="form-group"><label>Horário Geral (ex: 08:00 - 18:00)</label><input type="text" id="horario" placeholder="08:00 - 18:00"></div>
+
+                <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
+                    <h4>Domingo</h4>
+                    <div class="form-group">
+                        <label>Funciona aos domingos?</label>
+                        <select id="funciona_domingo" onchange="toggleHorarioDomingo()">
+                            <option value="false">Não</option>
+                            <option value="true">Sim</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="grupoHorarioDomingo" style="display:none;">
+                        <label>Horário de domingo (ex: 08:00 - 13:00)</label>
+                        <input type="text" id="horario_domingo" placeholder="08:00 - 13:00">
+                        <small style="color:#6b7280;">Se ficar vazio, usa o horário geral.</small>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
+                    <h4>Intervalo de almoço (opcional)</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="form-group"><label>Início</label><input type="text" id="horario_almoco_inicio" placeholder="12:00"></div>
+                        <div class="form-group"><label>Fim</label><input type="text" id="horario_almoco_fim" placeholder="14:00"></div>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
+                    <h4>Horários específicos por dia (opcional)</h4>
+                    <small style="color:#6b7280;">Deixe vazio para usar o horário geral.</small>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                        <div class="form-group"><label>Segunda</label><input type="text" id="horario_segunda" placeholder="08:00 - 18:00"></div>
+                        <div class="form-group"><label>Terça</label><input type="text" id="horario_terca" placeholder="08:00 - 18:00"></div>
+                        <div class="form-group"><label>Quarta</label><input type="text" id="horario_quarta" placeholder="08:00 - 18:00"></div>
+                        <div class="form-group"><label>Quinta</label><input type="text" id="horario_quinta" placeholder="08:00 - 18:00"></div>
+                        <div class="form-group"><label>Sexta</label><input type="text" id="horario_sexta" placeholder="08:00 - 18:00"></div>
+                        <div class="form-group"><label>Sábado</label><input type="text" id="horario_sabado" placeholder="08:00 - 13:00"></div>
+                    </div>
+                </div>
+            </div>
+
             <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
                 <h4>Localização Exata</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <div class="form-group"><label>Latitude</label><input type="text" id="latitude"></div>
                     <div class="form-group"><label>Longitude</label><input type="text" id="longitude"></div>
+                </div>
+                <div style="margin-top: 10px;">
+                    <button type="button" onclick="buscarCoordenadasPorEndereco()" style="background: #7c3aed; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Buscar Coordenadas</button>
                 </div>
             </div>
         `;
@@ -537,21 +571,31 @@ function mostrarCamposFormulario(tipo) {
 async function editarItem(tipo, id) {
     tipoAtual = tipo;
     idAtual = id;
-    var endpoint = tipo === 'hospital' ? '/hospitais' : tipo === 'centro' ? '/centros' : tipo === 'farmacia' ? '/farmacias' : '/emergencias';
+    var endpoint = ENDPOINTS[tipo];
     try {
         var item = await apiRequest(endpoint + '/' + id);
         var titulos = { 'hospital': 'Editar Hospital', 'centro': 'Editar Centro de Saúde', 'farmacia': 'Editar Farmácia', 'emergencia': 'Editar Contato de Emergência' };
         document.getElementById('tituloModal').textContent = titulos[tipo];
         mostrarCamposFormulario(tipo);
         document.getElementById('nome').value = item.nome;
-        
+
         if (tipo !== 'emergencia') {
             if (document.getElementById('endereco')) document.getElementById('endereco').value = item.endereco || '';
             if (document.getElementById('telefone')) document.getElementById('telefone').value = item.telefone || '';
             if (document.getElementById('horario')) document.getElementById('horario').value = item.horario || '';
             if (document.getElementById('latitude')) { document.getElementById('latitude').value = item.latitude || ''; document.getElementById('longitude').value = item.longitude || ''; }
             if ((tipo === 'hospital' || tipo === 'centro') && document.getElementById('servicos')) document.getElementById('servicos').value = item.servicos || '';
-            if (tipo === 'farmacia' && document.getElementById('plantao')) document.getElementById('plantao').value = item.plantao ? 'true' : 'false';
+
+            if (tipo === 'farmacia') {
+                document.getElementById('plantao').value = item.plantao ? 'true' : 'false';
+                CAMPOS_HORARIO_FARMACIA.forEach(function (c) {
+                    var el = document.getElementById(c);
+                    if (el) el.value = item[c] || '';
+                });
+                document.getElementById('funciona_domingo').value = item.funciona_domingo ? 'true' : 'false';
+                toggleHorarioDomingo();
+                togglePlantao();
+            }
         } else {
             document.getElementById('telefone').value = item.telefone;
             if (document.getElementById('tipo')) document.getElementById('tipo').value = item.tipo;
@@ -571,7 +615,7 @@ function fecharModal() {
 
 document.getElementById('formularioItem').addEventListener('submit', async function (e) {
     e.preventDefault();
-    var endpoint = tipoAtual === 'hospital' ? '/hospitais' : tipoAtual === 'centro' ? '/centros' : tipoAtual === 'farmacia' ? '/farmacias' : '/emergencias';
+    var endpoint = ENDPOINTS[tipoAtual];
     var dadosFormulario = { nome: document.getElementById('nome').value };
 
     if (tipoAtual === 'hospital' || tipoAtual === 'centro') {
@@ -586,6 +630,19 @@ document.getElementById('formularioItem').addEventListener('submit', async funct
         dadosFormulario.telefone = document.getElementById('telefone').value || '';
         dadosFormulario.horario = document.getElementById('horario').value || '';
         dadosFormulario.plantao = document.getElementById('plantao').value === 'true';
+
+        // Domingo
+        var funcionaDomingo = document.getElementById('funciona_domingo').value === 'true';
+        dadosFormulario.funciona_domingo = funcionaDomingo;
+        dadosFormulario.horario_domingo = funcionaDomingo ? (document.getElementById('horario_domingo').value.trim() || '') : '';
+
+        // Almoço e dias da semana
+        dadosFormulario.horario_almoco_inicio = document.getElementById('horario_almoco_inicio').value.trim() || '';
+        dadosFormulario.horario_almoco_fim = document.getElementById('horario_almoco_fim').value.trim() || '';
+        DIAS_SEMANA.forEach(function (d) {
+            dadosFormulario['horario_' + d] = document.getElementById('horario_' + d).value.trim() || '';
+        });
+
         var lat = document.getElementById('latitude'), lng = document.getElementById('longitude');
         if (lat && lat.value) { dadosFormulario.latitude = parseFloat(lat.value); dadosFormulario.longitude = parseFloat(lng.value); }
     } else if (tipoAtual === 'emergencia') {
@@ -610,10 +667,9 @@ document.getElementById('formularioItem').addEventListener('submit', async funct
     }
 });
 
-// ==================== DELETAR ITEM (CORRIGIDO) ====================
 async function deletarItem(tipo, id) {
     if (!confirm('Tem certeza que deseja excluir este item?')) return;
-    var endpoint = tipo === 'hospital' ? '/hospitais' : tipo === 'centro' ? '/centros' : tipo === 'farmacia' ? '/farmacias' : '/emergencias';
+    var endpoint = ENDPOINTS[tipo];
     try {
         const tokenAtual = getAuthToken();
         await apiRequest(endpoint + '/' + id, 'DELETE', null, tokenAtual);
@@ -627,16 +683,18 @@ async function deletarItem(tipo, id) {
 
 // ==================== EVENTOS E INICIALIZAÇÃO ====================
 document.getElementById('modal').addEventListener('click', function (e) { if (e.target === this) fecharModal(); });
-document.addEventListener('click', function(e) { var modal = document.getElementById('modalPublicacao'); if (modal && e.target === modal) fecharModalPublicacao(); });
+document.addEventListener('click', function (e) { var modal = document.getElementById('modalPublicacao'); if (modal && e.target === modal) fecharModalPublicacao(); });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     var formPublicacao = document.getElementById('formularioPublicacao');
     if (formPublicacao) formPublicacao.addEventListener('submit', salvarPublicacao);
 });
 
-// Tornar funções globais para os botões HTML
+// Funções globais para os botões do HTML
 window.buscarCoordenadasPorEndereco = buscarCoordenadasPorEndereco;
 window.abrirMapaParaSelecionar = abrirMapaParaSelecionar;
+window.toggleHorarioDomingo = toggleHorarioDomingo;
+window.togglePlantao = togglePlantao;
 window.abrirModalResposta = abrirModalResposta;
 window.fecharModalResposta = fecharModalResposta;
 window.enviarResposta = enviarResposta;
